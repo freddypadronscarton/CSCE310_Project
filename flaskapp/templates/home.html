@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Item Management</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Item Management</h1>
+
+    <!-- Form to Add New Item -->
+    <h2>Add Item</h2>
+    <form id="addItemForm">
+        <input type="text" id="name" placeholder="Name" required>
+        <input type="text" id="description" placeholder="Description" required>
+        <button type="submit">Add Item</button>
+    </form>
+
+    <!-- Table to Display Items -->
+    <h2>Items</h2>
+    <table id="itemsTable">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+        {% for item in items %}
+        <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <td>
+                <input type="text" id="desc_{{ item.id }}" value="{{ item.description }}">
+                <button onclick="updateItem({{ item.id }})">Update</button>
+            </td>
+            <td><button onclick="deleteItem({{ item.id }})">Delete</button></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <script>
+        //AJAX calls
+
+        // Add item
+        $('#addItemForm').submit(function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: '/item',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ 
+                    name: $('#name').val(), 
+                    description: $('#description').val() 
+                }),
+                success: function(response) {
+                    window.location.reload(); 
+                }
+            });
+        });
+
+        // Delete item
+        function deleteItem(id) {
+            $.ajax({
+                url: '/item/' + id,
+                method: 'DELETE',
+                success: function(response) {
+                    window.location.reload(); 
+                }
+            });
+        }
+
+        // Update item
+        function updateItem(id) {
+            $.ajax({
+                url: '/item/' + id,
+                method: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify({ 
+                    name: $('#name_' + id).val(), 
+                    description: $('#desc_' + id).val()
+                }),
+                success: function(response) {
+                    window.location.reload(); // Reload to update the table
+                }
+            });
+        }
+    </script>
+</body>
+</html>
