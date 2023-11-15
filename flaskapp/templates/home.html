@@ -6,7 +6,15 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <h1>Item Management</h1>
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <h1> {{ current_user.username }}'s Item Management</h1>
 
     <!-- Form to Add New Item -->
     <h2>Add Item</h2>
@@ -20,14 +28,12 @@
     <h2>Items</h2>
     <table id="itemsTable">
         <tr>
-            <th>ID</th>
             <th>Name</th>
             <th>Description</th>
             <th>Actions</th>
         </tr>
         {% for item in items %}
         <tr>
-            <td>{{ item.id }}</td>
             <td>{{ item.name }}</td>
             <td>
                 <input type="text" id="desc_{{ item.id }}" value="{{ item.description }}">
@@ -37,6 +43,11 @@
         </tr>
         {% endfor %}
     </table>
+
+    <!-- Logout Button -->
+    <form action="{{ url_for('logout') }}" method="post">
+        <button type="submit">Logout</button>
+    </form>
 
     <script>
         //AJAX calls
@@ -80,7 +91,7 @@
                     description: $('#desc_' + id).val()
                 }),
                 success: function(response) {
-                    window.location.reload(); // Reload to update the table
+                    window.location.reload();
                 }
             });
         }
