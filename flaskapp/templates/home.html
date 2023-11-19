@@ -14,7 +14,9 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-    <h1> {{ current_user.username }}'s Item Management</h1>
+    <h1> {{ current_user.f_name }}'s Item Management</h1>
+    <h1> Admin: {{ current_user.is_admin }}</h1>
+    <h1> Student Type: {{ current_user.student_type }}</h1>
 
     <!-- Form to Add New Item -->
     <h2>Add Item</h2>

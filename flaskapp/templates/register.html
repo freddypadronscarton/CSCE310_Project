@@ -6,25 +6,275 @@
 <body>
     <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="flash {{ category }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
     {% endwith %}
 
-    <form action="{{ url_for('register') }}" method="post">
+    <form action="{{ url_for('register') }}" method="post" onsubmit="return validateForm()">
+    <div class="form-group">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username">
+    </div> 
+
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email">
+    </div>
+
+    <div class="form-group">
+        <label for="f_name">First Name:</label>
+        <input type="text" id="f_name" name="f_name">
+    </div>
+
+    <div class="form-group">
+        <label for="l_name">Last Name:</label>
+        <input type="text" id="l_name" name="l_name">
+    </div>
+
+    <div class="form-group">
+        <label for="middle_initial">Middle Initial:</label>
+        <input type="text" id="middle_initial" name="middle_initial" maxlength="1">
+    </div>
+
+    <div class="form-group">
+        <label for="birth_date">Date of Birth: </label>
+        <input type="date" id="birth_date" name="birth_date">
+    </div>
+
+    <div class="form-group">
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender">
+            <option value="Not Selected">Please select</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+            <option value="Not Selected">Choose to not identify</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="phone_number">Phone Number:</label>
+        <input type="tel" id="phone_number" name="phone_number" placeholder="123-456-7890">
+    </div>
+
+    <div class="form-group">
+        <label for="hispanic_or_latino">Hispanic or Latino:</label>
+        <input type="checkbox" id="hispanic_or_latino" name="hispanic_or_latino">
+    </div>
+
+    <div class="form-group">
+        <label for="race">Race:</label>
+        <select id="race" name="race">
+            <option value="">Please select</option>
+            <option value="asian">Asian</option>
+            <option value="black">Black or African American</option>
+            <option value="hispanic">Hispanic or Latino</option>
+            <option value="white">White</option>
+            <option value="native_american">Native American or Alaska Native</option>
+            <option value="pacific_islander">Native Hawaiian or Other Pacific Islander</option>
+            <option value="other">Other</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="school">School:</label>
+        <input type="text" id="school" name="school">
+    </div>
+
+    <!-- User Type Selector -->
+    <div class="form-group">
+        <label for="user_type">User Type:</label>
+        <select id="user_type" name="user_type" onchange="showUserTypeFields()">
+            <option value="">Please select</option>
+            <option value="admin">Admin</option>
+            <option value="college_student">College Student</option>
+            <option value="k12_student">K12 Student</option>
+        </select>
+    </div>
+
+    <!-- Admin Fields -->
+    <div id="admin_fields" style="display:none;">
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title">
+        </div>
+    </div>
+
+    <!-- College Student Fields -->
+    <div id="college_student_fields" style="display:none;">
+        <div class="form-group">
+            <label for="uin">UIN:</label>
+            <input type="text" id="uin" name="uin">
+        </div>
+
+        <div class="form-group">
+            <label for="first_gen">First Generation Student:</label>
+            <input type="checkbox" id="first_gen" name="first_gen">
+        </div>
+
+        <div class="form-group">
+            <label for="classification">Classification:</label>
+            <select id="classification" name="classification">
+                <option value="">Please select</option>
+                <option value="freshman">Freshman</option>
+                <option value="sophomore">Sophomore</option>
+                <option value="junior">Junior</option>
+                <option value="senior">Senior</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="US_citizen">US Citizen:</label>
+            <input type="checkbox" id="US_citizen" name="US_citizen">
+        </div>
+
+        <div class="form-group">
+            <label for="uin">UIN:</label>
+            <input type="number" id="uin" name="uin">
+        </div>
+
+        <div class="form-group">
+            <label for="major">Major:</label>
+            <input type="text" id="major" name="major">
+        </div>
+
+        <div class="form-group">
+            <label for="second_major">Second Major:</label>
+            <input type="text" id="second_major" name="second_major">
+        </div>
+
+        <div class="form-group">
+            <label for="minor">Minor:</label>
+            <input type="text" id="minor" name="minor">
+        </div>
+
+        <div class="form-group">
+            <label for="second_minor">Second Minor:</label>
+            <input type="text" id="second_minor" name="second_minor">
+        </div>
+
+        <div class="form-group">
+            <label for="gpa">GPA:</label>
+            <input type="number" id="gpa" name="gpa">
+        </div>
+        <!-- ... other fields for college students ... -->
+    </div>
+
+    <!-- K12 Student Fields -->
+    <div id="k12_student_fields" style="display:none;">
+        <div class="form-group">
+            <label for="grade">Grade:</label>
+            <input type="number" id="grade" name="grade">
+        </div>
+
+        <div class="form-group">
+            <label for="US_citizen">US Citizen:</label>
+            <input type="checkbox" id="US_citizen" name="US_citizen">
+        </div>
+        <!-- ... other fields for K12 students ... -->
+    </div>
+
+    <div class="form-group">
         <label for="password">Password:</label>
-        <input type="text" id="password" name="password">
+        <input type="password" id="password" name="password">
+    </div>
+
+    <div class="form-group">
         <label for="confirm">Confirm Password:</label>
-        <input type="text" id="confirm" name="confirm">
+        <input type="password" id="confirm" name="confirm">
+    </div>
+
+    <div class="form-group">
         <button type="submit">Register</button>
-    </form>
+    </div>
+
     <!-- Login Redirect Button -->
-    <form action="{{ url_for('login') }}" method="get">
-        <button type="submit">Login Page</button>
+    <div class="form-group">
+        <a href="{{ url_for('login') }}" class="redirect-link">Back to login</a>
+    </div>
     </form>
+
 </body>
+<style>
+    body { 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    form {
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+    }
+    .form-group {
+        display: flex;
+        align-items: center;
+    }
+    label {
+        margin-right: 10px;
+    }
+</style>
+<script>
+    // Auto-format for phone number
+    document.getElementById('phone_number').addEventListener('input', function (e) {
+        var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+        e.target.value = !x[2] ? x[1] : x[1] + '-' + x[2] + (x[3] ? '-' + x[3] : '');
+    });
+
+    function showUserTypeFields() {
+        var userType = document.getElementById('user_type').value;
+        document.getElementById('admin_fields').style.display = (userType === 'admin') ? 'block' : 'none';
+        document.getElementById('college_student_fields').style.display = (userType === 'college_student') ? 'block' : 'none';
+        document.getElementById('k12_student_fields').style.display = (userType === 'k12_student') ? 'block' : 'none';
+    }
+
+
+    function validateForm() {
+        var isValid = true;
+        var userType = document.getElementById('user_type').value;
+        
+        
+        // Function to check if a field is displayed and empty
+        function isFieldEmpty(fieldId) {
+            var field = document.getElementById(fieldId);
+            return field.style.display !== 'none' && !field.value.trim();
+        }
+
+        // Check common fields
+        if (isFieldEmpty('username') || isFieldEmpty('email') || isFieldEmpty('f_name') || isFieldEmpty('l_name') || isFieldEmpty('password') || isFieldEmpty('confirm')) {
+            isValid = false;
+        }
+
+        if (!userType) {
+            alert("Please select a user type.");
+            return false; 
+        }
+
+        // Check fields based on the user type
+        if (userType === 'admin' && isFieldEmpty('title')) {
+            isValid = false;
+        }
+        
+        if (userType === 'college_student') {
+            // Add checks for college student fields
+            if (isFieldEmpty('uin') || isFieldEmpty('major') || isFieldEmpty('gpa')) {
+                isValid = false;
+            }
+        }
+        if (userType === 'k12_student' && isFieldEmpty('grade')) {
+            isValid = false;
+        }
+
+        if (!isValid) {
+            alert("Please fill out all the fields.");
+        }
+
+        return isValid;
+    }
+</script>
 </html>
