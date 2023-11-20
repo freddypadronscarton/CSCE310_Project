@@ -66,29 +66,6 @@ def init_sqlite_db():
                     grade INTEGER,
                     FOREIGN KEY(user_id) REFERENCES users(user_id)
                 )''')
-    
-    # SAMPLE INSERTS
-    # conn.execute('''INSERT INTO k12_students (user_id, GPA, school, grade)
-    #                     VALUES (1, 3.5, "Cinco Ranch High School", 11)''')
-
-    # conn.execute('''INSERT INTO college_students (user_id, UIN, GPA, major, year)
-    #                     VALUES (2, 10101, 4.0, "Computer Engineering", 2024)''')
-    # conn.commit()
-
-    # Sample Join for Specialization Hierarchy 
-    # example_join_query = '''
-    #     SELECT users.user_id, users.username, users.password, 
-    #            college_students.UIN, college_students.GPA, 
-    #            college_students.major, college_students.year
-    #     FROM users
-    #     INNER JOIN college_students ON users.user_id = college_students.user_id
-    # '''
-    
-    # column_names = ['user_id', 'username', 'password', 'UIN', 'GPA', 'major', 'year']
-    # college_students = conn.execute(example_join_query).fetchall()
-    # for row in college_students:
-    #     row_str = ", ".join([f"{col_name}: {row[i]}" for i, col_name in enumerate(column_names)])
-    #     print(row_str)
 
     print("Table created successfully")
     conn.close()
@@ -162,3 +139,8 @@ def register_user(conn, request, user_type):
     conn.commit()
     flash("Successfully registered new user!", "Success")
     
+        
+
+def update_user_field(conn, user_id, field, value):
+    query = f"UPDATE users SET {field} = ? WHERE user_id = ?"
+    conn.execute(query, (value, user_id))

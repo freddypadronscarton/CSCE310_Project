@@ -1,0 +1,89 @@
+<h2> Update User: {{selected_user.username}}</h2>
+<form action="{{ url_for('admin_bp.save_user_type') }}" method="post">
+    {% if user_type == "college_student" %}
+        <div class="form-group">
+            <label for="uin">UIN:</label>
+            <input type="number" id="uin" name="uin">
+        </div>
+
+        <div class="form-group">
+            <label for="first_gen">First Generation Student:</label>
+            <input type="checkbox" id="first_gen" name="first_gen">
+        </div>
+
+        <div class="form-group">
+            <label for="classification">Classification:</label>
+            <select id="classification" name="classification">
+                <option value="">Please select</option>
+                <option value="freshman">Freshman</option>
+                <option value="sophomore">Sophomore</option>
+                <option value="junior">Junior</option>
+                <option value="senior">Senior</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="US_citizen">US Citizen:</label>
+            <input type="checkbox" id="US_citizen" name="US_citizen">
+        </div>
+
+        <div class="form-group">
+            <label for="major">Major:</label>
+            <input type="text" id="major" name="major">
+        </div>
+
+        <div class="form-group">
+            <label for="second_major">Second Major:</label>
+            <input type="text" id="second_major" name="second_major">
+        </div>
+
+        <div class="form-group">
+            <label for="minor">Minor:</label>
+            <input type="text" id="minor" name="minor">
+        </div>
+
+        <div class="form-group">
+            <label for="second_minor">Second Minor:</label>
+            <input type="text" id="second_minor" name="second_minor">
+        </div>
+
+        <div class="form-group">
+            <label for="gpa">GPA:</label>
+            <input type="number" id="gpa" name="gpa">
+        </div>
+
+        <div class="form-group">
+            <button type="submit">Save</button>
+        </div>
+    {% elif user_type == "k12_student" %}
+        <div class="form-group">
+            <label for="grade">Grade:</label>
+            <input type="number" id="grade" name="grade">
+        </div>
+
+        <div class="form-group">
+            <label for="US_citizen">US Citizen:</label>
+            <input type="checkbox" id="US_citizen" name="US_citizen">
+        </div>
+
+        <div class="form-group">
+            <button type="submit">Save</button>
+        </div>
+    {% elif user_type == "admin" %}
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title">
+        </div>
+
+        <div class="form-group">
+            <button type="submit">Save</button>
+        </div>
+    {% else %}
+    {% endif %}
+
+    <!-- Hidden inputs -->
+    <input type="hidden" name="user_type" value="{{ user_type }}">
+    <input type="hidden" name="user_id" value="{{ selected_user.user_id }}">
+</form>
+
