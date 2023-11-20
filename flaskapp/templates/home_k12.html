@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>K12 Student Landing Page</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <h1> {{ current_user.f_name }}'s Landing Page</h1>
+    <h1> Student Type: {{ current_user.student_type }}</h1>
+
+    <!-- Form to Add New Item -->
+    <h2>Add Item</h2>
+    <form id="addItemForm">
+        <input type="text" id="name" placeholder="Name" required>
+        <input type="text" id="description" placeholder="Description" required>
+        <button type="submit">Add Item</button>
+    </form>
+
+    <!-- Table to Display Items -->
+    <h2>Items</h2>
+    <table id="itemsTable">
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+        {% for item in items %}
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>
+                <input type="text" id="desc_{{ item.id }}" value="{{ item.description }}">
+                <button onclick="updateItem({{ item.id }})">Update</button>
+            </td>
+            <td><button onclick="deleteItem({{ item.id }})">Delete</button></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <!-- Logout Button -->
+    <form action="{{ url_for('logout') }}" method="post">
+        <button type="submit">Logout</button>
+    </form>
+
+    <script>
+        //AJAX calls
+
+        // Add item
+        $('#addItemForm').submit(function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: '/item',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ 
+                    name: $('#name').val(), 
+                    description: $('#description').val() 
+                }),
+                success: function(response) {
+                    window.location.reload(); 
+                }
+            });
+        });
+
+        // Delete item
+        function deleteItem(id) {
+            $.ajax({
+                url: '/item/' + id,
+                method: 'DELETE',
+                success: function(response) {
+                    window.location.reload(); 
+                }
+            });
+        }
+
+        // Update item
+        function updateItem(id) {
+            $.ajax({
+                url: '/item/' + id,
+                method: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify({ 
+                    name: $('#name_' + id).val(), 
+                    description: $('#desc_' + id).val()
+                }),
+                success: function(response) {
+                    window.location.reload();
+                }
+            });
+        }
+    </script>
+</body>
+</html>

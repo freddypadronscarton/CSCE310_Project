@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Landing Page</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <h1> {{ current_user.f_name }}'s User Management</h1>
+
+    <!-- Table to Display Items -->
+    <h2>Users</h2>
+    <table id="usersTable">
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>User Type</th>
+            <th>Actions</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.f_name }}</td>
+            <td>{{ user.l_name }}</td>
+            {% if user.is_admin == "True" %}
+                <td>Admin</td>
+            {% elif user.student_type == "k12_student" %}
+                <td>K-12 Student</td>
+            {% else %}
+                <td>College Student</td>
+            {% endif %}
+            <td>
+                <button onclick="saveUserType({{user.user_id}})">Save</button>
+
+                <button onclick="deleteUser({{user.user_id}})">Delete</button>
+
+                {% if user.is_admin == "True" and user.archived %}
+                    <button onclick="updateUser('archived', {{user.user_id}}, 0)">Authorize</button>
+                {% elif user.archived %}
+                    <button onclick="updateUser('archived', {{user.user_id}}, 0)">Unarchive</button>
+                {% else %}
+                    <button onclick="updateUser('archived', {{user.user_id}}, 1)">Archive</button>
+                {% endif %}
+            
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <!-- Logout Button -->
+    <form action="{{ url_for('logout') }}" method="post">
+        <button type="submit">Logout</button>
+    </form>
+
+    <script>
+        //AJAX calls
+
+        // Add item
+        $('#addItemForm').submit(function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: '/item',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ 
+                    name: $('#name').val(), 
+                    description: $('#description').val() 
+                }),
+                success: function(response) {
+                    window.location.reload(); 
+                }
+            });
+        });
+
+        // Delete User
+        function deleteUser(id) {
+            $.ajax({
+                url: `/admin/delete_user/${id}`,
+                method: 'DELETE',
+                success: function(response) {
+                    window.location.reload(); 
+                }
+            });
+        }   
+
+        function updateUser(field, id, value) {
+            $.ajax({
+                url: `/admin/update_user/${id}`,
+                method: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify({ 
+                    'user_id': id,
+                    'field':field,
+                    'value': value
+                }),
+                success: function(response) {
+                    window.location.reload();
+                }
+            });
+        }
+    </script>
+</body>
+</html>

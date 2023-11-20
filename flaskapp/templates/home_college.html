@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Item Management</title>
+    <title>College Student Landing Page</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
@@ -14,8 +14,7 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-    <h1> {{ current_user.f_name }}'s Item Management</h1>
-    <h1> Admin: {{ current_user.is_admin }}</h1>
+    <h1> {{ current_user.f_name }}'s Landing Page</h1>
     <h1> Student Type: {{ current_user.student_type }}</h1>
 
     <!-- Form to Add New Item -->
