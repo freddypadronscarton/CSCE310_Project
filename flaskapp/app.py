@@ -179,6 +179,20 @@ def print_query_results(results, column_names):
         print(row_str)
 
 
+# Program Info Management Pages
+@app.route('/program_application', method=['GET', 'POST'])
+def application(): 
+    conn = get_db_connection()
+
+    if current_user.is_admin == "True":
+      # FIXME: ADD CORRECT MANAGER CODE LATER
+      conn.close()
+    else:
+      programs = conn.execute('SELECT * FROM programs').fetchall()
+      conn.close()
+      return render_template('program_application', programs=programs)
+
+
 @app.route("/logout", methods=['POST'])
 @login_required
 def logout():

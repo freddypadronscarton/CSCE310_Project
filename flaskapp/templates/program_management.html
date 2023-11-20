@@ -3,27 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Program Info Management</title>
+  <title>Program Management</title>
 </head>
 <body>
-  <select>
-    <% for progrm in programs %>
-    <option value="{{ program.Program_Num }}">{{ program.name }}</option>
-    <% endfor %>
-  </select>
+  <h1>Cybersecurity Programs</h1>
+  <h2>blurb about the benefit of cybersecurity programs</h2>
   <div>
-    <p>
-      Are you currently enrolled in other uncompleted certifications sponsored by the Cybersecurity Center?
-    </p>
-    <input id="uncom_cert" type="text">
-    <p>
-      Have you completed any cybersecurity industry certifications via the Cybersecurity Center?
-    </p>
-    <input id="com_cert" type="text">
-    <p>Please provide your purpose statement: </p>
-    <input id="purpose_statement" type="text">
-    <br>
-    <button id="apply-button" type="submit">Apply</button>
+    <a href="program_application.html">
+      <button>Apply</button>
+    </a>
+    <a>
+      <button>View Applications</button>
+    </a>
+    <a>
+      <button>Update Applications</button>
+    </a>
   </div>
 </body>
 </html>
