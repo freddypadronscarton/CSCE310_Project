@@ -180,7 +180,7 @@ def print_query_results(results, column_names):
 
 
 # Program Info Management Pages
-@app.route('/program_application', method=['GET', 'POST'])
+@app.route('/program_application', method=['GET'])
 def application(): 
     conn = get_db_connection()
 
@@ -191,6 +191,17 @@ def application():
       programs = conn.execute('SELECT * FROM programs').fetchall()
       conn.close()
       return render_template('program_application', programs=programs)
+  
+@app.rout('/program_application/<int:Program_Num>', methods=['GET'])
+def checkIfAlreadyApplied(Program_Num):
+    conn = get_db_connection()
+    alreadyApplied = conn.execute("SELECT COUNT(*) FROM Application WHERE Program_Num = ? AND UIN = ?", (Program_Num, current_user.id)).fetchone()
+    conn.close()
+    if (alreadyApplied > 0):
+        flash("You've already applied to this program")
+        return jsonify({'alreadyApplied': True})
+    else:
+        return jsonify({'alreadyApplied': False})
 
 
 @app.route("/logout", methods=['POST'])

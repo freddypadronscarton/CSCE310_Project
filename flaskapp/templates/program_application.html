@@ -6,24 +6,65 @@
   <title>Program Application</title>
 </head>
 <body>
-  <select>
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <select id="program-select">
     <% for progrm in programs %>
     <option value="{{ program.Program_Num }}">{{ program.name }}</option>
     <% endfor %>
   </select>
+
   <div>
     <p>
       Are you currently enrolled in other uncompleted certifications sponsored by the Cybersecurity Center?
     </p>
-    <input id="uncom_cert" type="text">
+    <input id="uncom-cert" type="text">
     <p>
       Have you completed any cybersecurity industry certifications via the Cybersecurity Center?
     </p>
-    <input id="com_cert" type="text">
+    <input id="com-cert" type="text">
     <p>Please provide your purpose statement: </p>
-    <input id="purpose_statement" type="text">
+    <input id="purpose-statement" type="text">
     <br>
-    <button id="apply-button" type="submit">Apply</button>
+    <button id="apply-button" type="submit" disabled="true">Apply</button>
   </div>
+
+  <script>
+    function updateApplyButton(alreadyApplied) {
+      // if already applied, flash message to screen notifying user and disable submit button
+      // else enable submit button
+      var applyButton = document.getElementById('apply-button');
+      if (alreadyApplied) {
+        applyButton.disabled = true;
+      } else {
+        applyButton.disabled = false;
+      }
+    }
+
+    function checkForApplication() {
+      let program_num = document.getElementById('program-select').value;
+
+      // ajax call to check if current user already applied to this program
+      $.ajax({
+        url: '/program_aplication/' + program_num,
+        method: 'GET',
+        contentType: 'application/json',
+
+        success: function(response) {
+          let alreadyApplied = response.json()['alreadyApplied'];
+          updateApplyButton(alreadyApplied);
+        }
+      });
+    }
+
+    document.getElementById('program-select').addEventListener('change', checkForApplication);
+  </script>
 </body>
 </html>
