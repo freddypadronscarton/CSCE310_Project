@@ -14,8 +14,8 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-    <h1> {{ current_user.f_name }}'s Landing Page</h1>
-    <h1> Student Type: {{ current_user.student_type }}</h1>
+    <h1> {{ current_user.first_name }}'s Landing Page</h1>
+    <h1> K-12 Student </h1>
 
     <!-- Form to Add New Item -->
     <h2>Add Item</h2>
@@ -26,21 +26,25 @@
     </form>
 
     <!-- Table to Display Items -->
+    {% if items %}
     <h2>Items</h2>
+    {% endif %}
     <table id="itemsTable">
+        {% if items %}
         <tr>
             <th>Name</th>
             <th>Description</th>
             <th>Actions</th>
         </tr>
+        {% endif %}
         {% for item in items %}
         <tr>
             <td>{{ item.name }}</td>
             <td>
-                <input type="text" id="desc_{{ item.id }}" value="{{ item.description }}">
-                <button onclick="updateItem({{ item.id }})">Update</button>
+                <input type="text" id="desc_{{ item.item_id }}" value="{{ item.description }}">
+                <button onclick="updateItem({{ item.item_id }})">Update</button>
             </td>
-            <td><button onclick="deleteItem({{ item.id }})">Delete</button></td>
+            <td><button onclick="deleteItem({{ item.item_id }})">Delete</button></td>
         </tr>
         {% endfor %}
     </table>
@@ -57,7 +61,7 @@
         $('#addItemForm').submit(function(e) {
             e.preventDefault();
             $.ajax({
-                url: '/item',
+                url: '/items/add',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ 
@@ -73,7 +77,7 @@
         // Delete item
         function deleteItem(id) {
             $.ajax({
-                url: '/item/' + id,
+                url: '/items/' + id,
                 method: 'DELETE',
                 success: function(response) {
                     window.location.reload(); 
@@ -84,7 +88,7 @@
         // Update item
         function updateItem(id) {
             $.ajax({
-                url: '/item/' + id,
+                url: '/items/update/' + id,
                 method: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify({ 

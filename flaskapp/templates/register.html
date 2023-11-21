@@ -14,24 +14,15 @@
     {% endwith %}
 
     <form action="{{ url_for('register') }}" method="post" onsubmit="return validateForm()">
+    
     <div class="form-group">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username">
-    </div> 
-
-    <div class="form-group">
-        <label for="email">Email:</label>
-        <input type="text" id="email" name="email">
+        <label for="uin">UIN:</label>
+        <input type="number" id="uin" name="uin">
     </div>
-
+    
     <div class="form-group">
-        <label for="f_name">First Name:</label>
-        <input type="text" id="f_name" name="f_name">
-    </div>
-
-    <div class="form-group">
-        <label for="l_name">Last Name:</label>
-        <input type="text" id="l_name" name="l_name">
+        <label for="first_name">First Name:</label>
+        <input type="text" id="first_name" name="first_name">
     </div>
 
     <div class="form-group">
@@ -40,48 +31,24 @@
     </div>
 
     <div class="form-group">
-        <label for="birth_date">Date of Birth: </label>
-        <input type="date" id="birth_date" name="birth_date">
+        <label for="last_name">Last Name:</label>
+        <input type="text" id="last_name" name="last_name">
+    </div>
+    
+    <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username">
     </div>
 
     <div class="form-group">
-        <label for="gender">Gender:</label>
-        <select id="gender" name="gender">
-            <option value="Not Selected">Please select</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-            <option value="Not Selected">Choose to not identify</option>
-        </select>
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email">
     </div>
 
+    
     <div class="form-group">
-        <label for="phone_number">Phone Number:</label>
-        <input type="tel" id="phone_number" name="phone_number" placeholder="123-456-7890">
-    </div>
-
-    <div class="form-group">
-        <label for="hispanic_or_latino">Hispanic or Latino:</label>
-        <input type="checkbox" id="hispanic_or_latino" name="hispanic_or_latino">
-    </div>
-
-    <div class="form-group">
-        <label for="race">Race:</label>
-        <select id="race" name="race">
-            <option value="">Please select</option>
-            <option value="asian">Asian</option>
-            <option value="black">Black or African American</option>
-            <option value="hispanic">Hispanic or Latino</option>
-            <option value="white">White</option>
-            <option value="native_american">Native American or Alaska Native</option>
-            <option value="pacific_islander">Native Hawaiian or Other Pacific Islander</option>
-            <option value="other">Other</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="school">School:</label>
-        <input type="text" id="school" name="school">
+        <label for="discord">Discord Username:</label>
+        <input type="text" id="discord" name="discord">
     </div>
 
     <!-- User Type Selector -->
@@ -95,24 +62,85 @@
         </select>
     </div>
 
-    <!-- Admin Fields -->
-    <div id="admin_fields" style="display:none;">
-        <div class="form-group">
-            <label for="title">Title:</label>
-            <input type="text" id="title" name="title">
-        </div>
-    </div>
-
     <!-- College Student Fields -->
     <div id="college_student_fields" style="display:none;">
+    
         <div class="form-group">
-            <label for="uin">UIN:</label>
-            <input type="number" id="uin" name="uin">
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender">
+                <option value="Not Selected">Please select</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="hispanic_or_latino">Hispanic or Latino:</label>
+            <input type="checkbox" id="hispanic_or_latino" name="hispanic_or_latino">
+        </div>
+
+        <div class="form-group">
+            <label for="race">Race:</label>
+            <select id="race" name="race">
+                <option value="">Please select</option>
+                <option value="asian">Asian</option>
+                <option value="black">Black or African American</option>
+                <option value="hispanic">Hispanic or Latino</option>
+                <option value="white">White</option>
+                <option value="native_american">Native American or Alaska Native</option>
+                <option value="pacific_islander">Native Hawaiian or Other Pacific Islander</option>
+                <option value="other">Other</option>
+            </select>
         </div>
 
         <div class="form-group">
             <label for="first_gen">First Generation Student:</label>
             <input type="checkbox" id="first_gen" name="first_gen">
+        </div>
+
+        <div class="form-group">
+            <label for="US_citizen">US Citizen:</label>
+            <input type="checkbox" id="US_citizen" name="US_citizen">
+        </div>
+
+        <div class="form-group">
+            <label for="birth_date">Date of Birth: </label>
+            <input type="date" id="birth_date" name="birth_date">
+        </div>
+
+        <div class="form-group">
+            <label for="gpa">GPA:</label>
+            <input type="number" id="gpa" name="gpa" min="0.0" max="4.0" step="0.01">
+        </div>
+        
+        <div class="form-group">
+            <label for="major">Major:</label>
+            <input type="text" id="major" name="major">
+        </div>
+
+        <div class="form-group">
+            <label for="minor">Minor:</label>
+            <input type="text" id="minor" name="minor">
+        </div>
+
+        <div class="form-group">
+            <label for="second_minor">Second Minor:</label>
+            <input type="text" id="second_minor" name="second_minor">
+        </div>
+
+        <div class="form-group">
+            <label for="Exp_Graduation">Expected Graduation:</label>
+            <select id="Exp_Graduation" name="Exp_Graduation">
+                {% for year in range(current_year, current_year + 6) %}
+                    <option value="{{ year }}">{{ year }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    
+        <div class="form-group">
+            <label for="school">School:</label>
+            <input type="text" id="school" name="school">
         </div>
 
         <div class="form-group">
@@ -128,46 +156,85 @@
         </div>
 
         <div class="form-group">
-            <label for="US_citizen">US Citizen:</label>
-            <input type="checkbox" id="US_citizen" name="US_citizen">
-        </div>
-
-        <div class="form-group">
-            <label for="major">Major:</label>
-            <input type="text" id="major" name="major">
-        </div>
-
-        <div class="form-group">
-            <label for="second_major">Second Major:</label>
-            <input type="text" id="second_major" name="second_major">
-        </div>
-
-        <div class="form-group">
-            <label for="minor">Minor:</label>
-            <input type="text" id="minor" name="minor">
-        </div>
-
-        <div class="form-group">
-            <label for="second_minor">Second Minor:</label>
-            <input type="text" id="second_minor" name="second_minor">
-        </div>
-
-        <div class="form-group">
-            <label for="gpa">GPA:</label>
-            <input type="number" id="gpa" name="gpa">
+            <label for="phone_number">Phone Number:</label>
+            <input type="tel" id="phone_number" name="phone_number" placeholder="123-456-7890">
         </div>
     </div>
 
     <!-- K12 Student Fields -->
     <div id="k12_student_fields" style="display:none;">
         <div class="form-group">
-            <label for="grade">Grade:</label>
-            <input type="number" id="grade" name="grade">
+            <label for="k12_gender">Gender:</label>
+            <select id="k12_gender" name="k12_gender">
+                <option value="Not Selected">Please select</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
         </div>
 
         <div class="form-group">
-            <label for="US_citizen">US Citizen:</label>
-            <input type="checkbox" id="US_citizen" name="US_citizen">
+            <label for="k12_hispanic_or_latino">Hispanic or Latino:</label>
+            <input type="checkbox" id="k12_hispanic_or_latino" name="k12_hispanic_or_latino">
+        </div>
+
+        <div class="form-group">
+            <label for="k12_race">Race:</label>
+            <select id="k12_race" name="k12_race">
+                <option value="">Please select</option>
+                <option value="asian">Asian</option>
+                <option value="black">Black or African American</option>
+                <option value="hispanic">Hispanic or Latino</option>
+                <option value="white">White</option>
+                <option value="native_american">Native American or Alaska Native</option>
+                <option value="pacific_islander">Native Hawaiian or Other Pacific Islander</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="k12_first_gen">First Generation Student:</label>
+            <input type="checkbox" id="k12_first_gen" name="k12_first_gen">
+        </div>
+
+        <div class="form-group">
+            <label for="k12_US_citizen">US Citizen:</label>
+            <input type="checkbox" id="k12_US_citizen" name="k12_US_citizen">
+        </div>
+
+        <div class="form-group">
+            <label for="k12_birth_date">Date of Birth: </label>
+            <input type="date" id="k12_birth_date" name="k12_birth_date">
+        </div>
+
+        <div class="form-group">
+            <label for="k12_school">School:</label>
+            <input type="text" id="k12_school" name="k12_school">
+        </div>
+
+        <div class="form-group">
+            <label for="k12_classification">Grade:</label>
+            <select id="k12_classification" name="k12_classification">
+                <option value="">Please select</option>
+                <option value="K">K</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="1">5</option>
+                <option value="2">6</option>
+                <option value="3">7</option>
+                <option value="4">8</option>
+                <option value="1">9</option>
+                <option value="2">10</option>
+                <option value="3">11</option>
+                <option value="4">12</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="k12_phone_number">Phone Number:</label>
+            <input type="tel" id="k12_phone_number" name="k12_phone_number" placeholder="123-456-7890">
         </div>
     </div>
 
@@ -214,14 +281,28 @@
 </style>
 <script>
     // Auto-format for phone number
-    document.getElementById('phone_number').addEventListener('input', function (e) {
+    function setupPhoneNumberFormatting() {
+        var phoneInput = document.getElementById('phone_number');
+        var k12PhoneInput = document.getElementById('k12_phone_number');
+
+        if (phoneInput) {
+            phoneInput.addEventListener('input', formatPhoneNumber);
+        }
+
+        if (k12PhoneInput) {
+            k12PhoneInput.addEventListener('input', formatPhoneNumber);
+        }
+    }
+
+    function formatPhoneNumber(e) {
         var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
         e.target.value = !x[2] ? x[1] : x[1] + '-' + x[2] + (x[3] ? '-' + x[3] : '');
-    });
+    }
+
+    setupPhoneNumberFormatting();
 
     function showUserTypeFields() {
         var userType = document.getElementById('user_type').value;
-        document.getElementById('admin_fields').style.display = (userType === 'admin') ? 'block' : 'none';
         document.getElementById('college_student_fields').style.display = (userType === 'college_student') ? 'block' : 'none';
         document.getElementById('k12_student_fields').style.display = (userType === 'k12_student') ? 'block' : 'none';
     }

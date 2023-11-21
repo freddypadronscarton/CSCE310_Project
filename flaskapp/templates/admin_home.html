@@ -14,10 +14,10 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-    <h1> {{ current_user.f_name }}'s User Management</h1>
+    <h1> {{ current_user.first_name }}'s User Management</h1>
 
     <!-- Table to Display Items -->
-    <h2>Users</h2>
+    <h2>Current Users</h2>
     <table id="usersTable">
         <tr>
             <th>Username</th>
@@ -28,27 +28,30 @@
             <th>Actions</th>
         </tr>
         {% for user in users %}
-        <tr>
-            <td>{{ user.username }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.f_name }}</td>
-            <td>{{ user.l_name }}</td>
-            <td>
-                <select id= "user_type_{{user.user_id}}" name="user_type" data-id = {{user.user_id}} data-student = {{user.student_type}} data-admin = {{user.is_admin}}>
-                    <option value="k12_student" {% if user.student_type == "k12_student" %} Selected {% endif%}>K-12 Student</option>
-                    <option value="college_student"  {% if user.student_type == "college_student" %} Selected {% endif%}>College Student</option>
-                    <option value="admin"  {% if user.is_admin == "True" %} Selected {% endif%} >Admin</option>
-                </select>
-            </td>
-            <td>
-                <button onclick="deleteUser({{user.user_id}})">Delete</button>
-                {% if user.archived %}
-                    <button onclick="updateUser('archived', {{user.user_id}}, 0)">Unarchive</button>
-                {% else %}
-                    <button onclick="updateUser('archived', {{user.user_id}}, 1)">Archive</button>
-                {% endif %}
-            </td>
-        </tr>
+            {% if user.uin|int != current_user.uin|int %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.first_name }}</td>
+                    <td>{{ user.last_name }}</td>
+                    <td>
+                        <select id= "user_type_{{user.uin}}" name="user_type" data-uin = {{user.uin}} data-usertype = {{user.user_type}} >
+                            <option value="k12_student" {% if user.user_type == "k12_student" %} Selected {% endif%}>K-12 Student</option>
+                            <option value="college_student"  {% if user.user_type == "college_student" %} Selected {% endif%}>College Student</option>
+                            <option value="admin"  {% if user.user_type == "admin" %} Selected {% endif%} >Admin</option>
+                        </select>
+                    </td>
+                    <td>
+                        <button onclick="deleteUser({{user.uin}})">Delete</button>
+                        {% if user.archived %}
+                            <button onclick="updateUser('Archived', {{user.uin}}, 0)">Unarchive</button>
+                        {% else %}
+                            <button onclick="updateUser('Archived', {{user.uin}}, 1)">Archive</button>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+            {% endif %}
         {% endfor %}
     </table>
 
@@ -66,9 +69,9 @@
         //AJAX calls
 
         // Delete User
-        function deleteUser(id) {
+        function deleteUser(uin) {
             $.ajax({
-                url: `/admin/delete_user/${id}`,
+                url: `/admin/delete_user/${uin}`,
                 method: 'DELETE',
                 success: function(response) {
                     window.location.reload(); 
@@ -77,13 +80,13 @@
         }   
 
         // update user: called for archive
-        function updateUser(field, id, value) {
+        function updateUser(field, uin, value) {
             $.ajax({
-                url: `/admin/update_user/${id}`,
+                url: `/admin/update_user/${uin}`,
                 method: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify({ 
-                    'user_id': id,
+                    'uin': uin,
                     'field':field,
                     'value': value
                 }),
@@ -95,13 +98,20 @@
 
         $('select[name="user_type"]').change(function() {
             var selectedUserType = $(this).val();
-            var user_id = $(this).data('id');
+            var uin = $(this).data('uin');
+
+            // Revert any previously changed selectors
+            $('select[name="user_type"]').each(function() {
+                if ($(this).data('uin') != uin) {
+                    $(this).val($(this).data('usertype'));
+                }
+            });
             
             // store the current user_type (before change)
             var current_user_type; 
-            if ($(this).data('admin') == "True"){
+            if ($(this).data('usertype') == 'admin'){
                 current_user_type = "admin";
-            } else if ($(this).data('student') == 'college_student'){
+            } else if ($(this).data('usertype') == 'college_student'){
                 current_user_type = "college_student";
             } else{
                 current_user_type = "k12_student";
@@ -114,7 +124,7 @@
                     method: 'POST',
                     data: { 
                         user_type: selectedUserType,
-                        user_id: user_id
+                        uin: uin
                      },
                     success: function(response) {
                         $('#userTypeFrom').html(response).show();
