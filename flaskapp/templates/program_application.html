@@ -6,6 +6,10 @@
   <title>Program Application</title>
 </head>
 <body>
+  <a href="program_management.html">
+    <button>< Back</button>
+  </a>
+
   <!-- Flash Messages -->
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
@@ -37,6 +41,8 @@
       <input id="purpose-statement" type="text">
     </div>
 
+    <!-- Need form group to handle uploading documents to application -->
+
     <br>
     <div class="form-group">
       <button id="apply-button" type="submit" disabled="true">Apply</button>
@@ -45,8 +51,7 @@
 
   <script>
     function updateApplyButton(alreadyApplied) {
-      // if already applied, flash message to screen notifying user and disable submit button
-      // else enable submit button
+      // if already applied (python code will flash) this function will disable submit button, else it enable submit button
       var applyButton = document.getElementById('apply-button');
       if (alreadyApplied) {
         applyButton.disabled = true;
@@ -63,7 +68,6 @@
         url: '/program_aplication/' + program_num,
         method: 'GET',
         contentType: 'application/json',
-
         success: function(response) {
           let alreadyApplied = response.json()['alreadyApplied'];
           updateApplyButton(alreadyApplied);
@@ -71,6 +75,7 @@
       });
     }
 
+    // triggers every time a new program is selected, checks if user has already applied to that program
     document.getElementById('program-select').addEventListener('change', checkForApplication);
   </script>
 </body>
