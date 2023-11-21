@@ -224,9 +224,33 @@ def add_new_application():
 @app.route('/program_review')
 def get_applied_programs():
     conn = get_db_connection()
-    applied_programs = conn.execute('SELECT * FROM Programs WHERE Program_Num in (SELECT * FROM Application WHERE UIN = ?)', (current_user.id)).fetchall()
+    applied_programs = conn.execute("""
+                                    SELECT Programs.Program_Num, Programs.Name, Programs.Description, Applied.App_Num FROM Programs 
+                                    INNER JOIN 
+                                    (SELECT * FROM Application WHERE UIN = ?) AS Applied 
+                                    ON Programs.Program_Num = Applied.Program_Num
+                                    """,
+                                     (current_user.id)).fetchall()
+    accepted_programs = conn.execute('SELECT * FROM Track WHERE Student_Num = ?', (current_user.id)).fetchall()
+    programs = []
+    programs_status = []
+    for program in applied_programs:
+      programs.append(program)
+      program_found = False
+      #if (applied_programs[i][index of programNUM] in accepted for accepted in accpeted_programs):
+      for accepted in accepted_programs:
+        if (program[0] == accepted[0]):
+          program_found = True
+
+      if (program_found):
+        programs_status.append(True)
+      else:
+        programs_status.append(False)
+    
+    applications = [{"program": p, "status": st} for p, st in zip(programs, programs_status)]
+    
     conn.closes()
-    return render_template('program_review.html', applied_programs=applied_programs)
+    return render_template('program_review.html', applications=applications)
 
 
 @app.route("/logout", methods=['POST'])

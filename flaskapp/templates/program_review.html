@@ -16,11 +16,11 @@
       <th>Application Status</th>
       <th>Modify</th>
     </tr>
-    <% for program in applied_programs %>
-    <tr>
-      <td>{{ program.name }}</td>
-      <td>{{ program.description }}</td>
-      <td>status</td>
+    <% for application in applications %>
+    <tr data-app-num="{{ application.program[2] }}">
+      <td>{{ application.program[1] }}</td>
+      <td>{{ application.program[2] }}</td>
+      <td>{{ application.status }}</td>
       <td>
         <button>Update</button>
         <button>Delete</button>
