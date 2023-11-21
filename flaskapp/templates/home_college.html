@@ -45,6 +45,19 @@
         {% endfor %}
     </table>
 
+    <!-- Program Application Management Section -->
+    <div>
+      <a href="{{ url_for('program_application') }}">
+        <button>Apply</button>
+      </a>
+      <a href="program_review.html">
+        <button>Review Applications</button>
+      </a>
+      <a>
+        <button>Update Applications</button>
+      </a>
+    </div>
+
     <!-- Logout Button -->
     <form action="{{ url_for('logout') }}" method="post">
         <button type="submit">Logout</button>

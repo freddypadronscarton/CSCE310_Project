@@ -181,7 +181,7 @@ def print_query_results(results, column_names):
 
 # Program Info Management Pages
 @app.route('/program_application', methods=['GET'])
-def application(): 
+def program_application(): 
     conn = get_db_connection()
 
     if current_user.is_admin == "True":
