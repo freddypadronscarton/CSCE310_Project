@@ -232,20 +232,22 @@ def get_applied_programs():
                                     """,
                                      (current_user.id)).fetchall()
     accepted_programs = conn.execute('SELECT * FROM Track WHERE Student_Num = ?', (current_user.id)).fetchall()
+
     programs = []
     programs_status = []
     for program in applied_programs:
-      programs.append(program)
-      program_found = False
-      #if (applied_programs[i][index of programNUM] in accepted for accepted in accpeted_programs):
-      for accepted in accepted_programs:
-        if (program[0] == accepted[0]):
-          program_found = True
+        programs.append(program)
 
-      if (program_found):
-        programs_status.append(True)
-      else:
-        programs_status.append(False)
+      # looking to see if user has been accepted to the program yet
+        program_found = False
+        for accepted in accepted_programs:
+            if (program[0] == accepted[0]):
+                program_found = True
+        
+        if (program_found):
+            programs_status.append(True)
+        else:
+            programs_status.append(False)
     
     applications = [{"program": p, "status": st} for p, st in zip(programs, programs_status)]
     
