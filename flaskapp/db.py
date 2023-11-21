@@ -50,6 +50,23 @@ def init_sqlite_db():
                     )
                 ''')
 
+    # PROGRAMS TABLE
+    conn.execute(''' CREATE TABLE IF NOT EXISTS programs (
+                    program_num INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT,
+                    description TEXT
+                    )''')
+    
+    # APPLICATION TABLE
+    conn.execute('''CREATE TABLE IF NOT EXISTS application (
+                    app_num INTEGER PRIMARY KEY AUTOINCREMENT,
+                    FOREIGN KEY(program_num) REFERENCES Programs(program_num),
+                    FOREIGN KEY(UIN) REFERENCES College_students(UIN),
+                    uncom_cert TEXT,
+                    com_cert TEXT,
+                    purpose_statement TEXT
+                    )''')
+
     print("Table created successfully")
     conn.close()
 
