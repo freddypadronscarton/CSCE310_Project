@@ -192,16 +192,28 @@ def application():
       conn.close()
       return render_template('program_application', programs=programs)
   
-@app.rout('/program_application/<int:Program_Num>', methods=['GET'])
-def checkIfAlreadyApplied(Program_Num):
+@app.route('/program_application/<int:Program_Num>', methods=['GET'])
+def check_if_already_applied(program_num):
     conn = get_db_connection()
-    alreadyApplied = conn.execute("SELECT COUNT(*) FROM Application WHERE Program_Num = ? AND UIN = ?", (Program_Num, current_user.id)).fetchone()
+    alreadyApplied = conn.execute("SELECT COUNT(*) FROM Application WHERE Program_Num = ? AND UIN = ?", (program_num, current_user.id)).fetchone()
     conn.close()
     if (alreadyApplied > 0):
         flash("You've already applied to this program")
         return jsonify({'alreadyApplied': True})
     else:
         return jsonify({'alreadyApplied': False})
+    
+@app.route('/program_application/<int:Program_Num>', method=['POST'])
+def add_new_application(program_num, uncom_cert, com_cert, purpose_statement):
+    conn = get_db_connection()
+    # get next available application num
+    app_num = conn.execute('SELECT MAX(App_Num) FROM Application').fetchone() + 1
+    print(app_num) # debugging statement
+    conn.execute('INSERT INTO Application (App_Num, Program_Num, UIN, Uncom_cert, Com_Cert, Purpose_statement) VALUES (?, ?, ?, ?, ?, ?)',
+                 (app_num, program_num, current_user.id, uncom_cert, com_cert, purpose_statement))
+    conn.commit()
+    conn.close()
+    return jsonify({"message": "application sent"})
 
 
 @app.route("/logout", methods=['POST'])
