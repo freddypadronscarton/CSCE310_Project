@@ -180,7 +180,7 @@ def print_query_results(results, column_names):
 
 
 # Program Info Management Pages
-@app.route('/program_application', method=['GET'])
+@app.route('/program_application', methods=['GET'])
 def application(): 
     conn = get_db_connection()
 
@@ -203,7 +203,7 @@ def check_if_already_applied(program_num):
     else:
         return jsonify({'alreadyApplied': False})
     
-@app.route('/program_application', method=['POST'])
+@app.route('/program_application', methods=['POST'])
 def add_new_application():
     program_num = request.form['program_num']
     uncom_cert = request.form['uncom_cert']
