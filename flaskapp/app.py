@@ -192,7 +192,7 @@ def application():
       conn.close()
       return render_template('program_application', programs=programs)
   
-@app.route('/program_application/<int:Program_Num>', methods=['GET'])
+@app.route('/program_application/<int:Program_Num>', methods=['GET']) # FIXME: MAKE PROGRAM NUM COME FROM FORM AND NOT THE URL??
 def check_if_already_applied(program_num):
     conn = get_db_connection()
     alreadyApplied = conn.execute("SELECT COUNT(*) FROM Application WHERE Program_Num = ? AND UIN = ?", (program_num, current_user.id)).fetchone()
@@ -203,8 +203,13 @@ def check_if_already_applied(program_num):
     else:
         return jsonify({'alreadyApplied': False})
     
-@app.route('/program_application/<int:Program_Num>', method=['POST'])
-def add_new_application(program_num, uncom_cert, com_cert, purpose_statement):
+@app.route('/program_application', method=['POST'])
+def add_new_application():
+    program_num = request.form['program_num']
+    uncom_cert = request.form['uncom_cert']
+    com_cert = request.form['com_cert']
+    purpose_statement = request.form['purpose_statement']
+
     conn = get_db_connection()
     # get next available application num
     app_num = conn.execute('SELECT MAX(App_Num) FROM Application').fetchone() + 1

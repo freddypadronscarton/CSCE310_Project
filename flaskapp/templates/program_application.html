@@ -21,20 +21,27 @@
     <% endfor %>
   </select>
 
-  <div>
-    <p>
-      Are you currently enrolled in other uncompleted certifications sponsored by the Cybersecurity Center?
-    </p>
-    <input id="uncom-cert" type="text">
-    <p>
-      Have you completed any cybersecurity industry certifications via the Cybersecurity Center?
-    </p>
-    <input id="com-cert" type="text">
-    <p>Please provide your purpose statement: </p>
-    <input id="purpose-statement" type="text">
+  <form action="{{ urlfor(add_new_application) }}" method="post">
+    <div class="form-group">
+      <p>Are you currently enrolled in other uncompleted certifications sponsored by the Cybersecurity Center?</p>
+      <input id="uncom-cert" type="text">
+    </div>
+
+    <div class="form-group">      
+      <p>Have you completed any cybersecurity industry certifications via the Cybersecurity Center?</p>
+      <input id="com-cert" type="text">
+    </div>
+
+    <div class="form-group">      
+      <p>Please provide your purpose statement: </p>
+      <input id="purpose-statement" type="text">
+    </div>
+
     <br>
-    <button id="apply-button" type="submit" disabled="true">Apply</button>
-  </div>
+    <div class="form-group">
+      <button id="apply-button" type="submit" disabled="true">Apply</button>
+    </div>
+  </form>
 
   <script>
     function updateApplyButton(alreadyApplied) {
