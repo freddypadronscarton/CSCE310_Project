@@ -221,6 +221,14 @@ def add_new_application():
     return jsonify({"message": "application sent"})
 
 
+@app.route('/program_review')
+def get_applied_programs():
+    conn = get_db_connection()
+    applied_programs = conn.execute('SELECT * FROM Programs WHERE Program_Num in (SELECT * FROM Application WHERE UIN = ?)', (current_user.id)).fetchall()
+    conn.closes()
+    return render_template('program_review.html', applied_programs=applied_programs)
+
+
 @app.route("/logout", methods=['POST'])
 @login_required
 def logout():
