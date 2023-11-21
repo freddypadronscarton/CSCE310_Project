@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Landing Page</title>
+    <title>K12 Student Landing Page</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
@@ -14,46 +14,37 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-    <h1> {{ current_user.f_name }}'s User Management</h1>
+    <h1> {{ current_user.first_name }}'s Landing Page</h1>
+    <h1> K-12 Student </h1>
+
+    <!-- Form to Add New Item -->
+    <h2>Add Item</h2>
+    <form id="addItemForm">
+        <input type="text" id="name" placeholder="Name" required>
+        <input type="text" id="description" placeholder="Description" required>
+        <button type="submit">Add Item</button>
+    </form>
 
     <!-- Table to Display Items -->
-    <h2>Users</h2>
-    <table id="usersTable">
+    {% if items %}
+    <h2>Items</h2>
+    {% endif %}
+    <table id="itemsTable">
+        {% if items %}
         <tr>
-            <th>Username</th>
-            <th>Email</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>User Type</th>
+            <th>Name</th>
+            <th>Description</th>
             <th>Actions</th>
         </tr>
-        {% for user in users %}
+        {% endif %}
+        {% for item in items %}
         <tr>
-            <td>{{ user.username }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.f_name }}</td>
-            <td>{{ user.l_name }}</td>
-            {% if user.is_admin == "True" %}
-                <td>Admin</td>
-            {% elif user.student_type == "k12_student" %}
-                <td>K-12 Student</td>
-            {% else %}
-                <td>College Student</td>
-            {% endif %}
+            <td>{{ item.name }}</td>
             <td>
-                <button onclick="saveUserType({{user.user_id}})">Save</button>
-
-                <button onclick="deleteUser({{user.user_id}})">Delete</button>
-
-                {% if user.is_admin == "True" and user.archived %}
-                    <button onclick="updateUser('archived', {{user.user_id}}, 0)">Authorize</button>
-                {% elif user.archived %}
-                    <button onclick="updateUser('archived', {{user.user_id}}, 0)">Unarchive</button>
-                {% else %}
-                    <button onclick="updateUser('archived', {{user.user_id}}, 1)">Archive</button>
-                {% endif %}
-            
+                <input type="text" id="desc_{{ item.item_id }}" value="{{ item.description }}">
+                <button onclick="updateItem({{ item.item_id }})">Update</button>
             </td>
+            <td><button onclick="deleteItem({{ item.item_id }})">Delete</button></td>
         </tr>
         {% endfor %}
     </table>
@@ -70,7 +61,7 @@
         $('#addItemForm').submit(function(e) {
             e.preventDefault();
             $.ajax({
-                url: '/item',
+                url: '/items/add',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ 
@@ -83,26 +74,26 @@
             });
         });
 
-        // Delete User
-        function deleteUser(id) {
+        // Delete item
+        function deleteItem(id) {
             $.ajax({
-                url: `/admin/delete_user/${id}`,
+                url: '/items/' + id,
                 method: 'DELETE',
                 success: function(response) {
                     window.location.reload(); 
                 }
             });
-        }   
+        }
 
-        function updateUser(field, id, value) {
+        // Update item
+        function updateItem(id) {
             $.ajax({
-                url: `/admin/update_user/${id}`,
+                url: '/items/update/' + id,
                 method: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify({ 
-                    'user_id': id,
-                    'field':field,
-                    'value': value
+                    name: $('#name_' + id).val(), 
+                    description: $('#desc_' + id).val()
                 }),
                 success: function(response) {
                     window.location.reload();
