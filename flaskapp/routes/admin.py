@@ -99,4 +99,23 @@ def view_all_programs():
     programs = get_all_programs(conn)
     conn.close()
     return render_template("admin_view_programs.html", programs=programs)
-    
+  
+# ENDPOINT FOR ARCHIVING AND UNARCHIVING PROGRAMS
+@admin_bp.route('/archive_program', methods=['PUT'])
+@login_required
+def archive_program():
+    data = request.get_json()
+    conn = get_db_connection()
+    update_program_archive_status(conn, data["program_num"], data["archive"])
+    conn.close()
+    return jsonify({"user archive status": data["archive"]})
+
+# ENDPOINT FOR DELETEING A PROGRAM
+@admin_bp.route('/delete_program/<int:program_num>', methods=['DELETE'])
+@login_required
+def delete_program(program_num):
+    conn = get_db_connection()
+    print(type(program_num))
+    delete_program_backend(conn, program_num)
+    conn.close()
+    return jsonify({"change": "program deleted"})
