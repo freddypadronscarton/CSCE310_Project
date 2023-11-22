@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin View All Programs</title>
+  <title>Admin View Programs</title>
 </head>
 <body>
   <table>
@@ -13,7 +13,7 @@
       <th>Generate Report</th>
       <th>Modify</th>
     </tr>
-    <% for program in all_programs %>
+    {% for program in programs %}
     <tr>
       <td>{{ program.name }}</td>
       <td>{{ program.description }}</td>
@@ -22,12 +22,12 @@
       </td>
       <td>
         <button>Update</button>
-        <!-- Look at admin_home.html for idea of how archived code will work -->
         <button>Archive</button>
         <button>Delete</button>
       </td>
     </tr>
-    <% endfor %>
+    {% endfor %}
+    <!-- Look at admin_home.html for idea of how archived code will work -->
   </table>
 </body>
 </html>

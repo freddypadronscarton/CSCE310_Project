@@ -96,7 +96,7 @@ def add_program():
 @login_required
 def view_all_programs():
     conn = get_db_connection()
-    all_programs = get_all_programs(conn)
+    programs = get_all_programs(conn)
     conn.close()
-    return render_template("admin_view_programs.html", all_programs=all_programs)
+    return render_template("admin_view_programs.html", programs=programs)
     
