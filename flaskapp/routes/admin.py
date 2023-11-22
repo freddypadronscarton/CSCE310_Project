@@ -84,19 +84,19 @@ def add_program():
         program_exist = is_program_name_taken(conn, program_name)
         if program_exist:
             flash("A program of this name already exists")
+            conn.close()
         else:
             add_new_program(conn, program_name, program_descr)
-        conn.close()
-        return render_template("admin_home.html")
-    else:
-      return render_template("admin_add_program.html")
+            conn.close()
+            return render_template("admin_home.html")
+    return render_template("admin_add_program.html")
     
 # ENDPOINT FOR ADMIN TO VIEW ALL PROGRAMS
-@admin_bp.route('/view_programs', methods=['GET', 'PUT'])
+@admin_bp.route('/view_programs', methods=['GET'])
 @login_required
 def view_all_programs():
     conn = get_db_connection()
     all_programs = get_all_programs(conn)
     conn.close()
-    return render_template('admin_view_programs.html  ', all_programs=all_programs)
+    return render_template("admin_view_programs.html", all_programs=all_programs)
     

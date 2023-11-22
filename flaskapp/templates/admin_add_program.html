@@ -6,6 +6,19 @@
   <title>Admin Add Program</title>
 </head>
 <body>
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <a href="{{ url_for('home') }}">
+    <button>< Back</button>
+  </a>
+
   <h1>Add New Program</h1>
   <form action="{{ url_for('admin_bp.add_program') }}" method="POST">
     <div class="form-group">
