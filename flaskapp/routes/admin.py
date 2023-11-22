@@ -71,3 +71,23 @@ def save_user_type():
     conn.close()
     
     return redirect(url_for('home'))
+
+# ENDPOINT FOR ADDING PROGRAMS
+@admin_bp.route('/add_program', methods=['GET', 'POST'])
+@login_required
+def add_program():
+    if (request.method == "POST"):
+        program_name = request.form['program_name']
+        program_descr = request.form['program_descr']
+        print(program_name)
+        conn = get_db_connection()
+        program_exist = conn.execute('SELECT COUNT(*) FROM Programs WHERE name=?', (program_name, )).fetchone()[0]
+        if (program_exist > 0):
+            flash("A program of this name already exists")
+        else:
+            conn.execute('INSERT INTO Programs (name, description) VALUES (?, ?)', (program_name, program_descr))
+            conn.commit()
+        conn.close()
+        return render_template("admin_home.html")
+    else:
+      return render_template("admin_add_program.html")

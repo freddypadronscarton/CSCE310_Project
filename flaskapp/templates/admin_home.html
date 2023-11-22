@@ -16,6 +16,17 @@
     {% endwith %}
     <h1> {{ current_user.first_name }}'s User Management</h1>
 
+    <!-- Buttons for managing available programs -->
+    <h2>Program Management</h2>
+    <div>
+      <a href="{{ url_for('admin_bp.add_program') }}">
+        <button>Add Program</button>
+      </a>
+      <a>
+        <button>View Programs</button>
+      </a>
+    </div>
+
     <!-- Table to Display Items -->
     <h2>Current Users</h2>
     <table id="usersTable">

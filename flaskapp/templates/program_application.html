@@ -20,8 +20,8 @@
   {% endwith %}
 
   <select id="program-select">
-    <% for progrm in programs %>
-    <option value="{{ program.Program_Num }}">{{ program.name }}</option>
+    <% for program in programs %>
+    <option value="{{ program.program_num }}">{{ program.name }}</option>
     <% endfor %>
   </select>
 
