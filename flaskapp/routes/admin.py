@@ -115,7 +115,6 @@ def archive_program():
 @login_required
 def delete_program(program_num):
     conn = get_db_connection()
-    print(type(program_num))
     delete_program_backend(conn, program_num)
     conn.close()
     return jsonify({"change": "program deleted"})
