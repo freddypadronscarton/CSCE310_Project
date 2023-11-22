@@ -54,7 +54,8 @@ def init_sqlite_db():
     conn.execute(''' CREATE TABLE IF NOT EXISTS Programs (
                     program_num INTEGER PRIMARY KEY AUTOINCREMENT,
                     name TEXT,
-                    description TEXT
+                    description TEXT,
+                    archived INTEGER
                     )''')
     
     # APPLICATION TABLE

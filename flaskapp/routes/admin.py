@@ -4,6 +4,7 @@ from flask_login import login_required
 from datetime import datetime
 from db import *
 from util.Users import *
+from util.Programs import *
 
 admin_bp = Blueprint('admin_bp', __name__)
 
@@ -79,15 +80,23 @@ def add_program():
     if (request.method == "POST"):
         program_name = request.form['program_name']
         program_descr = request.form['program_descr']
-        print(program_name)
         conn = get_db_connection()
-        program_exist = conn.execute('SELECT COUNT(*) FROM Programs WHERE name=?', (program_name, )).fetchone()[0]
-        if (program_exist > 0):
+        program_exist = is_program_name_taken(conn, program_name)
+        if program_exist:
             flash("A program of this name already exists")
         else:
-            conn.execute('INSERT INTO Programs (name, description) VALUES (?, ?)', (program_name, program_descr))
-            conn.commit()
+            add_new_program(conn, program_name, program_descr)
         conn.close()
         return render_template("admin_home.html")
     else:
       return render_template("admin_add_program.html")
+    
+# ENDPOINT FOR ADMIN TO VIEW ALL PROGRAMS
+@admin_bp.route('/view_programs', methods=['GET', 'PUT'])
+@login_required
+def view_all_programs():
+    conn = get_db_connection()
+    all_programs = get_all_programs(conn)
+    conn.close()
+    return render_template('admin_view_programs.html  ', all_programs=all_programs)
+    

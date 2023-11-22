@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin View All Programs</title>
+</head>
+<body>
+  <table>
+    <tr>
+      <th>Program Name</th>
+      <th>Progam Description</th>
+      <th>Generate Report</th>
+      <th>Modify</th>
+    </tr>
+    <% for program in all_programs %>
+    <tr>
+      <td>{{ program.name }}</td>
+      <td>{{ program.description }}</td>
+      <td>
+        <button>Get Report</button>
+      </td>
+      <td>
+        <button>Update</button>
+        <!-- Look at admin_home.html for idea of how archived code will work -->
+        <button>Archive</button>
+        <button>Delete</button>
+      </td>
+    </tr>
+    <% endfor %>
+  </table>
+</body>
+</html>
