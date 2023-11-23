@@ -147,15 +147,9 @@ def home():
 @app.route('/program_application')
 def program_application(): 
     conn = get_db_connection()
-
-    if current_user.user_type == "admin":
-      # FIXME: ADD CORRECT MANAGER CODE LATER
-      conn.close()
-    else:
-      conn.execute('INSERT INTO programs (name, description) VALUES ("program1", "placeholder program")')
-      programs = conn.execute('SELECT * FROM programs').fetchall()
-      conn.close()
-      return render_template('program_application.html', programs=programs)
+    programs = conn.execute('SELECT * FROM programs').fetchall()
+    conn.close()
+    return render_template('program_application.html', programs=programs)
   
 @app.route('/program_application/<int:Program_Num>', methods=['GET']) # FIXME: MAKE PROGRAM NUM COME FROM FORM AND NOT THE URL??
 def check_if_already_applied(program_num):

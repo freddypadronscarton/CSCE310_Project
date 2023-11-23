@@ -20,25 +20,25 @@
   {% endwith %}
 
   <select id="program-select">
-    <% for program in programs %>
+    {% for program in programs %}
     <option value="{{ program.program_num }}">{{ program.name }}</option>
-    <% endfor %>
+    {% endfor %}
   </select>
 
-  <form action="{{ urlfor(add_new_application) }}" method="post">
+  <form action="{{ url_for('add_new_application') }}" method="post">
     <div class="form-group">
-      <p>Are you currently enrolled in other uncompleted certifications sponsored by the Cybersecurity Center?</p>
-      <input id="uncom-cert" type="text">
+      <label for="uncom-cert">Are you currently enrolled in other uncompleted certifications sponsored by the Cybersecurity Center?</label>
+      <input id="uncom-cert" name="uncom-cert" type="text">
     </div>
 
     <div class="form-group">      
-      <p>Have you completed any cybersecurity industry certifications via the Cybersecurity Center?</p>
-      <input id="com-cert" type="text">
+      <label for="com-cert">Have you completed any cybersecurity industry certifications via the Cybersecurity Center?</label>
+      <input id="com-cert" name="com-cert" type="text">
     </div>
 
     <div class="form-group">      
-      <p>Please provide your purpose statement: </p>
-      <input id="purpose-statement" type="text">
+      <label for="purpose-statement">Please provide your purpose statement: </label>
+      <input id="purpose-statement" name="purpose-statement" type="text">
     </div>
 
     <!-- Need form group to handle uploading documents to application -->
