@@ -151,13 +151,13 @@ def program_application():
     conn.close()
     return render_template('program_application.html', programs=programs)
   
-@app.route('/program_application/<int:Program_Num>', methods=['GET']) # FIXME: MAKE PROGRAM NUM COME FROM FORM AND NOT THE URL??
+@app.route('/program_applied_check/<int:program_num>')
 def check_if_already_applied(program_num):
     conn = get_db_connection()
-    alreadyApplied = conn.execute("SELECT COUNT(*) FROM Application WHERE Program_Num = ? AND UIN = ?", (program_num, current_user.id)).fetchone()
+    alreadyApplied = conn.execute("SELECT COUNT(*) FROM Application WHERE Program_Num = ? AND UIN = ?", (program_num, current_user.uin)).fetchone()[0]
     conn.close()
+    print(alreadyApplied)
     if (alreadyApplied > 0):
-        flash("You've already applied to this program")
         return jsonify({'alreadyApplied': True})
     else:
         return jsonify({'alreadyApplied': False})
@@ -168,16 +168,12 @@ def add_new_application():
     uncom_cert = request.form['uncom_cert']
     com_cert = request.form['com_cert']
     purpose_statement = request.form['purpose_statement']
-
     conn = get_db_connection()
-    # get next available application num
-    app_num = conn.execute('SELECT MAX(App_Num) FROM Application').fetchone() + 1
-    print(app_num) # debugging statement
-    conn.execute('INSERT INTO Application (App_Num, Program_Num, UIN, Uncom_cert, Com_Cert, Purpose_statement) VALUES (?, ?, ?, ?, ?, ?)',
-                 (app_num, program_num, current_user.id, uncom_cert, com_cert, purpose_statement))
+    conn.execute('INSERT INTO Application (program_num, UIN, uncom_cert, com_cert, purpose_statement) VALUES (?, ?, ?, ?, ?)',
+                (program_num, current_user.uin, uncom_cert, com_cert, purpose_statement))
     conn.commit()
     conn.close()
-    return jsonify({"message": "application sent"})
+    return redirect(url_for('home'))
 
 
 @app.route('/program_review')
