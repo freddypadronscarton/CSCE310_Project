@@ -12,8 +12,15 @@ def add_new_program(conn, program_name, program_descr):
   conn.execute('INSERT INTO Programs (name, description, archived) VALUES (?, ?, 0)', (program_name, program_descr))
   conn.commit()
 
+def get_program(conn, program_num):
+  return conn.execute('SELECT * FROM Programs WHERE program_num=?', (program_num, )).fetchone()
+
 def get_all_programs(conn):
   return conn.execute('SELECT * FROM Programs').fetchall()
+
+def update_program_info(conn, program_num, program_name, program_descr):
+  conn.execute('UPDATE Programs SET name=?, description=? WHERE program_num=?', (program_name, program_descr, program_num))
+  conn.commit()
 
 def update_program_archive_status(conn, program_num, archived):
   conn.execute('UPDATE Programs SET archived=? WHERE program_num=?', (archived, program_num))

@@ -110,7 +110,7 @@ def archive_program():
     conn.close()
     return jsonify({"user archive status": data["archive"]})
 
-# ENDPOINT FOR DELETEING A PROGRAM
+# ENDPOINT FOR DELETING A PROGRAM
 @admin_bp.route('/delete_program/<int:program_num>', methods=['DELETE'])
 @login_required
 def delete_program(program_num):
@@ -118,3 +118,16 @@ def delete_program(program_num):
     delete_program_backend(conn, program_num)
     conn.close()
     return jsonify({"change": "program deleted"})
+
+# ENDPOINT FOR UPDATING A PROGRAM
+@admin_bp.route('/update_program/<int:program_num>', methods=['GET', 'POST'])
+@login_required
+def update_program(program_num):
+    conn =  get_db_connection()
+    if (request.method == 'POST'):
+        update_program_info(conn, program_num, request.form["program_name"], request.form["program_descr"])
+        conn.close()
+        return redirect(url_for('admin_bp.view_all_programs'))
+    program = get_program(conn, program_num)
+    conn.close()
+    return render_template("admin_update_program.html", program=program)
