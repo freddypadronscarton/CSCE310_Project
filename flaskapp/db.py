@@ -49,6 +49,37 @@ def init_sqlite_db():
                     FOREIGN KEY(UIN) REFERENCES Users(UIN)
                     )
                 ''')
+    
+    # EVENT TABLE
+    conn.execute(''' CREATE TABLE IF NOT EXISTS Event (
+                Event_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                FOREIGN KEY(UIN) REFERENCES Users(UIN),
+                FOREIGN KEY(Program_Num) REFERENCES Programs(Program_Num),
+                Start_Date DATE,
+                Time TIME,
+                Location VARCHAR(50),
+                End_Date DATE,
+                Time TIME,
+                Event_Type VARCHAR(50)
+                )
+            ''')
+    
+    # EVENT_TRACKING TABLE
+    conn.execute(''' CREATE TABLE IF NOT EXISTS Event_Tracking (
+                ET_Num INTEGER PRIMARY KEY AUTOINCREMENT,
+                FOREIGN KEY(Event_ID) REFERENCES Event(Event_ID),
+                FOREIGN KEY(UIN) REFERENCES Users(UIN),
+                )
+            ''')
+    
+    # DOCUMENTS TABLE
+    conn.execute(''' CREATE TABLE IF NOT EXISTS Documents (
+                Doc_Num INTEGER PRIMARY KEY AUTOINCREMENT,
+                FOREIGN KEY(App_Num) REFERENCES Applications(App_Num),
+                Link VARCHAR(50),
+                Doc_Type VARCHAR(50),
+                )
+            ''')
 
     print("Table created successfully")
     conn.close()
