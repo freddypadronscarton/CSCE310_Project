@@ -20,7 +20,7 @@ app.register_blueprint(items_bp, url_prefix='/items')
 # Flask-Login: User class and user_loader
 class User(UserMixin):
     
-    def __init__(self, UIN = None, Username=None, Email=None, First_Name=None, Last_Name=None, User_Type=None):
+    def __init__(self, UIN = None, Username=None, Email=None, First_Name=None, Last_Name=None, User_Type=None, Middle_Initial=None, Discord_Name=None):
         self.id = UIN
         if Username is not None:
             # Initialize with provided username and password
@@ -30,6 +30,8 @@ class User(UserMixin):
             self.first_name = First_Name
             self.last_name = Last_Name
             self.user_type = User_Type
+            self.middle_initial = Middle_Initial
+            self.discord_name = Discord_Name
         else:
             # Initialize by fetching from database
             conn = get_db_connection()
@@ -42,6 +44,8 @@ class User(UserMixin):
                 self.first_name = query_result["First_Name"]
                 self.last_name = query_result["Last_Name"]
                 self.user_type = query_result["User_Type"]
+                self.middle_initial = query_result["M_Initial"]
+                self.discord_name = query_result["Discord_Name"]
 
 @login_manager.user_loader
 def load_user(UIN):
@@ -60,7 +64,7 @@ def login():
         # connect to db
         conn = get_db_connection()
         # query for users by entered username
-        query_result = conn.execute('SELECT * FROM users where Username = ?', (entered_username, )).fetchone()
+        query_result = conn.execute('SELECT * FROM Users where Username = ?', (entered_username, )).fetchone()
 
         
         if not query_result:
@@ -119,7 +123,7 @@ def register():
 
 
 # HOME PAGE
-@app.route('/home')
+@app.route('/home', methods=['GET', 'POST'])
 @login_required
 def home():
     conn = get_db_connection()
@@ -137,10 +141,81 @@ def home():
         conn.close()
         return render_template('k12_home.html', items=items)
     else:
+        conn.close()
         return render_template('login.html')
 
 # PROFILE PAGE
+@app.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    # current UIN
+    UIN = current_user.uin
+    
+    conn = get_db_connection()
 
+    # Perform Read from Users table to get all user fields
+    user_info = get_user(conn, UIN)
+    
+    if request.method == 'POST':
+        
+        # Change any User Table fields
+        user_info['Username'] = request.form.get('username')
+        user_info['First_Name'] = request.form.get('first_name')
+        user_info['M_Initial'] = request.form.get('middle_initial')
+        user_info['Last_Name'] = request.form.get('last_name')
+        user_info['Email'] = request.form.get('email')
+        user_info['Discord_Name'] = request.form.get('discord')
+        
+        # Change College Student Fields
+        if current_user.user_type == "college_student":
+            user_info['GPA'] = request.form.get('gpa')
+            user_info['Major'] = request.form.get('major')
+            user_info['Minor'] = request.form.get('minor')
+            user_info['Second_Minor'] = request.form.get('second_minor')
+            user_info['Exp_Graduation'] = request.form.get('Exp_Graduation')
+            user_info['Phone'] = "".join(request.form.get('phone_number').split("-"))
+        
+        user_info['School'] = request.form.get('school')
+        user_info['Classification'] = request.form.get('classification')
+
+        
+        conn = get_db_connection()
+        update_user_fields(conn, user_info)
+        conn.close()
+        
+        flash('Profile updated successfully.')
+        return redirect(url_for('profile'))
+    else: # Get Request
+        conn = get_db_connection()
+        query_result = conn.execute('SELECT * FROM Users WHERE UIN = ?', (UIN,)).fetchone()
+        
+        if query_result:
+            user_info['username'] = query_result["Username"]
+            user_info['email'] = query_result["Email"]
+            user_info['first_name'] = query_result["First_Name"]
+            user_info['last_name'] = query_result["Last_Name"]
+            user_info['user_type'] = query_result["User_Type"]
+            user_info['middle_initial'] = query_result["M_Initial"]
+            user_info['discord_name'] = query_result["Discord_Name"]
+            
+            # Fetch additional details based on user type
+            if not user_info['user_type'] == 'admin':
+                college_query = 'SELECT * FROM College_Students WHERE UIN = ?'
+                college_info = conn.execute(college_query, (UIN,)).fetchone()
+                
+                # Assign additional attributes specific to college students
+                user_info['gpa'] = college_info["GPA"]
+                user_info['major'] = college_info["Major"]
+                user_info['minor'] = college_info["Minor"]
+                user_info['second_minor'] = college_info["Second_Minor"]
+                user_info['exp_graduation'] = college_info["Exp_Graduation"]
+                user_info['school'] = college_info["School"]
+                user_info['classification'] = college_info["Classification"]
+                phone_str = str(college_info["Phone"])
+                user_info['phone_number'] = phone_str[:3] + "-" + phone_str[3:6] + "-" + phone_str[6:]
+
+        conn.close()
+        return render_template('Profile.html', user=user_info, current_year=datetime.now().year)
 
 
 @app.route("/logout", methods=['POST'])

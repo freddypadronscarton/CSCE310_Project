@@ -52,8 +52,8 @@ def create_college_student(conn, user_info):
         user_info["gender"],
         1 if "hispanic_or_latino" in user_info else 0,
         user_info["race"],
-        1 if "first_gen" in user_info else 0,
         1 if "US_citizen" in user_info else 0,
+        1 if "first_gen"in user_info else 0,
         user_info["birth_date"],
         user_info["gpa"],
         user_info["major"],
@@ -117,11 +117,89 @@ def register_user(conn, user_info):
     
     flash("Successfully registered new user!", "Success")
           
-# UPDATES
+# READS
+def get_user(conn, UIN):
+    # Inner join between Users and College Students Table
+    query = '''
+        SELECT u.*, cs.Gender, cs.Hispanic_Or_Latino, cs.Race, cs.US_Citizen, cs.First_Generation, 
+               cs.Birthdate, cs.GPA, cs.Major, cs.Minor, cs.Second_Minor, cs.Exp_Graduation, 
+               cs.School, cs.Classification, cs.Phone, cs.Student_Type
+        FROM Users u
+        LEFT JOIN College_Students cs ON u.UIN = cs.UIN
+        WHERE u.UIN = ?
+    '''
+    # Edxecute Query
+    query_result = conn.execute(query, (UIN,)).fetchone()
+    
+    print(UIN)
+    
+    # store result in dict
+    user_info = {}
+    
+    for column_name in query_result.keys():
+        user_info[column_name] = query_result[column_name]
+    
+    return user_info
+
+          
+          
+# UPDATES SINGLE FIELD
 def update_user_field(conn, UIN, field, value):
     query = f"UPDATE users SET {field} = ? WHERE UIN = ?"
     conn.execute(query, (value, UIN))
     
+# UPDATES ALL FIELDS (except password and user_type)
+def update_user_fields(conn, user_info):    
+    # Constructing Users table SQL query
+
+    query = f'''UPDATE users SET 
+        First_Name = '{user_info["First_Name"]}',
+        M_Initial = '{user_info["M_Initial"]}',
+        Last_Name = '{user_info["Last_Name"]}',
+        Username = '{user_info["Username"]}',
+        Email = '{user_info["Email"]}',
+        Discord_Name = '{user_info["Discord_Name"]}'
+        WHERE UIN = {user_info["UIN"]}'''
+
+    # Executing Users table query
+    conn.execute(query)
+    
+    # Constructing College Students table SQL query (different based on student type)
+    if user_info['User_Type'] == "college_student":
+        query = f'''UPDATE College_Students SET 
+        Gender = '{user_info["Gender"]}',
+        Hispanic_Or_Latino = {user_info["Hispanic_Or_Latino"]},
+        Race = '{user_info["Race"]}',
+        US_Citizen = {user_info["US_Citizen"]},
+        First_Generation = {user_info["First_Generation"]},
+        Birthdate = '{user_info["Birthdate"]}',
+        GPA = '{user_info["GPA"]}',
+        Major = '{user_info["Major"]}',
+        Minor = '{user_info["Minor"]}',
+        Second_Minor = '{user_info["Second_Minor"]}',
+        Exp_Graduation = {user_info["Exp_Graduation"]},
+        School = '{user_info["School"]}',
+        Classification = '{user_info["Classification"]}',
+        Phone = '{user_info["Phone"]}'
+        WHERE UIN = {user_info["UIN"]}'''
+        
+        conn.execute(query)
+    elif user_info['User_Type'] == "k12_student":
+        query = f'''UPDATE College_Students SET 
+        Gender = '{user_info["Gender"]}',
+        Hispanic_Or_Latino = {user_info["Hispanic_Or_Latino"]},
+        Race = '{user_info["Race"]}',
+        US_Citizen = {user_info["US_Citizen"]},
+        First_Generation = {user_info["First_Generation"]},
+        Birthdate = '{user_info["Birthdate"]}',
+        School = '{user_info["School"]}',
+        Classification = '{user_info["Classification"]}'
+        WHERE UIN = {user_info["UIN"]}'''        
+        
+        conn.execute(query)
+
+    conn.commit()
+
 def delete_user(conn, UIN):
     conn.execute(f"DELETE FROM College_Students WHERE UIN = {UIN}")
     conn.execute(f"DELETE FROM Users WHERE UIN = {UIN}")

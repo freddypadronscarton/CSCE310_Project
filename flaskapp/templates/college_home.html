@@ -49,10 +49,17 @@
         {% endfor %}
     </table>
 
+
+    <!-- Edit Profile Button -->
+    <form action="{{ url_for('profile') }}" method="get">
+        <button type="submit">Edit Profile</button>
+    </form>
+
     <!-- Logout Button -->
     <form action="{{ url_for('logout') }}" method="post">
         <button type="submit">Logout</button>
     </form>
+
 
     <script>
         //AJAX calls

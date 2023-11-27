@@ -328,11 +328,6 @@
             alert("Please select a user type.");
             return false; 
         }
-
-        // Check fields based on the user type
-        if (userType === 'admin' && isFieldEmpty('title')) {
-            isValid = false;
-        }
         
         if (userType === 'college_student') {
             // Add checks for college student fields
