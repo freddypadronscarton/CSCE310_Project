@@ -85,10 +85,12 @@
     <form action="{{ url_for('home') }}" method="post">
         <button type="submit">Home</button>
     </form>
-
+    
     <form action="{{ url_for('logout') }}" method="post">
         <button type="submit">Logout</button>
     </form>
+
+    <button onclick="deleteUser({{user.uin}})">Delete Account</button>
 
     <script>
         // JavaScript for phone number formatting
@@ -127,6 +129,22 @@
             }
 
             return true;
+        }
+
+        function deleteUser(uin) {
+            var confirmation = confirm("Are you sure you'd like to delete your account?");
+            if (confirmation) {
+                $.ajax({
+                    url: `/admin/delete_user/${uin}`,
+                    method: 'DELETE',
+                    success: function(response) {
+                        window.location.reload(); 
+                    },
+                    error: function() {
+                        alert('Error: User could not be deleted.');
+                    }
+                });
+            }
         }
 
         // Initialize phone number formatting
