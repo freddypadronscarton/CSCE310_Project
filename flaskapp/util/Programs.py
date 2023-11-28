@@ -29,3 +29,12 @@ def update_program_archive_status(conn, program_num, archived):
 def delete_program_backend(conn, program_num):
   conn.execute('DELETE FROM Programs WHERE program_num=?', (program_num, ))
   conn.commit()
+
+def get_applied_programs(conn, UIN):
+  return conn.execute(f'''SELECT Applied.app_num, Applied.program_num, Programs.name, Programs.description, Applied.uncom_cert, Applied.com_cert, Applied.purpose_statement, Accepted.tracking_num
+                      FROM (SELECT * FROM Application WHERE UIN={UIN}) AS Applied
+                      LEFT OUTER JOIN
+                      (SELECT * FROM Track WHERE student_num={UIN}) AS Accepted
+                      ON Applied.program_num = Accepted.program
+                      JOIN Programs
+                      ON Applied.program_num = Programs.program_num''').fetchall()

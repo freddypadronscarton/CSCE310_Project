@@ -4,6 +4,7 @@ from datetime import datetime
 
 from db import *
 from util.Users import *
+from util.Programs import *
 from routes.admin import admin_bp
 from routes.example import items_bp
 
@@ -178,28 +179,19 @@ def add_new_application():
 
 
 @app.route('/program_review')
-def get_applied_programs():
+def application_review():
     conn = get_db_connection()
 
-    get_applied = ("SELECT Applied.app_num, Applied.program_num, Programs.name, Programs.description, Applied.uncom_cert, Application.com_cert, Applied.purpose_statement, Accepted.tracking_num"
-                   "FROM (SELECT * FROM Application WHERE UIN=?) AS Applied"
-                   "LEFT OUTER JOIN"
-                   "(SELECT * FROM Track WHERE UIN=?) AS Accepted"
-                   "ON Applied.program_num = Accepted.program"
-                   "JOIN Programs"
-                   "ON Applied.program_num = Programs.program_num")
-
-    applied_programs = conn.execute('''SELECT Applied.app_num, Applied.program_num, Programs.name, Programs.description, Applied.uncom_cert, Applied.com_cert, Applied.purpose_statement, Accepted.tracking_num
-                      FROM (SELECT * FROM Application WHERE UIN=?) AS Applied
-                      LEFT OUTER JOIN
-                      (SELECT * FROM Track WHERE student_num=?) AS Accepted
-                      ON Applied.program_num = Accepted.program
-                      JOIN Programs
-                      ON Applied.program_num = Programs.program_num'''
-                   , (current_user.uin, current_user.uin)).fetchall()
-    
+    # applied_programs = conn.execute('''SELECT Applied.app_num, Applied.program_num, Programs.name, Programs.description, Applied.uncom_cert, Applied.com_cert, Applied.purpose_statement, Accepted.tracking_num
+    #                   FROM (SELECT * FROM Application WHERE UIN=?) AS Applied
+    #                   LEFT OUTER JOIN
+    #                   (SELECT * FROM Track WHERE student_num=?) AS Accepted
+    #                   ON Applied.program_num = Accepted.program
+    #                   JOIN Programs
+    #                   ON Applied.program_num = Programs.program_num'''
+    #                , (current_user.uin, current_user.uin)).fetchall()
+    applied_programs = get_applied_programs(conn, current_user.uin)
     conn.close()
-    # return render_template('program_review.html', applications=applications)
 
     return render_template('program_review.html', applied_programs=applied_programs)
     
@@ -221,7 +213,7 @@ def update_application():
                  , (uncom_cert, com_cert, purpose_statement, app_num))
     conn.commit()
     conn.close()
-    return redirect(url_for('get_applied_programs'))
+    return redirect(url_for('application_review'))
 
 @app.route('/delete_application/<int:app_num>', methods=['DELETE'])
 def delete_application(app_num):
