@@ -27,7 +27,7 @@
 
     <div class="form-group">
         <label for="middle_initial">Middle Initial:</label>
-        <input type="text" id="middle_initial" name="middle_initial" maxlength="1">
+        <input type="text" id="middle_initial" name="middle_initial" maxlength="1" placeholder="optional">
     </div>
 
     <div class="form-group">
@@ -42,7 +42,7 @@
 
     <div class="form-group">
         <label for="email">Email:</label>
-        <input type="text" id="email" name="email">
+        <input type="email" id="email" name="email">
     </div>
 
     
@@ -121,12 +121,12 @@
 
         <div class="form-group">
             <label for="minor">Minor:</label>
-            <input type="text" id="minor" name="minor">
+            <input type="text" id="minor" name="minor" placeholder="optional">
         </div>
 
         <div class="form-group">
             <label for="second_minor">Second Minor:</label>
-            <input type="text" id="second_minor" name="second_minor">
+            <input type="text" id="second_minor" name="second_minor" placeholder="optional">
         </div>
 
         <div class="form-group">
@@ -307,7 +307,6 @@
         document.getElementById('k12_student_fields').style.display = (userType === 'k12_student') ? 'block' : 'none';
     }
 
-
     function validateForm() {
         var userType = document.getElementById('user_type').value;
         
@@ -317,9 +316,10 @@
         var password = document.getElementById('password').value;
         var confirmation = document.getElementById('confirm').value;
 
+        // Check if all required fields are inputted
         for (var i = 0; i < general_fields.length; i++) {
             if (!document.getElementById(general_fields[i]).value) {
-                alert("Please fill out all the fields.");
+                alert("Please fill out all required fields. ");
                 return false; 
             }
         }
@@ -330,24 +330,32 @@
         }
         
         // Fields for Colege Students
-        var college_fields = ['gender', 'hispanic_or_latino', 'race', 'first_gen', 'US_citizen', 'birth_date', 'gpa', 'major', 'minor', 'second_minor', 'Exp_Graduation', 'school', 'classification', 'phone_number'];
+        var college_fields = ['gender', 'race', 'birth_date', 'gpa', 'major', 'Exp_Graduation', 'school', 'classification', 'phone_number'];
         
         // Fields for K12 Students
-        var k12_fields = ['gender', 'hispanic_or_latino', 'race', 'first_gen', 'US_citizen', 'birth_date', 'school', 'classification', 'phone_number'];
+        var k12_fields = ['k12_gender', 'k12_race', 'k12_birth_date', 'k12_school', 'k12_classification', 'k12_phone_number'];
 
         if(userType == "college_student"){
             for (var i = 0; i < college_fields.length; i++) {
                 if (!document.getElementById(college_fields[i]).value) {
-                    alert("Please fill out all the fields.");
+                    alert("Please fill out all required fields. ");
                     return false; 
                 }
             }              
         }
 
+        // Regex for phone number
+        var regex = /^\d{3}-\d{3}-\d{4}$/;
+        // Validate number
+        if(!regex.test((document.getElementById("phone_number").value))){
+            alert("Please enter a valid phone number.");
+            return false; 
+        }
+
         if(userType == "k12_student"){
             for (var i = 0; i < k12_fields.length; i++) {
                 if (!document.getElementById(k12_fields[i]).value) {
-                    alert("Please fill out all the fields.");
+                    alert("Please fill out all required fields. ");
                     return false; 
                 }
             }  

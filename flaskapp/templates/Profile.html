@@ -12,14 +12,14 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-    <h1>{{ user.username }}'s Profile</h1>
+    <h1>Your Profile</h1>
 
-    <form method="POST" onsubmit="return validateForm()">
+    <form method="POST" onsubmit="return validateForm()" id="updateProfileForm" data-userType="{{user.user_type}}">
         <label for="first_name">First Name:</label><br>
         <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}"><br>
 
         <label for="middle_initial">Middle Initial:</label><br>
-        <input type="text" id="middle_initial" name="middle_initial" value="{{ user.middle_initial }}" maxlength="1"><br>
+        <input type="text" id="middle_initial" name="middle_initial" value="{{ user.middle_initial }}" maxlength="1" placeholder="optional"><br>
 
         <label for="last_name">Last Name:</label><br>
         <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}"><br>
@@ -42,10 +42,10 @@
         <input type="text" id="major" name="major" value="{{ user.major }}"><br>
 
         <label for="minor">Minor:</label><br>
-        <input type="text" id="minor" name="minor" value="{{ user.minor }}"><br>
+        <input type="text" id="minor" name="minor" value="{{ user.minor }}" placeholder="optional"><br>
 
         <label for="second_minor">Second Minor:</label><br>
-        <input type="text" id="second_minor" name="second_minor" value="{{ user.second_minor }}"><br>
+        <input type="text" id="second_minor" name="second_minor" value="{{ user.second_minor }}" placeholder="optional"><br>
 
         <label for="school">School:</label><br>
         <input type="text" id="school" name="school" value="{{ user.school }}"><br>
@@ -108,26 +108,53 @@
 
         // Form validation function
         function validateForm() {
-            var isValid = true;
+            var userType = document.getElementById('updateProfileForm').getAttribute('data-userType');
             
-            // Function to check if a field is empty
-            function isFieldEmpty(fieldId) {
-                var field = document.getElementById(fieldId);
-                return !field.value.trim();
+
+            // Fields for any user
+            var general_fields = ['first_name', 'last_name', 'username', 'email', 'discord'];
+
+
+            for (var i = 0; i < general_fields.length; i++) {
+                if (!document.getElementById(general_fields[i]).value) {
+                    alert("Please fill out all the fields.");
+                    return false; 
+                }
             }
 
-            // Check each field for emptiness
-            if (isFieldEmpty('username') || isFieldEmpty('email') || isFieldEmpty('first_name') || isFieldEmpty('last_name')) {
-                isValid = false;
+
+            // Fields for Colege Students
+            var college_fields = ['gpa', 'major', 'Exp_Graduation', 'school', 'classification', 'phone_number'];
+            
+            // Fields for K12 Students
+            var k12_fields = ['school', 'classification', 'phone_number'];
+    
+            if(userType == "college_student"){
+                for (var i = 0; i < college_fields.length; i++) {
+                    if (!document.getElementById(college_fields[i]).value) {
+                        alert("Please fill out all required fields. ");
+                        return false; 
+                    }
+                }              
             }
 
-            // Add validations for other fields as needed
-
-            if (!isValid) {
-                alert("Please fill out all required fields.");
-                return false;
+            // Regex for phone number
+            var regex = /^\d{3}-\d{3}-\d{4}$/;
+            // Validate number
+            if(!regex.test((document.getElementById("phone_number").value))){
+                alert("Please enter a valid phone number.");
+                return false; 
             }
-
+    
+            if(userType == "k12_student"){
+                for (var i = 0; i < k12_fields.length; i++) {
+                    if (!document.getElementById(k12_fields[i]).value) {
+                        alert("Please fill out all required fields. ");
+                        return false; 
+                    }
+                }  
+            }
+            
             return true;
         }
 
