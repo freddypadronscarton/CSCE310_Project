@@ -217,6 +217,52 @@ def profile():
         conn.close()
         return render_template('Profile.html', user=user_info, current_year=datetime.now().year)
 
+# PROFILE PAGE
+@app.route('/passwordRecovery', methods=['GET', 'POST'])
+def passwordRecovery():
+    
+    # saves previous entry of form (in case of failure)
+    stored = {}
+    
+    if request.method == 'POST':
+        # FORM FIELDS
+        UIN = request.form.get("UIN")
+        oldPassword = request.form.get("Old")
+        newPassword = request.form.get("New")
+        confirmation = request.form.get("Confirm")
+        
+        # save entry
+        stored = {
+            'UIN': UIN,
+            'Old': oldPassword,
+            'New': newPassword,
+            'Confirm': confirmation
+        }
+        
+        # Connect to database
+        conn = get_db_connection()
+        #Retrieve User info (for entered UIN)
+        user_info = get_user(conn, UIN)
+        
+        if not user_info:
+            flash("No user exists with UIN: ", UIN)
+        elif not user_info["Password"] == oldPassword:
+            flash("Incorrect old password entered.")
+        elif not newPassword == confirmation:
+            flash("Entered passwords do not match.")
+        else:
+            update_user_field(conn,UIN, 'Password', newPassword)
+            conn.commit()
+            flash("Password updated!")
+
+        conn.close()
+        
+    
+        
+    return render_template('PasswordRecovery.html', stored = stored)
+        
+
+    
 
 @app.route("/logout", methods=['POST'])
 @login_required

@@ -8,14 +8,20 @@ from util.Users import *
 admin_bp = Blueprint('admin_bp', __name__)
 
 # ENDPOINT FOR ARCHIVED BUTTON
-@admin_bp.route('/update_user/<int:UIN>', methods=['PUT'])
+@admin_bp.route('/archive_user/<int:UIN>', methods=['PUT'])
 @login_required
-def update_user(UIN):
+def archive_user(UIN):
     data = request.get_json()
+    # connect to db
     conn = get_db_connection()
-    update_user_field(conn, UIN, data['field'], data['value'])
+    
+    # Updates Archived field to provided value for given UIN
+    update_user_field(conn, UIN, 'Archived', data['value'])
+    
+    # commit and close
     conn.commit()
     conn.close()
+    
     return jsonify({'message': 'User archived'})
 
 

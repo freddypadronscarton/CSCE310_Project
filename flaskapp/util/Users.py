@@ -131,8 +131,6 @@ def get_user(conn, UIN):
     # Edxecute Query
     query_result = conn.execute(query, (UIN,)).fetchone()
     
-    print(UIN)
-    
     # store result in dict
     user_info = {}
     

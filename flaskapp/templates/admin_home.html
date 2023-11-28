@@ -44,9 +44,9 @@
                     <td>
                         <button onclick="editButtonPress({{ user.uin }})">Edit</button>
                         {% if user.archived %}
-                            <button onclick="updateUser('Archived', {{user.uin}}, 0)">Unarchive</button>
+                            <button onclick="archiveUser({{user.uin}}, 0)">Unarchive</button>
                         {% else %}
-                            <button onclick="updateUser('Archived', {{user.uin}}, 1)">Archive</button>
+                            <button onclick="archiveUser({{user.uin}}, 1)">Archive</button>
                         {% endif %}
                         <button onclick="deleteUser({{user.uin}})">Delete</button>
                     </td>
@@ -96,15 +96,13 @@
             }
         }
 
-        // update user: called for archive
-        function updateUser(field, uin, value) {
+        function archiveUser(uin, value) {
             $.ajax({
-                url: `/admin/update_user/${uin}`,
+                url: `/admin/archive_user/${uin}`,
                 method: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify({ 
                     'uin': uin,
-                    'field':field,
                     'value': value
                 }),
                 success: function(response) {
