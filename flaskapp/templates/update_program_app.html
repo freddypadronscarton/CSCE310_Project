@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Program Application</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="../static/program_application.css">
+</head>
+<body>
+  <a class="back_button" href="{{url_for('get_applied_programs')}}">
+    <button>< Back to All Applications</button>
+  </a>
+
+  <h2>Update Program Application</h2>
+
+  <form action="{{ url_for('update_application') }}" method="POST">
+    <div class="form-group">
+      <input id="app_num" name="app_num" type="number" value="{{ app.app_num }}" style="display:none"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="uncom_cert">Are you currently enrolled in other uncompleted certifications sponsored by the Cybersecurity Center?</label>
+      <input id="uncom_cert" name="uncom_cert" type="text" value="{{ app.uncom_cert }}">
+    </div>
+
+    <div class="form-group">      
+      <label for="com_cert">Have you completed any cybersecurity industry certifications via the Cybersecurity Center?</label>
+      <input id="com_cert" name="com_cert" type="text" value="{{ app.com_cert }}">
+    </div>
+
+    <div class="form-group">      
+      <label for="purpose_statement">Please provide your purpose statement: </label>
+      <input id="purpose_statement" name="purpose_statement" type="text" value="{{ app.purpose_statement }}">
+    </div>
+
+    <!-- Need form group to handle uploading documents to application -->
+    <div class="form-group">
+      <label>FIXME</label>
+      <input type="file">
+    </div>
+
+    <br>
+    <div class="form-group">
+      <button id="apply-button" type="submit">Update</button>
+    </div>
+  </form>
+
+  <script>
+    
+  </script>
+</body>
+</html>

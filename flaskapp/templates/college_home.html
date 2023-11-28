@@ -51,10 +51,11 @@
 
     <!-- Program Application Management Section -->
     <div>
+      <h2>Program Management</h2>
       <a href="{{ url_for('program_application') }}">
         <button>Apply</button>
       </a>
-      <a href="program_review.html">
+      <a href="{{ url_for('get_applied_programs') }}">
         <button>Review Applications</button>
       </a>
       <a>

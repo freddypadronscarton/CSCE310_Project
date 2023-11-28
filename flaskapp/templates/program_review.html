@@ -4,19 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Review Program Application</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-  <a href="program_management.html">
+  <a href="{{ url_for('home') }}">
     <button>< Back</button>
   </a>
   <table>
     <tr>
       <th>Program Name</th>
       <th>Program Description</th>
+      <th>Uncompleted Certifications</th>
+      <th>Completed Certifications</th>
+      <th>Purpose Statment</th>
       <th>Application Status</th>
       <th>Modify</th>
+      <th>Delete</th>
     </tr>
-    <% for application in applications %>
+    <!-- {% for application in applications %}
     <tr data-app-num="{{ application.program[2] }}">
       <td>{{ application.program[1] }}</td>
       <td>{{ application.program[2] }}</td>
@@ -26,7 +31,55 @@
         <button>Delete</button>
       </td>
     </tr>
-    <% endfor %>
+    {% endfor %} -->
+    {% for program in applied_programs %}
+    <tr>
+      <!-- <td>{{ program.program_num }}</td>
+      <td>{{ program.uncom_cert }}</td>
+      <td>{{ program.com_cert }}</td>
+      <td>{{ program.purpose_statement }}</td>
+      <td>{{ program.tracking_num }}</td> -->
+
+      <!-- <td>{{ program[2] }}</td>
+      <td>{{ program[3] }}</td>
+      <td>{{ program[4] }}</td>
+      <td>{{ program[5] }}</td>
+      <td>{{ program[6] }}</td> -->
+
+      <td>{{ program.name }}</td>
+      <td>{{ program.description }}</td>
+      <td>{{ program.uncom_cert }}</td>
+      <td>{{ program.com_cert }}</td>
+      <td>{{ program.purpose_statement }}</td>
+      <td>
+        {% if program.tracking_num == None %}
+        Pending
+        {% else %}
+        Accepted
+        {% endif %}
+      </td>
+      <td>
+        <a href="/update_program_app/{{ program.app_num }}">
+          <button>Modify</button>
+        </a>
+      </td>
+      <td>
+        <button onclick="deleteApp({{ program.app_num }})">Delete</button>
+      </td>
+    </tr>
+    {% endfor %}
   </table>
+  
+  <script>
+    function deleteApp(app_num) {
+      $.ajax({
+        url: `/delete_application/${app_num}`,
+        method: 'DELETE',
+        success: function(response) {
+          window.location.reload();
+        }
+      });
+    }
+  </script>
 </body>
 </html>

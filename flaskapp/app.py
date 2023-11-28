@@ -150,7 +150,8 @@ def program_application():
     programs = conn.execute('SELECT * FROM programs').fetchall()
     conn.close()
     return render_template('program_application.html', programs=programs)
-  
+
+# This is the endpoint for checking if a user has already applied to the program
 @app.route('/program_applied_check/<int:program_num>')
 def check_if_already_applied(program_num):
     conn = get_db_connection()
@@ -179,36 +180,57 @@ def add_new_application():
 @app.route('/program_review')
 def get_applied_programs():
     conn = get_db_connection()
-    applied_programs = conn.execute("""
-                                    SELECT Programs.Program_Num, Programs.Name, Programs.Description, Applied.App_Num FROM Programs 
-                                    INNER JOIN 
-                                    (SELECT * FROM Application WHERE UIN = ?) AS Applied 
-                                    ON Programs.Program_Num = Applied.Program_Num
-                                    """,
-                                     (current_user.id)).fetchall()
-    accepted_programs = conn.execute('SELECT * FROM Track WHERE Student_Num = ?', (current_user.id)).fetchall()
 
-    programs = []
-    programs_status = []
-    for program in applied_programs:
-        programs.append(program)
+    get_applied = ("SELECT Applied.app_num, Applied.program_num, Programs.name, Programs.description, Applied.uncom_cert, Application.com_cert, Applied.purpose_statement, Accepted.tracking_num"
+                   "FROM (SELECT * FROM Application WHERE UIN=?) AS Applied"
+                   "LEFT OUTER JOIN"
+                   "(SELECT * FROM Track WHERE UIN=?) AS Accepted"
+                   "ON Applied.program_num = Accepted.program"
+                   "JOIN Programs"
+                   "ON Applied.program_num = Programs.program_num")
 
-      # looking to see if user has been accepted to the program yet
-        program_found = False
-        for accepted in accepted_programs:
-            if (program[0] == accepted[0]):
-                program_found = True
-        
-        if (program_found):
-            programs_status.append(True)
-        else:
-            programs_status.append(False)
+    applied_programs = conn.execute('''SELECT Applied.app_num, Applied.program_num, Programs.name, Programs.description, Applied.uncom_cert, Applied.com_cert, Applied.purpose_statement, Accepted.tracking_num
+                      FROM (SELECT * FROM Application WHERE UIN=?) AS Applied
+                      LEFT OUTER JOIN
+                      (SELECT * FROM Track WHERE student_num=?) AS Accepted
+                      ON Applied.program_num = Accepted.program
+                      JOIN Programs
+                      ON Applied.program_num = Programs.program_num'''
+                   , (current_user.uin, current_user.uin)).fetchall()
     
-    applications = [{"program": p, "status": st} for p, st in zip(programs, programs_status)]
+    conn.close()
+    # return render_template('program_review.html', applications=applications)
+
+    return render_template('program_review.html', applied_programs=applied_programs)
     
-    conn.closes()
-    return render_template('program_review.html', applications=applications)
-    
+@app.route('/update_program_app/<int:app_num>')
+def load_update_appl_page(app_num):
+    conn = get_db_connection()
+    app = conn.execute("SELECT * FROM Application WHERE APP_NUM = ?", (app_num, )).fetchone()
+    conn.close();
+    return render_template("update_program_app.html", app=app)
+
+@app.route('/update_application', methods=['POST'])
+def update_application():
+    app_num = request.form["app_num"]
+    uncom_cert = request.form["uncom_cert"]
+    com_cert = request.form["com_cert"]
+    purpose_statement = request.form["purpose_statement"]
+    conn = get_db_connection()
+    conn.execute("UPDATE Application SET uncom_cert=?, com_cert=?, purpose_statement=? WHERE app_num=?"
+                 , (uncom_cert, com_cert, purpose_statement, app_num))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('get_applied_programs'))
+
+@app.route('/delete_application/<int:app_num>', methods=['DELETE'])
+def delete_application(app_num):
+  print("calling function")
+  conn = get_db_connection()
+  conn.execute(f"DELETE FROM Application WHERE app_num = {app_num}")
+  conn.commit()
+  conn.close()
+  return jsonify({"success": "program application deleted"})
     
 @app.route("/logout", methods=['POST'])
 @login_required

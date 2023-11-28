@@ -69,6 +69,15 @@ def init_sqlite_db():
                     FOREIGN KEY(program_num) REFERENCES Programs(program_num),
                     FOREIGN KEY(UIN) REFERENCES College_students(UIN)
                     )''')
+    
+    # TRACK TABLE
+    conn.execute('''CREATE TABLE IF NOT EXISTS Track (
+                    tracking_num INTEGER PRIMARY KEY AUTOINCREMENT,
+                    program INTEGER,
+                    student_num INTEGER,
+                    FOREIGN KEY(program) REFERENCES Programs(program_num),
+                    FOREIGN KEY(student_num) REFERENCES College_students(UIN)             
+                  )''')
 
     print("Table created successfully")
     conn.close()
