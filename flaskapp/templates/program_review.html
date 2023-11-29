@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Review Program Application</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="../static/general.css">
 </head>
 <body>
   <a href="{{ url_for('home') }}">
@@ -21,35 +22,29 @@
       <th>Modify</th>
       <th>Delete</th>
     </tr>
-    
-    {% for program in applied_programs %}
+
+    {% for program_app in applied_programs %}
     <tr>
-
-      <!-- <td>{{ program[2] }}</td>
-      <td>{{ program[3] }}</td>
-      <td>{{ program[4] }}</td>
-      <td>{{ program[5] }}</td>
-      <td>{{ program[6] }}</td> -->
-
-      <td>{{ program.name }}</td>
-      <td>{{ program.description }}</td>
-      <td>{{ program.uncom_cert }}</td>
-      <td>{{ program.com_cert }}</td>
-      <td>{{ program.purpose_statement }}</td>
+      <td>{{ program_app.name }}</td>
+      <td>{{ program_app.description }}</td>
+      <td>{{ program_app.uncom_cert }}</td>
+      <td>{{ program_app.com_cert }}</td>
+      <td>{{ program_app.purpose_statement }}</td>
       <td>
-        {% if program.tracking_num == None %}
+        <!-- Gives application status depending on whether student+program is in Track -->
+        {% if program_app.tracking_num == None %}
         Pending
         {% else %}
         Accepted
         {% endif %}
       </td>
       <td>
-        <a href="/update_program_app/{{ program.app_num }}">
+        <a href="/update_program_app/{{ program_app.app_num }}">
           <button>Modify</button>
         </a>
       </td>
       <td>
-        <button onclick="deleteApp({{ program.app_num }})">Delete</button>
+        <button onclick="deleteApp({{ program_app.app_num }})">Delete</button>
       </td>
     </tr>
     {% endfor %}

@@ -181,15 +181,6 @@ def add_new_application():
 @app.route('/program_review')
 def application_review():
     conn = get_db_connection()
-
-    # applied_programs = conn.execute('''SELECT Applied.app_num, Applied.program_num, Programs.name, Programs.description, Applied.uncom_cert, Applied.com_cert, Applied.purpose_statement, Accepted.tracking_num
-    #                   FROM (SELECT * FROM Application WHERE UIN=?) AS Applied
-    #                   LEFT OUTER JOIN
-    #                   (SELECT * FROM Track WHERE student_num=?) AS Accepted
-    #                   ON Applied.program_num = Accepted.program
-    #                   JOIN Programs
-    #                   ON Applied.program_num = Programs.program_num'''
-    #                , (current_user.uin, current_user.uin)).fetchall()
     applied_programs = get_applied_programs(conn, current_user.uin)
     conn.close()
 
@@ -204,20 +195,20 @@ def load_update_appl_page(app_num):
 
 @app.route('/update_application', methods=['POST'])
 def update_application():
+    # gets all needed data from form
     app_num = request.form["app_num"]
     uncom_cert = request.form["uncom_cert"]
     com_cert = request.form["com_cert"]
     purpose_statement = request.form["purpose_statement"]
+
+    # calls Program.py function to update program applications
     conn = get_db_connection()
-    conn.execute("UPDATE Application SET uncom_cert=?, com_cert=?, purpose_statement=? WHERE app_num=?"
-                 , (uncom_cert, com_cert, purpose_statement, app_num))
-    conn.commit()
+    update_prog_apps(conn, uncom_cert, com_cert, purpose_statement, app_num)
     conn.close()
     return redirect(url_for('application_review'))
 
 @app.route('/delete_application/<int:app_num>', methods=['DELETE'])
 def delete_application(app_num):
-  print("calling function")
   conn = get_db_connection()
   conn.execute(f"DELETE FROM Application WHERE app_num = {app_num}")
   conn.commit()

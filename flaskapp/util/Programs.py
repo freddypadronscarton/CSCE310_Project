@@ -38,3 +38,8 @@ def get_applied_programs(conn, UIN):
                       ON Applied.program_num = Accepted.program
                       JOIN Programs
                       ON Applied.program_num = Programs.program_num''').fetchall()
+
+def update_prog_apps(conn, uncom_cert, com_cert, purpose_statement, app_num):
+  conn.execute("UPDATE Application SET uncom_cert=?, com_cert=?, purpose_statement=? WHERE app_num=?"
+                 , (uncom_cert, com_cert, purpose_statement, app_num))
+  conn.commit()
