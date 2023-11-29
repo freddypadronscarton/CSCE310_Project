@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>College Student Landing Page</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="../static/college_home.css">
 </head>
 <body>
     <!-- Flash Messages -->
@@ -54,6 +55,17 @@
     <form action="{{ url_for('profile') }}" method="get">
         <button type="submit">Edit Profile</button>
     </form>
+    
+    <!-- Program Application Management Section -->
+    <div id="program_app_management">
+      <h2>Program Applications</h2>
+      <a href="{{ url_for('program_application') }}">
+        <button>Apply</button>
+      </a>
+      <a href="{{ url_for('application_review') }}">
+        <button>Review and Modify Applications</button>
+      </a>
+    </div>
 
     <!-- Logout Button -->
     <form action="{{ url_for('logout') }}" method="post">

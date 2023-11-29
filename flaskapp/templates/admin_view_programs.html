@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin View Programs</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="../static/general.css">
+</head>
+<body>
+  <a href="{{url_for('home')}}">
+    <button>< Back</button>
+  </a>
+
+  <table>
+    <tr>
+      <th>Program Name</th>
+      <th>Progam Description</th>
+      <th>Generate Report</th>
+      <th>Modify</th>
+    </tr>
+    {% for program in programs %}
+    <tr>
+      <td>{{ program.name }}</td>
+      <td>{{ program.description }}</td>
+      <td>
+        <button>Get Report</button>
+      </td>
+      <td>
+        <a href="/admin/update_program/{{program.program_num}}">
+          <button>Update</button>
+        </a>
+
+        {% if program.archived %}
+          <button onclick="archiveProgram({{program.program_num}}, 0)">Unarchive</button>
+        {% else %}
+          <button onclick="archiveProgram({{program.program_num}}, 1)">Archive</button>
+        {% endif %}
+
+        <button onclick="deleteProgram({{program.program_num}})">Delete</button>
+      </td>
+    </tr>
+    {% endfor %}
+    <!-- Look at admin_home.html for idea of how archived code will work -->
+  </table>
+
+  <script>
+    function archiveProgram(program_num, archive) {
+      $.ajax({
+        url: '/admin/archive_program',
+        method: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          "program_num": parseInt(program_num),
+          "archive": archive
+        }),
+        success: function(response) {
+          window.location.reload();
+        }
+      });
+    }
+
+    function deleteProgram(program_num) {
+      $.ajax({
+        url: `/admin/delete_program/${program_num}`,
+        method: 'DELETE',
+        success: function(response) {
+          window.location.reload();
+        }
+      })
+    }
+  </script>
+</body>
+</html>
