@@ -49,6 +49,67 @@ def init_sqlite_db():
                     FOREIGN KEY(UIN) REFERENCES Users(UIN)
                     )
                 ''')
+    
+    # CLASSES TABLE
+    conn.execute(''' CREATE TABLE IF NOT EXISTS Classes (
+                    Class_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Name VARCHAR,
+                    Description VARCHAR,
+                    Type VARCHAR
+                    )
+                 ''')
+    
+    # INTERNSHIP TABLE
+    conn.execute(''' CREATE TABLE IF NOT EXISTS Internship (
+                    Intern_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Name VARCHAR,
+                    Description VARCHAR,
+                    Is_Gov BINARY
+                    )
+                 ''')
+    
+    # CERTIFICATION TABLE
+    conn.execute(''' CREATE TABLE IF NOT EXISTS Certification (
+                    Cert_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Name VARCHAR,
+                    Description VARCHAR,
+                    Level VARCHAR
+                    )
+                 ''')
+    
+    # CLASS ENROLLMENT TABLE
+    conn.execute(''' CREATE TABLE IF NOT EXISTS Class_Enrollment (
+                    CE_Num INTEGER PRIMARY KEY AUTOINCREMENT,
+                    FOREIGN KEY(UIN) REFERENCES College_students(UIN),
+                    FOREIGN KEY(Class_ID) REFERENCES Classes(Class_ID),
+                    Status VARCHAR, 
+                    Semester VARCHAR,
+                    Year YEAR
+                    )
+                 ''')
+    
+    # CERTIFICATION ENROLLMENT TABLE
+    conn.execute(''' CREATE TABLE IF NOT EXISTS Cert_Enrollment (
+                    CertE_Num INTEGER PRIMARY KEY AUTOINCREMENT,
+                    FOREIGN KEY(UIN) REFERENCES College_students(UIN),
+                    FOREIGN KEY(Cert_ID) REFERENCES Certification(Cert_ID),
+                    FOREIGN KEY(Program_Num) REFERENCES Programs(Program_Num),
+                    Status VARCHAR, 
+                    Training_Status VARCHAR,
+                    Semester VARCHAR,
+                    Year YEAR
+                    )
+                 ''')
+    
+    # INTERNSHIP APPLICATION TABLE
+    conn.execute(''' CREATE TABLE IF NOT EXISTS Intern_App (
+                    IA_Num INTEGER PRIMARY KEY AUTOINCREMENT,
+                    FOREIGN KEY(UIN) REFERENCES College_students(UIN),
+                    FOREIGN KEY(Intern_ID) REFERENCES Internship(Intern_ID),
+                    Status VARCHAR, 
+                    Year YEAR
+                    )
+                 ''')
 
     print("Table created successfully")
     conn.close()
