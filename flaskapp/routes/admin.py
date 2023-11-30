@@ -4,6 +4,7 @@ from flask_login import login_required
 from datetime import datetime
 from db import *
 from util.Users import *
+from util.Programs import *
 
 admin_bp = Blueprint('admin_bp', __name__)
 
@@ -162,3 +163,62 @@ def editUser(UIN):
 
         conn.close()
         return render_template('edit_user.html', user=user_info, current_year=datetime.now().year)
+
+# ENDPOINT FOR ADDING PROGRAMS
+@admin_bp.route('/add_program', methods=['GET', 'POST'])
+@login_required
+def add_program():
+    if (request.method == "POST"):
+        program_name = request.form['program_name']
+        program_descr = request.form['program_descr']
+        conn = get_db_connection()
+        program_exist = is_program_name_taken(conn, program_name)
+        if program_exist:
+            flash("A program of this name already exists")
+            conn.close()
+        else:
+            add_new_program(conn, program_name, program_descr)
+            conn.close()
+            return render_template("admin_home.html")
+    return render_template("admin_add_program.html")
+    
+# ENDPOINT FOR ADMIN TO VIEW ALL PROGRAMS
+@admin_bp.route('/view_programs', methods=['GET'])
+@login_required
+def view_all_programs():
+    conn = get_db_connection()
+    programs = get_all_programs(conn)
+    conn.close()
+    return render_template("admin_view_programs.html", programs=programs)
+  
+# ENDPOINT FOR ARCHIVING AND UNARCHIVING PROGRAMS
+@admin_bp.route('/archive_program', methods=['PUT'])
+@login_required
+def archive_program():
+    data = request.get_json()
+    conn = get_db_connection()
+    update_program_archive_status(conn, data["program_num"], data["archive"])
+    conn.close()
+    return jsonify({"user archive status": data["archive"]})
+
+# ENDPOINT FOR DELETING A PROGRAM
+@admin_bp.route('/delete_program/<int:program_num>', methods=['DELETE'])
+@login_required
+def delete_program(program_num):
+    conn = get_db_connection()
+    delete_program_backend(conn, program_num)
+    conn.close()
+    return jsonify({"change": "program deleted"})
+
+# ENDPOINT FOR UPDATING A PROGRAM
+@admin_bp.route('/update_program/<int:program_num>', methods=['GET', 'POST'])
+@login_required
+def update_program(program_num):
+    conn =  get_db_connection()
+    if (request.method == 'POST'):
+        update_program_info(conn, program_num, request.form["program_name"], request.form["program_descr"])
+        conn.close()
+        return redirect(url_for('admin_bp.view_all_programs'))
+    program = get_program(conn, program_num)
+    conn.close()
+    return render_template("admin_update_program.html", program=program)

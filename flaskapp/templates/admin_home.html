@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Admin Landing Page</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="../static/general.css">
 </head>
 <body>
     <!-- Flash Messages -->
@@ -15,6 +16,17 @@
         {% endif %}
     {% endwith %}
     <h1> {{ current_user.first_name }}'s User Management</h1>
+
+    <!-- Buttons for managing available programs -->
+    <h2>Program Management</h2>
+    <div>
+      <a href="{{ url_for('admin_bp.add_program') }}">
+        <button>Add Program</button>
+      </a>
+      <a href="{{ url_for('admin_bp.view_all_programs') }}">
+        <button>View Programs</button>
+      </a>
+    </div>
 
     <!-- Table to Display Items -->
     <h2>Current Users</h2>

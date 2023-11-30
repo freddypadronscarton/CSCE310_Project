@@ -85,6 +85,35 @@ def init_sqlite_db():
                 )
             ''')
 
+    # PROGRAMS TABLE
+    conn.execute(''' CREATE TABLE IF NOT EXISTS Programs (
+                    program_num INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT,
+                    description TEXT,
+                    archived INTEGER
+                    )''')
+    
+    # APPLICATION TABLE
+    conn.execute(''' CREATE TABLE IF NOT EXISTS Application (
+                    app_num INTEGER PRIMARY KEY AUTOINCREMENT,
+                    program_num INTEGER,
+                    UIN INTEGER,
+                    uncom_cert TEXT,
+                    com_cert TEXT,
+                    purpose_statement TEXT,
+                    FOREIGN KEY(program_num) REFERENCES Programs(program_num),
+                    FOREIGN KEY(UIN) REFERENCES College_students(UIN)
+                    )''')
+    
+    # TRACK TABLE
+    conn.execute('''CREATE TABLE IF NOT EXISTS Track (
+                    tracking_num INTEGER PRIMARY KEY AUTOINCREMENT,
+                    program INTEGER,
+                    student_num INTEGER,
+                    FOREIGN KEY(program) REFERENCES Programs(program_num),
+                    FOREIGN KEY(student_num) REFERENCES College_students(UIN)             
+                  )''')
+
     print("Table created successfully")
     conn.close()
 
