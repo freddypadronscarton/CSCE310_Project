@@ -22,9 +22,14 @@
         <button type="submit">Login</button>
     </form>
 
-    <!-- Logout Button -->
+    <!-- Register Button -->
     <form action="{{ url_for('register') }}" method="get">
         <button type="submit">Register</button>
+    </form>
+
+    <!-- Password Recovery Button -->
+    <form action="{{ url_for('passwordRecovery') }}" method="get">
+        <button type="submit">Forgot Password?</button>
     </form>
 </body>
 </html>

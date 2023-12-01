@@ -50,6 +50,12 @@
         {% endfor %}
     </table>
 
+
+    <!-- Edit Profile Button -->
+    <form action="{{ url_for('profile') }}" method="get">
+        <button type="submit">Edit Profile</button>
+    </form>
+    
     <!-- Program Application Management Section -->
     <div id="program_app_management">
       <h2>Program Applications</h2>
@@ -65,6 +71,7 @@
     <form action="{{ url_for('logout') }}" method="post">
         <button type="submit">Logout</button>
     </form>
+
 
     <script>
         //AJAX calls

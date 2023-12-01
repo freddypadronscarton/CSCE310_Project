@@ -54,12 +54,13 @@
                         </select>
                     </td>
                     <td>
-                        <button onclick="deleteUser({{user.uin}})">Delete</button>
+                        <button onclick="editButtonPress({{ user.uin }})">Edit</button>
                         {% if user.archived %}
-                            <button onclick="updateUser('Archived', {{user.uin}}, 0)">Unarchive</button>
+                            <button onclick="archiveUser({{user.uin}}, 0)">Unarchive</button>
                         {% else %}
-                            <button onclick="updateUser('Archived', {{user.uin}}, 1)">Archive</button>
+                            <button onclick="archiveUser({{user.uin}}, 1)">Archive</button>
                         {% endif %}
+                        <button onclick="deleteUser({{user.uin}})">Delete</button>
                     </td>
                 </tr>
             {% else %}
@@ -72,6 +73,11 @@
         <button type="submit">Logout</button>
     </form>
 
+    <!-- Edit Profile Button -->
+    <form action="{{ url_for('profile') }}" method="get">
+        <button type="submit">Edit Profile</button>
+    </form>
+
     <!-- User Type Selector Modal Container -->
     <Modal id="userTypeFrom" style="display:none;">
     </Modal>
@@ -80,26 +86,35 @@
     <script>
         //AJAX calls
 
+        // Redirect to editUser page
+        function editButtonPress(uin) {
+            window.location.href = `/admin/edit/user/${uin}`;
+        }
+
         // Delete User
         function deleteUser(uin) {
-            $.ajax({
-                url: `/admin/delete_user/${uin}`,
-                method: 'DELETE',
-                success: function(response) {
-                    window.location.reload(); 
-                }
-            });
-        }   
+            var confirmation = confirm("Are you sure you'd like to delete this user?");
+            if (confirmation) {
+                $.ajax({
+                    url: `/admin/delete_user/${uin}`,
+                    method: 'DELETE',
+                    success: function(response) {
+                        window.location.reload(); 
+                    },
+                    error: function() {
+                        alert('Error: User could not be deleted.');
+                    }
+                });
+            }
+        }
 
-        // update user: called for archive
-        function updateUser(field, uin, value) {
+        function archiveUser(uin, value) {
             $.ajax({
-                url: `/admin/update_user/${uin}`,
+                url: `/admin/archive_user/${uin}`,
                 method: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify({ 
                     'uin': uin,
-                    'field':field,
                     'value': value
                 }),
                 success: function(response) {
