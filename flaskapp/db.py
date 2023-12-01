@@ -128,7 +128,7 @@ def init_sqlite_db():
     
     
     conn.execute('''CREATE VIEW IF NOT EXISTS View_ApplicationDetails AS
-        SELECT Applied.app_num, Applied.program_num, Programs.name, Programs.description, Applied.uncom_cert, Applied.com_cert, Applied.purpose_statement, Accepted.tracking_num
+        SELECT Applied.UIN, Applied.app_num, Applied.program_num, Programs.name, Programs.description, Applied.uncom_cert, Applied.com_cert, Applied.purpose_statement, Accepted.tracking_num
         FROM (SELECT * FROM Application) AS Applied
         LEFT OUTER JOIN (SELECT * FROM Track) AS Accepted
         ON Applied.program_num = Accepted.program
