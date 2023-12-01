@@ -236,6 +236,8 @@
 
     function validateForm() {
         var userType = document.getElementById('userTypeSelectionForm').getAttribute('data-userType');
+
+        alert(userType);
         // Fields for Colege Students
         var college_fields = ['gender', 'race', 'birth_date', 'gpa', 'major', 'Exp_Graduation', 'school', 'classification', 'phone_number'];
         
@@ -248,24 +250,33 @@
                     alert("Please fill out all required fields. ");
                     return false; 
                 }
-            }              
+            }     
+            // Regex for phone number
+            var regex = /^\d{3}-\d{3}-\d{4}$/;
+            // Validate number
+            if(!regex.test((document.getElementById("phone_number").value))){
+                alert("Please enter a valid phone number.");
+                return false; 
+            }         
         }
 
-        // Regex for phone number
-        var regex = /^\d{3}-\d{3}-\d{4}$/;
-        // Validate number
-        if(!regex.test((document.getElementById("phone_number").value))){
-            alert("Please enter a valid phone number.");
-            return false; 
-        }
 
         if(userType == "k12_student"){
             for (var i = 0; i < k12_fields.length; i++) {
+                console.log(document.getElementById(k12_fields[i]).value);
                 if (!document.getElementById(k12_fields[i]).value) {
                     alert("Please fill out all required fields. ");
                     return false; 
                 }
             }  
+
+            // Regex for phone number
+            var regex = /^\d{3}-\d{3}-\d{4}$/;
+            // Validate number
+            if(!regex.test((document.getElementById("k12_phone_number").value))){
+                alert("Please enter a valid phone number.");
+                return false; 
+            }       
         }
         
         return true;
