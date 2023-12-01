@@ -259,3 +259,16 @@ def delete_event(event_id):
     delete_event_backend(conn, event_id)
     conn.close()
     return jsonify({"success": "event deleted"})
+
+# ENDPOINT FOR ADMIN UPDATE EVENTS
+@admin_bp.route('/update_event/<int:event_id>', methods=['GET', 'POST'])
+@login_required
+def update_event(event_id):
+    conn =  get_db_connection()
+    if (request.method == 'POST'):
+        update_event_info(conn, event_id, request.form["program_num"], request.form["UIN"], request.form["start_date"], request.form["time"], request.form["location"], request.form["end_date"], request.form["event_type"])
+        conn.close()
+        return redirect(url_for('admin_bp.view_all_events'))
+    event = get_event(conn, event_id)
+    conn.close()
+    return render_template("update_event.html", event=event)

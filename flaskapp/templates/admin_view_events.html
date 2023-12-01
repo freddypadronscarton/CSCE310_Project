@@ -34,6 +34,7 @@
         <td>{{event.event_type}}</td>
 
         <td>
+            <a href="/admin/update_event/{{event.event_id}}"><button>Update</button></a>
             <button onclick="deleteEvent({{event.event_id}})">Delete</button>
         </td>
     </tr>
@@ -41,6 +42,19 @@
   </table>
 
     <script>
+        function updateEvent(event_id) {
+            $.ajax({
+                url: `/admin/update_event/${event_id}`,
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "event_id": parseInt(event_id)
+                }),
+                success: function(response) {
+                    window.location.reload();
+                }
+            });
+        }
         function deleteEvent(event_id) {
             $.ajax({
                 url: `/admin/delete_event/${event_id}`,
