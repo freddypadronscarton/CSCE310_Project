@@ -47,7 +47,7 @@ def user_type_form():
 
     conn = get_db_connection()
     selected_user = conn.execute('SELECT * FROM users where UIN = ?', (UIN,)).fetchone() 
-    return render_template('forms/changeUserTypeForm.html', selected_user= selected_user, user_type= user_type, current_year=datetime.now().year)
+    return render_template('admin/changeUserTypeForm.html', selected_user= selected_user, user_type= user_type, current_year=datetime.now().year)
 
 # ENDPOINT FOR USER TYPE SAVE/PROMOTE BUTTON
 @admin_bp.route('/save_user_type', methods=['POST'])
@@ -162,7 +162,7 @@ def editUser(UIN):
                 user_info['phone_number'] = phone_str[:3] + "-" + phone_str[3:6] + "-" + phone_str[6:]
 
         conn.close()
-        return render_template('edit_user.html', user=user_info, current_year=datetime.now().year)
+        return render_template('admin/edit_user.html', user=user_info, current_year=datetime.now().year)
 
 # ENDPOINT FOR ADDING PROGRAMS
 @admin_bp.route('/add_program', methods=['GET', 'POST'])
@@ -179,8 +179,8 @@ def add_program():
         else:
             add_new_program(conn, program_name, program_descr)
             conn.close()
-            return render_template("admin_home.html")
-    return render_template("admin_add_program.html")
+            return render_template("admin/admin_home.html")
+    return render_template("admin/admin_add_program.html")
     
 # ENDPOINT FOR ADMIN TO VIEW ALL PROGRAMS
 @admin_bp.route('/view_programs', methods=['GET'])
@@ -189,7 +189,7 @@ def view_all_programs():
     conn = get_db_connection()
     programs = get_all_programs(conn)
     conn.close()
-    return render_template("admin_view_programs.html", programs=programs)
+    return render_template("admin/admin_view_programs.html", programs=programs)
   
 # ENDPOINT FOR ARCHIVING AND UNARCHIVING PROGRAMS
 @admin_bp.route('/archive_program', methods=['PUT'])
@@ -221,4 +221,4 @@ def update_program(program_num):
         return redirect(url_for('admin_bp.view_all_programs'))
     program = get_program(conn, program_num)
     conn.close()
-    return render_template("admin_update_program.html", program=program)
+    return render_template("admin/admin_update_program.html", program=program)

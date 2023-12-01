@@ -135,7 +135,7 @@ def home():
     if current_user.user_type == "admin":
         users = conn.execute('SELECT * FROM users').fetchall()
         conn.close()
-        return render_template('admin_home.html', users=users)
+        return render_template('admin/admin_home.html', users=users)
     elif current_user.user_type == "college_student":
         items = conn.execute('SELECT * FROM items where UIN = ?', (current_user.uin, )).fetchall()
         conn.close()
