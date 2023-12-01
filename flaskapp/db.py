@@ -136,9 +136,16 @@ def init_sqlite_db():
         ON Applied.program_num = Programs.program_num;
     ''')
     
-    conn.commit()
     
+    #  ---------- INDEXES ---------- 
+    
+    conn.execute('CREATE INDEX IF NOT EXISTS idx_event_uin ON Event(UIN)')
+    conn.execute('CREATE INDEX IF NOT EXISTS idx_application_uin ON Application(UIN)')
+    conn.execute('CREATE INDEX IF NOT EXISTS idx_user_username ON Users(Username)')
 
+    
+    
+    conn.commit()
     print("Table created successfully")
     conn.close()
 
