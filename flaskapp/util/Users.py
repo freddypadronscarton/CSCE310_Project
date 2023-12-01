@@ -119,17 +119,9 @@ def register_user(conn, user_info):
           
 # READS
 def get_user(conn, UIN):
-    # Inner join between Users and College Students Table
-    query = '''
-        SELECT u.*, cs.Gender, cs.Hispanic_Or_Latino, cs.Race, cs.US_Citizen, cs.First_Generation, 
-               cs.Birthdate, cs.GPA, cs.Major, cs.Minor, cs.Second_Minor, cs.Exp_Graduation, 
-               cs.School, cs.Classification, cs.Phone, cs.Student_Type
-        FROM Users u
-        LEFT JOIN College_Students cs ON u.UIN = cs.UIN
-        WHERE u.UIN = ?
-    '''
-    # Edxecute Query
-    query_result = conn.execute(query, (UIN,)).fetchone()
+
+    # Query from College Student Details view: Users and CollegeStudents Joined (Admins have None values)
+    query_result = conn.execute("SELECT * FROM View_CollegeStudentDetails WHERE UIN = ?", (UIN,)).fetchone()
     
     # store result in dict
     user_info = {}

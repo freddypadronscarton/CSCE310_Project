@@ -113,6 +113,31 @@ def init_sqlite_db():
                     FOREIGN KEY(program) REFERENCES Programs(program_num),
                     FOREIGN KEY(student_num) REFERENCES College_students(UIN)             
                   )''')
+    
+    
+    #  ---------- VIEWS ----------
+    
+    # View of Left Join from Users and College Students table
+    conn.execute('''CREATE VIEW IF NOT EXISTS View_CollegeStudentDetails AS
+        SELECT u.*, cs.Gender, cs.Hispanic_Or_Latino, cs.Race, cs.US_Citizen, cs.First_Generation, 
+            cs.Birthdate, cs.GPA, cs.Major, cs.Minor, cs.Second_Minor, cs.Exp_Graduation, 
+            cs.School, cs.Classification, cs.Phone, cs.Student_Type
+        FROM Users u
+        LEFT JOIN College_Students cs ON u.UIN = cs.UIN
+    ''')
+    
+    
+    conn.execute('''CREATE VIEW IF NOT EXISTS View_ApplicationDetails AS
+        SELECT Applied.app_num, Applied.program_num, Programs.name, Programs.description, Applied.uncom_cert, Applied.com_cert, Applied.purpose_statement, Accepted.tracking_num
+        FROM (SELECT * FROM Application) AS Applied
+        LEFT OUTER JOIN (SELECT * FROM Track) AS Accepted
+        ON Applied.program_num = Accepted.program
+        JOIN Programs
+        ON Applied.program_num = Programs.program_num;
+    ''')
+    
+    conn.commit()
+    
 
     print("Table created successfully")
     conn.close()
