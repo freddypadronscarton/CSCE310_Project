@@ -250,3 +250,12 @@ def add_event():
         conn.close()
         return render_template("admin_home.html")
     return render_template("admin_add_event.html")
+
+# ENDPOINT FOR ADMIN TO DELETE EVENTS
+@admin_bp.route('/delete_event/<int:event_id>', methods=['DELETE'])
+@login_required
+def delete_event(event_id):
+    conn = get_db_connection()
+    delete_event_backend(conn, event_id)
+    conn.close()
+    return jsonify({"success": "event deleted"})
