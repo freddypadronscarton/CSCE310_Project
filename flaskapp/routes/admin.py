@@ -1,10 +1,11 @@
 # admin.py
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
-from flask_login import login_required
+from flask_login import login_required, current_user
 from datetime import datetime
 from db import *
 from util.Users import *
 from util.Programs import *
+from util.Events import *
 
 admin_bp = Blueprint('admin_bp', __name__)
 
@@ -222,3 +223,30 @@ def update_program(program_num):
     program = get_program(conn, program_num)
     conn.close()
     return render_template("admin_update_program.html", program=program)
+
+# ENDPOINT FOR ADMIN TO VIEW ALL EVENTS
+@admin_bp.route('/view_events', methods=['GET'])
+@login_required
+def view_all_events():
+    conn = get_db_connection()
+    events = get_all_events(conn)
+    conn.close()
+    return render_template("admin_view_events.html", events=events)
+
+# ENDPOINT FOR ADMIN TO ADD EVENTS
+@admin_bp.route('/add_event', methods=['GET', 'POST'])
+@login_required
+def add_event():
+    if (request.method == "POST"):
+        Program_Num = request.form['program_num']
+        UIN = current_user.id
+        Start_Date = request.form['start_date']
+        Time = request.form['time']
+        Location = request.form['location']
+        End_Date = request.form['end_date']
+        Event_Type = request.form['event_type']
+        conn = get_db_connection()
+        add_new_event(conn, Program_Num, UIN, Start_Date, Time, Location, End_Date, Event_Type)
+        conn.close()
+        return render_template("admin_home.html")
+    return render_template("admin_add_event.html")

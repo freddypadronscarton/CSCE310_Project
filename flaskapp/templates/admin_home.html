@@ -28,6 +28,17 @@
       </a>
     </div>
 
+    <!-- Buttons for managing available events -->
+    <h2>Event Management</h2>
+    <div>
+      <a href="{{ url_for('admin_bp.view_all_events') }}">
+        <button>View Events</button>
+      </a>
+      <a href="{{ url_for('admin_bp.add_event') }}">
+        <button>Add Event</button>
+      </a>
+    </div>
+
     <!-- Table to Display Items -->
     <h2>Current Users</h2>
     <table id="usersTable">
