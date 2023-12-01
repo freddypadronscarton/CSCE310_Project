@@ -117,7 +117,7 @@ def init_sqlite_db():
     
     #  ---------- VIEWS ----------
     
-    # View of Left Join from Users and College Students table
+    # View of Left Join from Users and College Students table: Admins have NULL values for student attribut3es
     conn.execute('''CREATE VIEW IF NOT EXISTS View_CollegeStudentDetails AS
         SELECT u.*, cs.Gender, cs.Hispanic_Or_Latino, cs.Race, cs.US_Citizen, cs.First_Generation, 
             cs.Birthdate, cs.GPA, cs.Major, cs.Minor, cs.Second_Minor, cs.Exp_Graduation, 
@@ -142,6 +142,7 @@ def init_sqlite_db():
     conn.execute('CREATE INDEX IF NOT EXISTS idx_event_uin ON Event(UIN)')
     conn.execute('CREATE INDEX IF NOT EXISTS idx_application_uin ON Application(UIN)')
     conn.execute('CREATE INDEX IF NOT EXISTS idx_user_username ON Users(Username)')
+    conn.execute('CREATE INDEX IF NOT EXISTS idx_user_email ON Users(Email)')
 
     
     

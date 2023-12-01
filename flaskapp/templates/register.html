@@ -17,38 +17,38 @@
     
     <div class="form-group">
         <label for="uin">UIN:</label>
-        <input type="number" id="uin" name="uin">
+        <input type="number" id="uin" name="uin" value = "{{previous.uin}}">
     </div>
     
     <div class="form-group">
         <label for="first_name">First Name:</label>
-        <input type="text" id="first_name" name="first_name">
+        <input type="text" id="first_name" name="first_name"  value = "{{previous.first_name}}">
     </div>
 
     <div class="form-group">
         <label for="middle_initial">Middle Initial:</label>
-        <input type="text" id="middle_initial" name="middle_initial" maxlength="1" placeholder="optional">
+        <input type="text" id="middle_initial" name="middle_initial" maxlength="1" placeholder="optional" value = "{{previous.middle_initial}}">
     </div>
 
     <div class="form-group">
         <label for="last_name">Last Name:</label>
-        <input type="text" id="last_name" name="last_name">
+        <input type="text" id="last_name" name="last_name" value = "{{previous.last_name}}">
     </div>
     
     <div class="form-group">
         <label for="username">Username:</label>
-        <input type="text" id="username" name="username">
+        <input type="text" id="username" name="username" value = "{{previous.username}}">
     </div>
 
     <div class="form-group">
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email">
+        <input type="email" id="email" name="email" value = "{{previous.email}}">
     </div>
 
     
     <div class="form-group">
         <label for="discord">Discord Username:</label>
-        <input type="text" id="discord" name="discord">
+        <input type="text" id="discord" name="discord" value = "{{previous.discord}}">
     </div>
 
     <!-- User Type Selector -->
@@ -69,9 +69,9 @@
             <label for="gender">Gender:</label>
             <select id="gender" name="gender">
                 <option value="Not Selected">Please select</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
+                <option value="male" {% if previous.gender == "male" %} selected {% endif %}>Male</option>
+                <option value="female" {% if previous.gender == "female" %} selected {% endif %}>Female</option>
+                <option value="other" {% if previous.gender == "other" %} selected {% endif %}>Other</option>
             </select>
         </div>
 
@@ -84,80 +84,80 @@
             <label for="race">Race:</label>
             <select id="race" name="race">
                 <option value="">Please select</option>
-                <option value="asian">Asian</option>
-                <option value="black">Black or African American</option>
-                <option value="hispanic">Hispanic or Latino</option>
-                <option value="white">White</option>
-                <option value="native_american">Native American or Alaska Native</option>
-                <option value="pacific_islander">Native Hawaiian or Other Pacific Islander</option>
-                <option value="other">Other</option>
+                <option value="asian" {% if previous.race == "asian" %} selected {% endif %} >Asian</option>
+                <option value="black" {% if previous.race == "black" %} selected {% endif %}>Black or African American</option>
+                <option value="hispanic" {% if previous.race == "hispanic" %} selected {% endif %}>Hispanic or Latino</option>
+                <option value="white" {% if previous.race == "white" %} selected {% endif %}>White</option>
+                <option value="native_american" {% if previous.race == "native_american" %} selected {% endif %}>Native American or Alaska Native</option>
+                <option value="pacific_islander" {% if previous.race == "pacific_islander" %} selected {% endif %}>Native Hawaiian or Other Pacific Islander</option>
+                <option value="other" {% if previous.race == "other" %} selected {% endif %}>Other</option>
             </select>
         </div>
 
         <div class="form-group">
             <label for="first_gen">First Generation Student:</label>
-            <input type="checkbox" id="first_gen" name="first_gen">
+            <input type="checkbox" id="first_gen" name="first_gen" {% if previous.first_gen %} checked {% endif %}>
         </div>
 
         <div class="form-group">
             <label for="US_citizen">US Citizen:</label>
-            <input type="checkbox" id="US_citizen" name="US_citizen">
+            <input type="checkbox" id="US_citizen" name="US_citizen" {% if previous.US_citizen %} checked {% endif %}>
         </div>
 
         <div class="form-group">
             <label for="birth_date">Date of Birth: </label>
-            <input type="date" id="birth_date" name="birth_date">
+            <input type="date" id="birth_date" name="birth_date" value="{{previous.birth_date}}">
         </div>
 
         <div class="form-group">
             <label for="gpa">GPA:</label>
-            <input type="number" id="gpa" name="gpa" min="0.0" max="4.0" step="0.01">
+            <input type="number" id="gpa" name="gpa" min="0.0" max="4.0" step="0.01" value = "{{previous.gpa}}">
         </div>
         
         <div class="form-group">
             <label for="major">Major:</label>
-            <input type="text" id="major" name="major">
+            <input type="text" id="major" name="major" value = "{{previous.major}}">
         </div>
 
         <div class="form-group">
             <label for="minor">Minor:</label>
-            <input type="text" id="minor" name="minor" placeholder="optional">
+            <input type="text" id="minor" name="minor" placeholder="optional" value="{{previous.minor}}">
         </div>
 
         <div class="form-group">
             <label for="second_minor">Second Minor:</label>
-            <input type="text" id="second_minor" name="second_minor" placeholder="optional">
+            <input type="text" id="second_minor" name="second_minor" placeholder="optional" value="{{previous.second_minor}}">
         </div>
 
         <div class="form-group">
             <label for="Exp_Graduation">Expected Graduation:</label>
             <select id="Exp_Graduation" name="Exp_Graduation">
                 {% for year in range(current_year, current_year + 6) %}
-                    <option value="{{ year }}">{{ year }}</option>
+                    <option value="{{ year }}" {% if year == previous.Exp_Graduation|int %} selected {% endif %}>{{ year }}</option>
                 {% endfor %}
             </select>
         </div>
     
         <div class="form-group">
             <label for="school">School:</label>
-            <input type="text" id="school" name="school">
+            <input type="text" id="school" name="school" value="{{previous.school}}">
         </div>
 
         <div class="form-group">
             <label for="classification">Classification:</label>
             <select id="classification" name="classification">
                 <option value="">Please select</option>
-                <option value="freshman">Freshman</option>
-                <option value="sophomore">Sophomore</option>
-                <option value="junior">Junior</option>
-                <option value="senior">Senior</option>
-                <option value="other">Other</option>
+                <option value="freshman" {% if previous.classification == "freshman" %} selected {% endif %} >Freshman</option>
+                <option value="sophomore" {% if previous.classification == "sophomore" %} selected {% endif %}>Sophomore</option>
+                <option value="junior" {% if previous.classification == "junior" %} selected {% endif %}>Junior</option>
+                <option value="senior" {% if previous.classification == "senior" %} selected {% endif %}>Senior</option>
+                <option value="other" {% if previous.classification == "other" %} selected {% endif %}>Other</option>
             </select>
         </div>
 
         <div class="form-group">
             <label for="phone_number">Phone Number:</label>
-            <input type="tel" id="phone_number" name="phone_number" placeholder="123-456-7890">
+            <input type="tel" id="phone_number" name="phone_number" placeholder="123-456-7890" value="{{previous.phone_number}}">
         </div>
     </div>
 
@@ -167,85 +167,76 @@
             <label for="k12_gender">Gender:</label>
             <select id="k12_gender" name="k12_gender">
                 <option value="Not Selected">Please select</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
+                <option value="male" {% if previous.k12_gender == "male" %} selected {% endif %}>Male</option>
+                <option value="female" {% if previous.k12_gender == "female" %} selected {% endif %}>Female</option>
+                <option value="other" {% if previous.k12_gender == "other" %} selected {% endif %}>Other</option>
             </select>
         </div>
-
+    
         <div class="form-group">
             <label for="k12_hispanic_or_latino">Hispanic or Latino:</label>
-            <input type="checkbox" id="k12_hispanic_or_latino" name="k12_hispanic_or_latino">
+            <input type="checkbox" id="k12_hispanic_or_latino" name="k12_hispanic_or_latino" {% if previous.k12_hispanic_or_latino %} checked {% endif %}>
         </div>
-
+    
         <div class="form-group">
             <label for="k12_race">Race:</label>
             <select id="k12_race" name="k12_race">
                 <option value="">Please select</option>
-                <option value="asian">Asian</option>
-                <option value="black">Black or African American</option>
-                <option value="hispanic">Hispanic or Latino</option>
-                <option value="white">White</option>
-                <option value="native_american">Native American or Alaska Native</option>
-                <option value="pacific_islander">Native Hawaiian or Other Pacific Islander</option>
-                <option value="other">Other</option>
+                <option value="asian" {% if previous.k12_race == "asian" %} selected {% endif %}>Asian</option>
+                <option value="black" {% if previous.k12_race == "black" %} selected {% endif %}>Black or African American</option>
+                <option value="hispanic" {% if previous.k12_race == "hispanic" %} selected {% endif %}>Hispanic or Latino</option>
+                <option value="white" {% if previous.k12_race == "white" %} selected {% endif %}>White</option>
+                <option value="native_american" {% if previous.k12_race == "native_american" %} selected {% endif %}>Native American or Alaska Native</option>
+                <option value="pacific_islander" {% if previous.k12_race == "pacific_islander" %} selected {% endif %}>Native Hawaiian or Other Pacific Islander</option>
+                <option value="other" {% if previous.k12_race == "other" %} selected {% endif %}>Other</option>
             </select>
         </div>
-
+    
         <div class="form-group">
             <label for="k12_first_gen">First Generation Student:</label>
-            <input type="checkbox" id="k12_first_gen" name="k12_first_gen">
+            <input type="checkbox" id="k12_first_gen" name="k12_first_gen" {% if previous.k12_first_gen %} checked {% endif %}>
         </div>
-
+    
         <div class="form-group">
             <label for="k12_US_citizen">US Citizen:</label>
-            <input type="checkbox" id="k12_US_citizen" name="k12_US_citizen">
+            <input type="checkbox" id="k12_US_citizen" name="k12_US_citizen" {% if previous.k12_US_citizen %} checked {% endif %}>
         </div>
-
+    
         <div class="form-group">
-            <label for="k12_birth_date">Date of Birth: </label>
-            <input type="date" id="k12_birth_date" name="k12_birth_date">
+            <label for="k12_birth_date">Date of Birth:</label>
+            <input type="date" id="k12_birth_date" name="k12_birth_date" value="{{ previous.k12_birth_date }}">
         </div>
-
+    
         <div class="form-group">
             <label for="k12_school">School:</label>
-            <input type="text" id="k12_school" name="k12_school">
+            <input type="text" id="k12_school" name="k12_school" value="{{ previous.k12_school }}">
         </div>
-
+    
         <div class="form-group">
             <label for="k12_classification">Grade:</label>
             <select id="k12_classification" name="k12_classification">
                 <option value="">Please select</option>
-                <option value="K">K</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="1">5</option>
-                <option value="2">6</option>
-                <option value="3">7</option>
-                <option value="4">8</option>
-                <option value="1">9</option>
-                <option value="2">10</option>
-                <option value="3">11</option>
-                <option value="4">12</option>
+                <option value="K" {% if "K" == previous.k12_classification %} selected {% endif %}>K</option>
+                {% for grade in range(1, 13) %} <!-- Adjust range as needed -->
+                    <option value="{{ grade }}" {% if grade == previous.k12_classification %} selected {% endif %}>{{ grade }}</option>
+                {% endfor %}
             </select>
         </div>
-
+    
         <div class="form-group">
             <label for="k12_phone_number">Phone Number:</label>
-            <input type="tel" id="k12_phone_number" name="k12_phone_number" placeholder="123-456-7890">
+            <input type="tel" id="k12_phone_number" name="k12_phone_number" placeholder="123-456-7890" value="{{ previous.k12_phone_number }}">
         </div>
     </div>
 
     <div class="form-group">
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password">
+        <input type="password" id="password" name="password" value="{{previous.password}}">
     </div>
 
     <div class="form-group">
         <label for="confirm">Confirm Password:</label>
-        <input type="password" id="confirm" name="confirm">
+        <input type="password" id="confirm" name="confirm" value="{{previous.confirm}}">
     </div>
 
     <div class="form-group">
@@ -341,15 +332,15 @@
                     alert("Please fill out all required fields. ");
                     return false; 
                 }
-            }              
-        }
-
-        // Regex for phone number
-        var regex = /^\d{3}-\d{3}-\d{4}$/;
-        // Validate number
-        if(!regex.test((document.getElementById("phone_number").value))){
-            alert("Please enter a valid phone number.");
-            return false; 
+            }     
+            
+            // Regex for phone number
+            var regex = /^\d{3}-\d{3}-\d{4}$/;
+            // Validate number
+            if(!regex.test((document.getElementById("phone_number").value))){
+                alert("Please enter a valid phone number.");
+                return false; 
+            }
         }
 
         if(userType == "k12_student"){
@@ -359,6 +350,14 @@
                     return false; 
                 }
             }  
+
+            // Regex for phone number
+            var regex = /^\d{3}-\d{3}-\d{4}$/;
+            // Validate number
+            if(!regex.test((document.getElementById("k12_phone_number").value))){
+                alert("Please enter a valid phone number.");
+                return false; 
+            }
         }
         
         return true;

@@ -131,6 +131,29 @@ def get_user(conn, UIN):
     
     return user_info
 
+def check_user_email(conn, email):
+    result = conn.execute("SELECT * FROM Users WHERE Email = ?", (email,)).fetchone()
+    
+    if not result:
+        return True
+    else:
+        return False
+    
+def check_user_username(conn, username):
+    result = conn.execute("SELECT * FROM Users WHERE Username = ?", (username,)).fetchone()
+    
+    if not result:
+        return True
+    else:
+        return False
+    
+def check_user_uin(conn, UIN):
+    result = conn.execute("SELECT * FROM Users WHERE UIN = ?", (UIN,)).fetchone()
+    
+    if not result:
+        return True
+    else:
+        return False
           
           
 # UPDATES SINGLE FIELD

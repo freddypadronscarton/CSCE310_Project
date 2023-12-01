@@ -92,35 +92,38 @@ def register():
     #handling the submission
     #handling the submission
     
+    previous_entry = None
+    
     if request.method == 'POST':
         # fields from the submitted form
         entered_username = request.form['username']
         entered_uin = request.form['uin']
         entered_password = request.form['password']
         entered_confirmation = request.form['confirm']
+        entered_email = request.form['email']
+        
+        # save previous entry
+        previous_entry = request.form
+        
+        
+        # connect to db
+        conn = get_db_connection()        
         
         if not entered_confirmation == entered_password:
             flash("Passwords do not match. Please try again.", "Error")
-            return render_template('register.html')
-        
-        # connect to db
-        conn = get_db_connection()
-        # query for users by entered username
-        check_username = conn.execute('SELECT * FROM Users where username = ?', (entered_username, )).fetchone()
-        check_UIN = conn.execute('SELECT * FROM Users where UIN = ?', (entered_uin, )).fetchone()
-        
-        # TODO: Validate Email
-        
-
-        if check_username or check_UIN:
-            flash("That username or UIN is already in use. Please try another.", "Error")
+        elif check_user_username(conn,entered_username):
+            flash("That username is already in use. Please try another.", "Error")
+        elif check_user_email(conn, entered_email):
+            flash("That email is already in use. Please try another.", "Error")
+        elif check_user_email(conn, entered_uin):
+            flash("That UIN is already in use. Please try another.", "Error")
         else:
             register_user(conn, request.form)
             conn.commit()
             
         conn.close()  
      
-    return render_template('register.html', current_year=datetime.now().year)
+    return render_template('register.html', current_year=datetime.now().year, previous = previous_entry)
 
 
 # HOME PAGE
