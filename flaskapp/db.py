@@ -113,8 +113,13 @@ def init_sqlite_db():
                     FOREIGN KEY(program) REFERENCES Programs(program_num),
                     FOREIGN KEY(student_num) REFERENCES College_students(UIN)             
                   )''')
+    
+    
+    # CREATE INDEXES FOR TABLES
+    conn.execute("CREATE INDEX IF NOT EXISTS App_UIN_Index ON Application (UIN);")
+    conn.execute("CREATE INDEX IF NOT EXISTS Track_Index ON Track (program, student_num);")
 
-    print("Table created successfully")
+    print("Database initialized succesfully")
     conn.close()
 
 def get_db_connection():
