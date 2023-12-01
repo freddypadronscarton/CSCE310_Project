@@ -17,35 +17,35 @@ def init_sqlite_db():
     # USERS TABLE
     conn.execute(''' CREATE TABLE IF NOT EXISTS Users (
                     UIN INTEGER PRIMARY KEY,
-                    First_Name TEXT,
+                    First_Name TEXT NOT NULL,
                     M_Initial TEXT,
-                    Last_Name TEXT,
-                    Username TEXT,
-                    Password TEXT,
-                    User_Type TEXT,
-                    Email TEXT,
-                    Discord_Name TEXT,
-                    Archived INTEGER
+                    Last_Name TEXT NOT NULL,
+                    Username TEXT UNIQUE NOT NULL,
+                    Password TEXT NOT NULL,
+                    User_Type TEXT NOT NULL,
+                    Email TEXT UNIQUE NOT NULL,
+                    Discord_Name TEXT UNIQUE NOT NULL,
+                    Archived INTEGER NOT NULL
                     )''')
 
    # COLLEGE STUDENTS TABLE
     conn.execute(''' CREATE TABLE IF NOT EXISTS College_Students (
                     UIN INTEGER PRIMARY KEY,
-                    Gender TEXT,
-                    Hispanic_Or_Latino INTEGER,
-                    Race TEXT,
-                    US_Citizen INTEGER,
-                    First_Generation INTEGER,
-                    Birthdate DATE,
-                    GPA REAL,
-                    Major TEXT,
-                    Minor TEXT,
+                    Gender TEXT NOT NULL,
+                    Hispanic_Or_Latino INTEGER NOT NULL,
+                    Race TEXT NOT NULL,
+                    US_Citizen INTEGER NOT NULL,
+                    First_Generation INTEGER NOT NULL,
+                    Birthdate DATE NOT NULL,
+                    GPA REAL NOT NULL,
+                    Major TEXT NOT NULL,
+                    Minor TEXT ,
                     Second_Minor TEXT,
-                    Exp_Graduation INTEGER,
-                    School TEXT,
-                    Classification TEXT,
-                    Phone INTEGER,
-                    Student_Type TEXT,
+                    Exp_Graduation INTEGER NOT NULL,
+                    School TEXT NOT NULL,
+                    Classification TEXT NOT NULL,
+                    Phone INTEGER NOT NULL,
+                    Student_Type TEXT NOT NULL,
                     FOREIGN KEY(UIN) REFERENCES Users(UIN)
                     )
                 ''')
