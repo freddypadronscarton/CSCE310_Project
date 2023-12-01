@@ -3,10 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin Landing Page</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="../static/general.css">
+    <link rel="stylesheet" href="../static/admin_home.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <a class="navbar-brand" href="#">CSCE 310 Project</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/profile">Profile</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!--End of Navigation Bar -->
+
+
     <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -67,16 +93,6 @@
             {% endif %}
         {% endfor %}
     </table>
-
-    <!-- Logout Button -->
-    <form action="{{ url_for('logout') }}" method="post">
-        <button type="submit">Logout</button>
-    </form>
-
-    <!-- Edit Profile Button -->
-    <form action="{{ url_for('profile') }}" method="get">
-        <button type="submit">Edit Profile</button>
-    </form>
 
     <!-- User Type Selector Modal Container -->
     <Modal id="userTypeFrom" style="display:none;">

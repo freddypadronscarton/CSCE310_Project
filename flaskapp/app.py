@@ -339,7 +339,7 @@ def delete_application(app_num):
   conn.close()
   return jsonify({"success": "program application deleted"})
     
-@app.route("/logout", methods=['POST'])
+@app.route("/logout", methods=['POST', 'GET'])
 @login_required
 def logout():
     logout_user()
