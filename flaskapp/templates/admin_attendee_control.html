@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Attendee Control</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="../static/general.css">
+</head>
+<body>
+    <a href="{{url_for('admin_bp.view_all_events')}}">
+        <button>< Back</button>
+    </a>
+
+    <table>
+        <tr>
+            <th>UIN</th>
+            <th>Actions</th>
+        </tr>
+        {% for attendee in attendees %}
+        <tr>
+            <td>{{attendee.UIN}}</td>
+
+            <td>
+                <button onclick="deleteAttendee({{attendee.UIN}})">Delete</button>
+            </td>
+        {% endfor %}
+    </table>
+    <script>
+        function deleteAttendee(UIN) {
+            $.ajax({
+                url: `/admin/delete_attendee/${UIN}`,
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "UIN": parseInt(UIN)
+                }),
+                success: function(response) {
+                    window.location.reload();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
