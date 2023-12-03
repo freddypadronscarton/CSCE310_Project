@@ -230,8 +230,15 @@ def update_program(program_num):
 @login_required
 def get_report(program_num):
     conn = get_db_connection()
-    program = get_program(conn, program_num);
-    num_students = get_program_num_students(conn, program_num)[0];
+    program = get_program(conn, program_num)
+    num_students = get_program_num_students(conn, program_num)[0]
+
+    # num that completed all opportunities
+
+    num_in_foreign_lang = num_in_program_and_coursetype(conn, program_num, 'foreign language')
+    num_in_cryptogrpahy = num_in_program_and_coursetype(conn, program_num, 'cryptography')
+    num_in_cryptogrpahy += num_in_program_and_coursetype(conn, program_num, 'cryptography mathematics')
+    num_in_data_science = num_in_program_and_coursetype(conn, program_num, 'data science')
 
     # missing attributes
 
@@ -246,16 +253,16 @@ def get_report(program_num):
       minority_percent = 100
     
     k12 = conn.execute(f'''SELECT COUNT(*) FROM 
-                        (SELECT * FROM TRACK WHERE program={program_num}) AS Accepted_students
+                        (SELECT * FROM TRACK WHERE program = {program_num}) AS Accepted_students
                         INNER JOIN
-                        (SELECT * FROM College_students WHERE student_type='k12_student') AS K12_students
+                        (SELECT * FROM College_students WHERE student_type = 'k12_student') AS K12_students
                         ON Accepted_students.student_num=K12_students.UIN''').fetchone()[0]
 
     majors_data = conn.execute(f'''SELECT View_CollegeStudentDetails.major FROM
-                               (SELECT * FROM TRACK WHERE program={program_num}) AS Accepted_students
+                               (SELECT * FROM TRACK WHERE program = {program_num}) AS Accepted_students
                                INNER JOIN
                                View_CollegeStudentDetails
-                               ON Accepted_students.student_num=View_CollegeStudentDetails.UIN''').fetchall()
+                               ON Accepted_students.student_num = View_CollegeStudentDetails.UIN''').fetchall()
     
     # converts majors_data into a dictionary w {major: student count} values
     majors_dict = {"None": 0}
@@ -273,6 +280,12 @@ def get_report(program_num):
         "num_students": num_students,
 
         # missing attributes
+
+        "num_in_foreign_lang_courses": num_in_foreign_lang,
+        "num_in_crypt_courses": num_in_cryptogrpahy,
+        "num_in_data_science_courses": num_in_data_science,
+
+
         
         "minority_participation": f"{minority_percent: .2f}%",
         "num_k12_accepted": k12,

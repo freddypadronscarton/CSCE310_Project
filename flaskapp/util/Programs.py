@@ -34,6 +34,16 @@ def delete_program_backend(conn, program_num):
 def get_program_num_students(conn, program_num):
   return conn.execute(f'SELECT COUNT(*) FROM TRACK WHERE program={program_num}').fetchone()
 
+def num_in_program_and_coursetype(conn, program_num, course_type):
+  return conn.execute(f'''SELECT COUNT(DISTINCT UIN) AS num_students_in_foreign_lang 
+                          FROM (SELECT * FROM Track WHERE Program = {program_num}) AS Accepted_students
+                          JOIN Class_enrollment
+                          ON Accepted_students.student_num = Class_enrollment.UIN
+                          JOIN Classes
+                          ON Class_enrollment.Class_ID = Classes.Class_ID
+                          WHERE Classes.type = {course_type}
+                          ''').fetchone()[0]
+
 # These functions are mainly meant for student pages
 def get_applied_programs(conn, UIN):
   return conn.execute(f'''SELECT * FROM View_ApplicationDetails Where UIN = {UIN}''').fetchall()
