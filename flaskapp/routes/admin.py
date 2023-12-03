@@ -222,3 +222,43 @@ def update_program(program_num):
     program = get_program(conn, program_num)
     conn.close()
     return render_template("admin_update_program.html", program=program)
+
+
+# ENDPOINT FOR GETTING REPORT FOR A PROGRAM
+@admin_bp.route('/get_report/<int:program_num>')
+@login_required
+def get_report(program_num):
+    conn = get_db_connection()
+    program = get_program(conn, program_num);
+    num_students = get_program_num_students(conn, program_num)[0];
+
+    # missing attributes
+
+    minority_count = conn.execute("SELECT COUNT(*) FROM Student_Data WHERE race != 'white'").fetchone()[0]
+    # Error checking to prevent divide by zero errors
+    if (num_students == 0):
+        minority_percent = 0
+    else:
+        minority_percent = minority_count/num_students * 100
+    if (minority_percent > 100):
+      print("Error, impossible for minority percent to be over 100%")
+      minority_percent = 100
+    
+    k12 = conn.execute(f'''SELECT COUNT(*) FROM 
+                        (SELECT * FROM TRACK WHERE program={program_num}) AS Accepted_students
+                        INNER JOIN
+                        (SELECT * FROM College_students WHERE student_type='k12_student') AS K12_students
+                        ON Accepted_students.student_num=K12_students.UIN''').fetchone()[0]
+
+    program_report = {
+        "name" : program["name"],
+        "descr" : program["description"],
+        "num_students": num_students,
+
+        # missing attributes
+        
+        "minority_participation": f"{minority_percent: .2f}%",
+        "num_k12_accepted": k12
+    }
+    conn.close()
+    return render_template("get_program_report.html", program=program_report)

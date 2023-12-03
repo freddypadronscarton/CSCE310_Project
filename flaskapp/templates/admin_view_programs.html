@@ -24,7 +24,9 @@
       <td>{{ program.name }}</td>
       <td>{{ program.description }}</td>
       <td>
-        <button>Get Report</button>
+        <a href="/admin/get_report/{{program.program_num}}">
+          <button>Get Report</button>
+        </a>
       </td>
       <td>
         <a href="/admin/update_program/{{program.program_num}}">

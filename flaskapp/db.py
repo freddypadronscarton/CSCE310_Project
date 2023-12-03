@@ -117,7 +117,15 @@ def init_sqlite_db():
     
     # CREATE INDEXES FOR TABLES
     conn.execute("CREATE INDEX IF NOT EXISTS App_UIN_Index ON Application (UIN);")
-    conn.execute("CREATE INDEX IF NOT EXISTS Track_Index ON Track (program, student_num);")
+    conn.execute("CREATE INDEX IF NOT EXISTS Track_Index ON Track (program);")
+
+    conn.execute("DROP VIEW IF EXISTS Student_Data")
+
+    # CREATE VIEWS FOR TABLES
+    conn.execute('''CREATE VIEW Student_Data AS 
+                 SELECT UIN, gender, hispanic_or_latino, race, us_citizen, 
+                 first_generation, GPA, major, student_type
+                 FROM College_students''')
 
     print("Database initialized succesfully")
     conn.close()
