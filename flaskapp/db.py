@@ -105,14 +105,83 @@ def init_sqlite_db():
                     FOREIGN KEY(UIN) REFERENCES College_students(UIN)
                     )''')
     
-    # TRACK TABLE
+    # TRACK TABLE: status = ['Applied', 'Rejected', 'Enrolled', 'Completed', 'Inactive'] 
     conn.execute('''CREATE TABLE IF NOT EXISTS Track (
                     tracking_num INTEGER PRIMARY KEY AUTOINCREMENT,
                     program INTEGER,
                     student_num INTEGER,
+                    status VARCHAR, 
                     FOREIGN KEY(program) REFERENCES Programs(program_num),
                     FOREIGN KEY(student_num) REFERENCES College_students(UIN)             
                   )''')
+    
+    # CLASSES TABLE
+    conn.execute(''' CREATE TABLE IF NOT EXISTS Classes (
+                    Class_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Name VARCHAR,
+                    Description VARCHAR,
+                    Type VARCHAR
+                    )
+                 ''')
+    
+    # INTERNSHIP TABLE
+    conn.execute(''' CREATE TABLE IF NOT EXISTS Internship (
+                    Intern_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Name VARCHAR,
+                    Description VARCHAR,
+                    Is_Gov BINARY
+                    )
+                 ''')
+    
+    # CERTIFICATION TABLE
+    conn.execute(''' CREATE TABLE IF NOT EXISTS Certification (
+                    Cert_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Name VARCHAR,
+                    Description VARCHAR,
+                    Level VARCHAR
+                    )
+                 ''')
+    
+    # CLASS ENROLLMENT TABLE
+    conn.execute(''' CREATE TABLE IF NOT EXISTS Class_Enrollment (
+                    CE_Num INTEGER PRIMARY KEY AUTOINCREMENT,
+                    UIN INTEGER,
+                    Class_ID INTEGER,
+                    Status VARCHAR, 
+                    Semester VARCHAR,
+                    Year YEAR,
+                    FOREIGN KEY(UIN) REFERENCES College_students(UIN),
+                    FOREIGN KEY(Class_ID) REFERENCES Classes(Class_ID)
+                    )
+                 ''')
+    
+    # CERTIFICATION ENROLLMENT TABLE
+    conn.execute(''' CREATE TABLE IF NOT EXISTS Cert_Enrollment (
+                    CertE_Num INTEGER PRIMARY KEY AUTOINCREMENT,
+                    UIN INTEGER,
+                    Cert_ID INTEGER,
+                    Program_Num INTEGER
+                    Status VARCHAR, 
+                    Training_Status VARCHAR,
+                    Semester VARCHAR,
+                    Year YEAR,
+                    FOREIGN KEY(UIN) REFERENCES College_students(UIN),
+                    FOREIGN KEY(Cert_ID) REFERENCES Certification(Cert_ID),
+                    FOREIGN KEY(Program_Num) REFERENCES Programs(program_Num)
+                    )
+                 ''')
+    
+    # INTERNSHIP APPLICATION TABLE
+    conn.execute(''' CREATE TABLE IF NOT EXISTS Intern_App (
+                    IA_Num INTEGER PRIMARY KEY AUTOINCREMENT,
+                    UIN INTEGER,
+                    Intern_ID INTEGER,
+                    Status VARCHAR, 
+                    Year YEAR,
+                    FOREIGN KEY(UIN) REFERENCES College_students(UIN),
+                    FOREIGN KEY(Intern_ID) REFERENCES Internship(Intern_ID)
+                    )
+                 ''')
     
     
     #  ---------- VIEWS ----------
