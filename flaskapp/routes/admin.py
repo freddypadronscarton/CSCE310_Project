@@ -179,7 +179,7 @@ def add_program():
         else:
             add_new_program(conn, program_name, program_descr)
             conn.close()
-            return render_template("admin/admin_home.html")
+            return redirect(url_for("home"))
     return render_template("admin/admin_add_program.html")
     
 # ENDPOINT FOR ADMIN TO VIEW ALL PROGRAMS
