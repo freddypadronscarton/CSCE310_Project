@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Get Program Report</title>
+  <link rel="stylesheet" href="../../static/general.css">
+</head>
+<body>
+  <a href="{{ url_for('admin_bp.view_all_programs') }}">
+    <button>< Back to All Programs</button>
+  </a>
+  <h2>Program Report</h2>
+  <table>
+    <tr>
+      <th>Program Name</th>
+      <td>{{ program.name }}</td>
+    </tr>
+    <tr>
+      <th>Program description</th>
+      <td>{{ program.descr }}</td>
+    </tr>
+    <tr>
+      <th>Number of students</th>
+      <td>{{ program.num_students }}</td>
+    </tr>
+    <tr>
+      <th>Number of students that completed all opportunities</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th>Number of students in foreign language courses</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th>Number of students take other cryptography and cryptographic mathematics courses</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th>Number of students electing to carry additional data science and related courses</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th>Number of students to enroll in DoD 8570.01M preparation training courses</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th>Number of students to complete DoD 8570.01M preparation training courses</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th>Number of students to complete a DoD 8570.01M certification examination</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th>Minority participation</th>
+      <td>{{ program.minority_participation }}</td>
+    </tr>
+    <tr>
+      <th>The number of K-12 students enrolled in summer camps</th>
+      <td>{{ program.num_k12_accepted }}</td>
+    </tr>
+    <tr>
+      <th>Number of students pursuing federal internships</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th>Student majors</th>
+      <td>
+        {% for major in program.student_majors %}
+          <p>{{ major }}: {{ program.student_majors[major] }}</p>
+        {% endfor %}
+      </td>
+    </tr>
+    <tr>
+      <th>Internship locations</th>
+      <td></td>
+    </tr>
+    <!-- <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr> -->
+  </table>
+</body>
+</html>

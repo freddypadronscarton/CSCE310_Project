@@ -136,6 +136,11 @@ def init_sqlite_db():
         ON Applied.program_num = Programs.program_num;
     ''')
     
+    # conn.execute('''CREATE VIEW IF NOT EXISTS Student_Data AS 
+    #              SELECT UIN, gender, hispanic_or_latino, race, us_citizen, 
+    #              first_generation, GPA, major, student_type
+    #              FROM College_students''')
+    
     
     #  ---------- INDEXES ---------- 
     
@@ -143,11 +148,12 @@ def init_sqlite_db():
     conn.execute('CREATE INDEX IF NOT EXISTS idx_application_uin ON Application(UIN)')
     conn.execute('CREATE INDEX IF NOT EXISTS idx_user_username ON Users(Username)')
     conn.execute('CREATE INDEX IF NOT EXISTS idx_user_email ON Users(Email)')
+    conn.execute("CREATE INDEX IF NOT EXISTS Track_Index ON Track (program);")
 
     
-    
     conn.commit()
-    print("Table created successfully")
+
+    print("Database initialized succesfully")
     conn.close()
 
 def get_db_connection():

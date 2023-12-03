@@ -14,4 +14,10 @@ th, td {
 
 th {
   background-color: #f8f8f8;
+  vertical-align: text-top;
+}
+
+/* this is for lists of p elements inside cells, example on program report page */
+td p {
+  margin: 0px;
 }

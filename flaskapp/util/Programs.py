@@ -1,6 +1,10 @@
 from flask import flash
 from db import *
 
+def get_program(conn, program_num):
+  return conn.execute('SELECT * FROM Programs WHERE program_num=?', (program_num, )).fetchone()
+
+# These functions are mainly meant for admin pages
 def is_program_name_taken(conn, program_name):
   program_exist = conn.execute('SELECT COUNT(*) FROM Programs WHERE name=?', (program_name, )).fetchone()[0]
   if (program_exist > 0):
@@ -11,9 +15,6 @@ def is_program_name_taken(conn, program_name):
 def add_new_program(conn, program_name, program_descr):
   conn.execute('INSERT INTO Programs (name, description, archived) VALUES (?, ?, 0)', (program_name, program_descr))
   conn.commit()
-
-def get_program(conn, program_num):
-  return conn.execute('SELECT * FROM Programs WHERE program_num=?', (program_num, )).fetchone()
 
 def get_all_programs(conn):
   return conn.execute('SELECT * FROM Programs').fetchall()
@@ -30,6 +31,10 @@ def delete_program_backend(conn, program_num):
   conn.execute('DELETE FROM Programs WHERE program_num=?', (program_num, ))
   conn.commit()
 
+def get_program_num_students(conn, program_num):
+  return conn.execute(f'SELECT COUNT(*) FROM TRACK WHERE program={program_num}').fetchone()
+
+# These functions are mainly meant for student pages
 def get_applied_programs(conn, UIN):
   return conn.execute(f'''SELECT * FROM View_ApplicationDetails Where UIN = {UIN}''').fetchall()
 
