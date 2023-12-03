@@ -4,7 +4,7 @@ body {
 }
 
 .container {
-    max-width: 600px;
+    max-width: 50%;
     margin: auto;
 }
 
@@ -33,14 +33,14 @@ body {
     margin-bottom: .5rem;
 }
 
-.form-group input[type="text"],
-.form-group input[type="email"],
-.form-group input[type="tel"],
-.form-group input[type="number"],
-.form-group select,
-.form-group input[type="date"],
-.form-group input[type="submit"] {
-    width: 100%;
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+select,
+input[type="date"],
+input[type="submit"] {
+    width: 50%;
     padding: .375rem .75rem;
     border: 1px solid #ced4da;
     border-radius: .25rem;
@@ -71,8 +71,8 @@ body {
 }
 
 .btn-danger {
-    background-color: #dc3545;
-    border-color: #dc3545;
+    background-color: #a47378;
+    border-color: #a47378;
 }
 
 .btn-custom:hover {
