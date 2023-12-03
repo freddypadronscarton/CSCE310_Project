@@ -250,6 +250,22 @@ def get_report(program_num):
                         (SELECT * FROM College_students WHERE student_type='k12_student') AS K12_students
                         ON Accepted_students.student_num=K12_students.UIN''').fetchone()[0]
 
+    majors_data = conn.execute(f'''SELECT Student_data.major FROM
+                               (SELECT * FROM TRACK WHERE program={program_num}) AS Accepted_students
+                               INNER JOIN
+                               Student_data
+                               ON Accepted_students.student_num=Student_data.UIN''').fetchall()
+    
+    # converts majors_data into a dictionary w {major: student count} values
+    majors_dict = {"None": 0}
+    for major in majors_data:
+        majorName = major[0]
+        currCount = majors_dict.get(majorName, -1)
+        if (currCount == -1):
+            majors_dict.update({majorName: 1})
+        else:
+            majors_dict.update({majorName: currCount + 1})
+    
     program_report = {
         "name" : program["name"],
         "descr" : program["description"],
@@ -258,7 +274,11 @@ def get_report(program_num):
         # missing attributes
         
         "minority_participation": f"{minority_percent: .2f}%",
-        "num_k12_accepted": k12
+        "num_k12_accepted": k12,
+
+        # num pursuing federal internships
+
+        "student_majors": majors_dict 
     }
     conn.close()
     return render_template("get_program_report.html", program=program_report)

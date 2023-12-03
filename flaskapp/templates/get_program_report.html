@@ -65,8 +65,12 @@
       <td></td>
     </tr>
     <tr>
-      <th>Student majors ?? How to approach this</th>
-      <td></td>
+      <th>Student majors</th>
+      <td>
+        {% for major in program.student_majors %}
+          <p>{{ major }}: {{ program.student_majors[major] }}</p>
+        {% endfor %}
+      </td>
     </tr>
     <tr>
       <th>Internship locations</th>
