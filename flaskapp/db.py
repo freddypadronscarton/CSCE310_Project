@@ -225,6 +225,24 @@ def init_sqlite_db():
     #     ON Applied.program_num = Programs.program_num;
     # ''')
     
+    # Join classes and enrollments
+    conn.execute('''CREATE VIEW IF NOT EXISTS View_ClassEnrollmentDetails AS
+    SELECT
+        CE.CE_Num,
+        CE.UIN,
+        CE.Class_ID,
+        CE.Status,
+        CE.Semester,
+        CE.Year,
+        C.Name AS ClassName,
+        C.Description AS ClassDescription,
+        C.Type AS ClassType
+    FROM
+        Class_Enrollment CE
+        JOIN Classes C ON CE.Class_ID = C.Class_ID;
+        ''')
+
+
     # conn.execute('''CREATE VIEW IF NOT EXISTS Student_Data AS 
     #              SELECT UIN, gender, hispanic_or_latino, race, us_citizen, 
     #              first_generation, GPA, major, student_type

@@ -100,13 +100,16 @@
     <div>
       <h2>Class Progress</h2>
       <div>
-        <a href="{{ url_for('admin_bp.add_program') }}">
+        <a href="{{ url_for('classes_bp.add_classes') }}">
           <button>Add Class</button>
         </a>
-        <a href="{{ url_for('admin_bp.view_all_programs') }}">
+        <a href="{{ url_for('classes_bp.view_all_classes') }}">
           <button>View Classes</button>
         </a>
-        Classes not yet implemented
+        <a href="{{ url_for('classes_bp.view_classes', UIN=request.view_args['UIN']) }}">
+          <button>View User's Classes</button>
+        </a>
+        &lt;--Not yet implemented
       </div>
       <table id="classesTable">
         <tr>
