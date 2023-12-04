@@ -150,11 +150,11 @@ def home():
     elif current_user.user_type == "college_student":
         items = conn.execute('SELECT * FROM items where UIN = ?', (current_user.uin, )).fetchall()
         conn.close()
-        return render_template('college_home.html', items=items)
+        return render_template('student/college_home.html', items=items)
     elif current_user.user_type == "k12_student":
         items = conn.execute('SELECT * FROM items where UIN = ?', (current_user.uin, )).fetchall()
         conn.close()
-        return render_template('k12_home.html', items=items)
+        return render_template('student/k12_home.html', items=items)
     else:
         conn.close()
         return render_template('auth/login.html')
@@ -287,7 +287,7 @@ def program_application():
     conn = get_db_connection()
     programs = conn.execute('SELECT * FROM programs').fetchall()
     conn.close()
-    return render_template('program_application.html', programs=programs)
+    return render_template('student/program_application.html', programs=programs)
 
 # This is the endpoint for checking if a user has already applied to the program
 @app.route('/program_applied_check/<int:program_num>')
@@ -328,7 +328,7 @@ def load_update_appl_page(app_num):
     conn = get_db_connection()
     app = conn.execute("SELECT * FROM Application WHERE APP_NUM = ?", (app_num, )).fetchone()
     conn.close();
-    return render_template("update_program_app.html", app=app)
+    return render_template("student/update_program_app.html", app=app)
 
 @app.route('/update_application', methods=['POST'])
 def update_application():
@@ -397,7 +397,7 @@ def update_document(doc_num):
     conn = get_db_connection()
     document = get_document_by_id(conn, doc_num)
     conn.close()
-    return render_template('update_document.html', document=document)
+    return render_template('student/update_document.html', document=document)
 
 @app.route('/update_file/<int:doc_num>', methods=['POST'])
 def update_file(doc_num):
