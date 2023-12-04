@@ -231,7 +231,7 @@ def view_all_events():
     conn = get_db_connection()
     events = get_all_events(conn)
     conn.close()
-    return render_template("admin_view_events.html", events=events)
+    return render_template("admin/admin_view_events.html", events=events)
 
 # ENDPOINT FOR ADMIN TO ADD EVENTS
 @admin_bp.route('/add_event', methods=['GET', 'POST'])
@@ -249,7 +249,7 @@ def add_event():
         add_new_event(conn, Program_Num, UIN, Start_Date, Time, Location, End_Date, Event_Type)
         conn.close()
         return render_template("admin/admin_home.html")
-    return render_template("admin_add_event.html")
+    return render_template("admin/admin_add_event.html")
 
 # ENDPOINT FOR ADMIN TO DELETE EVENTS
 @admin_bp.route('/delete_event/<int:event_id>', methods=['DELETE'])
@@ -280,7 +280,7 @@ def event_attendance(event_id):
     conn = get_db_connection()
     event_attendance = get_event_attendance(conn, event_id)
     conn.close()
-    return render_template("admin_view_events.html", event_attendance=event_attendance)
+    return render_template("admin/admin_view_events.html", event_attendance=event_attendance)
 
 # ENDPOINT FOR ADMIN ATTENDEE CONTROL *** FIX THIS ***
 @admin_bp.route('/attendee_control/<int:event_id>', methods=['GET', 'POST'])
@@ -293,7 +293,7 @@ def attendee_control(event_id):
         return redirect(url_for('admin_bp.admin_attendee_control'))
     event_attendance = get_event_attendance(conn, event_id)
     conn.close()
-    return render_template("admin_attendee_control.html", event_attendance=event_attendance)
+    return render_template("admin/admin_attendee_control.html", event_attendance=event_attendance)
 
 # ENDPOINT FOR ADMIN TO ADD ATTENDEES TO AN EVENT *** FIX THIS ***
 @admin_bp.route('/add_attendee/<int:event_id>', methods=['GET', 'POST'])
@@ -306,4 +306,87 @@ def add_attendee(event_id):
         return redirect(url_for('admin_bp.admin_attendee_control'))
     event_attendance = get_event_attendance(conn, event_id)
     conn.close()
-    return render_template("admin_attendee_control.html", event_attendance=event_attendance)
+    return render_template("admin/admin_attendee_control.html", event_attendance=event_attendance)
+
+
+@admin_bp.route('/get_report/<int:program_num>')
+def get_report(program_num):
+    conn = get_db_connection()
+    
+    program = get_program(conn, program_num)
+    num_students = get_program_num_students(conn, program_num)
+
+    # num that completed all opportunities
+    completed_students_count = num_students_completed_program(conn, program_num)
+
+    num_in_foreign_lang = num_in_program_and_coursetype(conn, program_num, 'foreign language')
+    num_in_cryptogrpahy = num_in_program_and_coursetype(conn, program_num, 'cryptography')
+    num_in_cryptogrpahy += num_in_program_and_coursetype(conn, program_num, 'cryptography mathematics')
+    num_in_data_science = num_in_program_and_coursetype(conn, program_num, 'data science')
+
+    # missing attributes
+
+    minority_count = conn.execute("SELECT COUNT(*) FROM View_CollegeStudentDetails WHERE race != 'white'").fetchone()[0]
+    # Error checking to prevent divide by zero errors
+    if (num_students == 0):
+        minority_percent = 0
+    else:
+        minority_percent = minority_count/num_students * 100
+    if (minority_percent > 100):
+      print("Error, impossible for minority percent to be over 100%")
+      minority_percent = 100
+
+    k12 = conn.execute(f'''SELECT COUNT(*) FROM 
+                        (SELECT * FROM TRACK WHERE program = {program_num}) AS Accepted_students
+                        INNER JOIN
+                        (SELECT * FROM College_students WHERE student_type = 'k12_student') AS K12_students
+                        ON Accepted_students.student_num=K12_students.UIN''').fetchone()[0]
+    
+    DoD_training_completed = num_w_specified_DoD_training_status(conn, program_num, "Complete")
+    DoD_training_enrolled = num_w_specified_DoD_training_status(conn, program_num, "Enrolled")
+    # A student who has a complete status is also enrolled in the training program
+    DoD_training_enrolled += DoD_training_completed
+    DoD_cert_complete = num_completed_DoD_cert(conn, program_num)
+    fed_internships = num_federal_internships(conn, program_num)
+    majors_data = conn.execute(f'''SELECT View_CollegeStudentDetails.major FROM
+                               (SELECT * FROM TRACK WHERE program = {program_num}) AS Accepted_students
+                               INNER JOIN
+                               View_CollegeStudentDetails
+                               ON Accepted_students.student_num = View_CollegeStudentDetails.UIN''').fetchall()
+
+    # converts majors_data into a dictionary w {major: student count} values
+    majors_dict = {"None": 0}
+    for major in majors_data:
+        majorName = major[0]
+        currCount = majors_dict.get(majorName, -1)
+        if (currCount == -1):
+            majors_dict.update({majorName: 1})
+        else:
+            majors_dict.update({majorName: currCount + 1})
+            
+    internship_list = []
+    all_internship_names = names_of_prog_student_internships(conn, program_num)
+    if all_internship_names != None:
+      for internship in all_internship_names:
+          internship_list.append(internship[0])
+          
+
+    program_report = {
+        "name" : program["name"],
+        "descr" : program["description"],
+        "num_students": num_students,
+        "completed_students_count": completed_students_count,
+        "num_in_foreign_lang_courses": num_in_foreign_lang,
+        "num_in_crypt_courses": num_in_cryptogrpahy,
+        "num_in_data_science_courses": num_in_data_science,        
+        "minority_participation": f"{minority_percent: .2f}%",
+        "num_k12_accepted": k12,
+        "DoD_training_enrolled": DoD_training_enrolled,
+        "DoD_training_completed": DoD_training_completed,
+        "DoD_cert_complete": DoD_cert_complete,
+        "fed_internships" : fed_internships,
+        "student_majors": majors_dict,
+        "internship_names": internship_list
+    }
+    
+    return render_template("admin/get_program_report.html", program=program_report)
