@@ -248,7 +248,7 @@ def add_event():
         conn = get_db_connection()
         add_new_event(conn, Program_Num, UIN, Start_Date, Time, Location, End_Date, Event_Type)
         conn.close()
-        return render_template("admin_home.html")
+        return render_template("admin/admin_home.html")
     return render_template("admin_add_event.html")
 
 # ENDPOINT FOR ADMIN TO DELETE EVENTS
