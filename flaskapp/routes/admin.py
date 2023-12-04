@@ -231,9 +231,10 @@ def update_program(program_num):
 def get_report(program_num):
     conn = get_db_connection()
     program = get_program(conn, program_num)
-    num_students = get_program_num_students(conn, program_num)[0]
+    num_students = get_program_num_students(conn, program_num)
 
     # num that completed all opportunities
+    completed_students_count = num_students_completed_program(conn, program_num)
 
     num_in_foreign_lang = num_in_program_and_coursetype(conn, program_num, 'foreign language')
     num_in_cryptogrpahy = num_in_program_and_coursetype(conn, program_num, 'cryptography')
@@ -258,6 +259,16 @@ def get_report(program_num):
                         (SELECT * FROM College_students WHERE student_type = 'k12_student') AS K12_students
                         ON Accepted_students.student_num=K12_students.UIN''').fetchone()[0]
 
+
+    DoD_training_completed = num_w_specified_DoD_training_status(conn, program_num, "Complete")
+    DoD_training_enrolled = num_w_specified_DoD_training_status(conn, program_num, "Enrolled")
+    # A student who has a complete status is also enrolled in the training program
+    DoD_training_enrolled += DoD_training_completed
+
+    DoD_cert_complete = num_completed_DoD_cert(conn, program_num)
+
+    fed_internships = num_federal_internships(conn, program_num)
+
     majors_data = conn.execute(f'''SELECT View_CollegeStudentDetails.major FROM
                                (SELECT * FROM TRACK WHERE program = {program_num}) AS Accepted_students
                                INNER JOIN
@@ -273,26 +284,29 @@ def get_report(program_num):
             majors_dict.update({majorName: 1})
         else:
             majors_dict.update({majorName: currCount + 1})
-    
+
+    internship_list = []
+    all_internship_names = names_of_prog_student_internships(conn, program_num)
+    if all_internship_names != None:
+      for internship in all_internship_names:
+          internship_list.append(internship[0])
+
     program_report = {
         "name" : program["name"],
         "descr" : program["description"],
         "num_students": num_students,
-
-        # missing attributes
-
+        "completed_students_count": completed_students_count,
         "num_in_foreign_lang_courses": num_in_foreign_lang,
         "num_in_crypt_courses": num_in_cryptogrpahy,
-        "num_in_data_science_courses": num_in_data_science,
-
-
-        
+        "num_in_data_science_courses": num_in_data_science,        
         "minority_participation": f"{minority_percent: .2f}%",
         "num_k12_accepted": k12,
-
-        # num pursuing federal internships
-
-        "student_majors": majors_dict 
+        "DoD_training_enrolled": DoD_training_enrolled,
+        "DoD_training_completed": DoD_training_completed,
+        "DoD_cert_complete": DoD_cert_complete,
+        "fed_internships" : fed_internships,
+        "student_majors": majors_dict,
+        "internship_names": internship_list
     }
     conn.close()
     return render_template("get_program_report.html", program=program_report)
