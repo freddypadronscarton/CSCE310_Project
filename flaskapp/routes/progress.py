@@ -19,7 +19,5 @@ def view_progress(UIN):
     programs = conn.execute('SELECT * FROM View_ApplicationDetails where UIN = ?', (UIN,)).fetchall()
     # name = conn.execute('SELECT * FROM WHERE UIN = ?', (UIN,)).fetchone()
     conn.close()
-
-
-
+    
     return render_template("admin/admin_program_progress.html", programs=programs)

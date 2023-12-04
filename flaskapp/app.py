@@ -12,6 +12,7 @@ from routes.admin import admin_bp
 from routes.example import items_bp
 from util.Documents import *
 from routes.progress import progress_bp
+from routes.classes import classes_bp
 
 # App Initialization
 app = Flask(__name__)
@@ -26,6 +27,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.register_blueprint(admin_bp, url_prefix='/admin')
 app.register_blueprint(items_bp, url_prefix='/items')
 app.register_blueprint(progress_bp, url_prefix='/progress')
+app.register_blueprint(classes_bp, url_prefix='/classes')
 
 # Flask-Login: User class and user_loader
 class User(UserMixin):
