@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document Viewer</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="../static/general.css">
+</head>
+<body>
+  <a class="back_button" href="{{ url_for('home') }}">
+    <button>< Back</button>
+  </a>
+
+    <h2>Documents</h2>
+
+    <table id="documentTable">
+        <tr>
+            <th>Document Type</th>
+            <th>Actions</th>
+        </tr>
+        {% for document in documents %}
+        <tr>
+            <td>{{ document.doc_type }}</td>
+            <td>
+                <button onclick="deleteDocument({{ document.doc_num }})">Delete</button>
+                <a href="/update_document/{{document.doc_num}}">
+                    <button>Update</button>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <script>
+        function deleteDocument(doc_num) {
+            $.ajax({
+                url: `/delete_document/${doc_num}`,
+                method: 'DELETE',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "doc_num": parseInt(doc_num)
+                }),
+                success: function(response) {
+                    window.location.reload();
+                }
+            });
+        }
+    </script>
+    
+</body>
+</html>

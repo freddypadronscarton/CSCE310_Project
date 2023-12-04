@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Event</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="../static/general.css">
+</head>
+<body>
+  <a class="back_button" href="{{ url_for('admin_bp.view_all_events') }}">
+    <button>< Back to All Events</button>
+  </a>
+
+  <h2>Update Event</h2>
+
+  <form action="/admin/update_event/{{event.event_id}}" method="POST">
+        <div class="form-group">
+            <input id="event_id" name="event_id" type="number" value="{{ event.event_id }}" style="display:none"></div>
+        </div>
+
+    <div class="form-group">
+        <label for="program_num">Program Number</label>
+        <input id="program_num" name="program_num" type="number" value="{{ event.program_num }}">
+    </div>
+
+    <div class="form-group">      
+        <label for="UIN">UIN of Event Creator</label>
+        <input id="UIN" name="UIN" type="number" value="{{ event.UIN }}">
+    </div>
+
+    <div class="form-group">      
+        <label for="start_date">Start Date</label>
+        <input id="start_date" name="start_date" type="date" value="{{ event.start_date }}">
+    </div>
+
+    <div class="form-group">      
+        <label for="time">Time</label>
+        <input id="time" name="time" type="time" value="{{ event.time }}">
+    </div>
+
+    <div class="form-group">      
+        <label for="location">Location</label>
+        <input id="location" name="location" type="text" value="{{ event.location }}">
+    </div>
+
+    <div class="form-group">      
+        <label for="end_date">End Date</label>
+        <input id="end_date" name="end_date" type="date" value="{{ event.end_date }}">
+    </div>
+
+    <div class="form-group">      
+        <label for="event_type">Event Type</label>
+        <input id="event_type" name="event_type" type="text" value="{{ event.event_type }}">
+    </div>
+
+    <br>
+    <div class="form-group">
+      <button id="apply-button" type="submit">Update</button>
+    </div>
+  </form>
+
+  <script>
+    
+  </script>
+</body>
+</html>
