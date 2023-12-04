@@ -6,7 +6,8 @@ def init_sqlite_db():
     conn = sqlite3.connect('database.db')
     print("Opened database successfully")
     
-    conn.execute('''DROP TABLE Track''')
+    # conn.execute('''DROP TABLE Track''')
+
     # ITEMS TABLE (EXAMPLE)
     conn.execute(''' CREATE TABLE IF NOT EXISTS items (
                     item_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -155,13 +156,13 @@ def init_sqlite_db():
                     FOREIGN KEY(Class_ID) REFERENCES Classes(Class_ID)
                     )
                  ''')
-    
+
     # CERTIFICATION ENROLLMENT TABLE
     conn.execute(''' CREATE TABLE IF NOT EXISTS Cert_Enrollment (
                     CertE_Num INTEGER PRIMARY KEY AUTOINCREMENT,
                     UIN INTEGER,
                     Cert_ID INTEGER,
-                    Program_Num INTEGER
+                    Program_Num INTEGER,
                     Status VARCHAR, 
                     Training_Status VARCHAR,
                     Semester VARCHAR,
@@ -216,8 +217,59 @@ def init_sqlite_db():
         ON Applied.program_num = Programs.program_num;
     ''')
 
-    conn.execute('''CREATE VIEW IF NOT EXISTS Program_accepts AS
+    # INSERT STATEMENTS FOR THE SAKE OF TESTING GIVEN THAT ALEX'S CODE ISN"T DONE
+    # Add Student
+    # conn.execute('''INSERT INTO Track (program, student_num, status) 
+    #              values (1, 1111111111, "Accepted")''')
+    # Add Class
+    # conn.execute('''INSERT INTO Classes (name, description, type) 
+    #              values ("data science", "beginner data science class", "data science")''')
+    # Add Class Enrollment
+    # conn.execute('''INSERT INTO Class_enrollment (UIN, Class_ID, status) 
+    #              values (11111, 6, "Enrolled")''')
+    # Add Certification
+    # conn.execute('''INSERT INTO Certification (Name, Description, Level)
+    #              values ("cert1", "basic cyber certification", "1")''')
+    # Add Certificatino Enrollment
+    # conn.execute('''INSERT INTO Cert_enrollment (UIN, Cert_ID, Program_Num, Status, Training_status)
+    #              values (3424, 1, 1, "Incomplete", "Enrolled")''')
+    
+    # Set Student program status to complete
+    # conn.execute('''UPDATE TRACK SET STATUS = "Completed" WHERE student_num = 3424''')
+
+    # conn.execute('''UPDATE Cert_enrollment
+    #              SET Status = "Complete"
+    #              WHERE CertE_Num = 2''')
+    
+    # Add Internship
+    # conn.execute('''INSERT INTO Internship (Name, Description, Is_Gov)
+    #              VALUES ("Gov Internship", "a govt internship", 1)''')
+    # Add Internship Application
+    # conn.execute('''INSERT INTO Intern_app (UIN, Intern_ID, Status, Year)
+    #              VALUES (3424, 1, "Accepted", 2021)''')
+
+    # conn.execute("DELETE FROM Classes WHERE Class_ID = 2")
+    # conn.execute("DELETE FROM Track WHERE tracking_num = 2")
+    # conn.execute("DELETE FROM Internship WHERE Intern_ID = 2")
+    # conn.execute("DELETE FROM Intern_App WHERE IA_Num = 2")
+
+    # View of students in programs that are not rejected
+    conn.execute('''CREATE VIEW IF NOT EXISTS Program_Accepts AS
                  SELECT Tracking_num, Program, Student_num, Status FROM Track WHERE Status != "Rejected"
+                 ''')
+    
+    # View of certifications students in programs are enrolled in, helps reduce number of JOINs in code
+    conn.execute('''CREATE VIEW IF NOT EXISTS Program_student_certification_data AS
+              SELECT
+                 Program_Accepts.program,
+                 Program_Accepts.student_num,
+                 Cert_Enrollment.status,
+                 Cert_Enrollment.training_status
+              FROM
+                 Program_Accepts
+                 JOIN Cert_Enrollment
+                 On Program_Accepts.student_num = Cert_Enrollment.UIN
+                 JOIN Internship
                  ''')
 
     # Old view for View_ApplicationDetails

@@ -253,32 +253,27 @@ def get_report(program_num):
       print("Error, impossible for minority percent to be over 100%")
       minority_percent = 100
     
-    k12 = conn.execute(f'''SELECT COUNT(*) FROM 
-                        (SELECT * FROM Program_accepts WHERE program = {program_num}) AS Accepted_students
-                        INNER JOIN
-                        (SELECT * FROM College_students WHERE student_type = 'k12_student') AS K12_students
-                        ON Accepted_students.student_num=K12_students.UIN''').fetchone()[0]
-
+    k12 = get_program_num_k12_students(conn, program_num)
 
     DoD_training_completed = num_w_specified_DoD_training_status(conn, program_num, "Complete")
     DoD_training_enrolled = num_w_specified_DoD_training_status(conn, program_num, "Enrolled")
     # A student who has a complete status is also enrolled in the training program
-    DoD_training_enrolled += DoD_training_completed
+    # DoD_training_enrolled += DoD_training_completed
 
     DoD_cert_complete = num_completed_DoD_cert(conn, program_num)
 
     fed_internships = num_federal_internships(conn, program_num)
 
-    majors_data = conn.execute(f'''SELECT View_CollegeStudentDetails.major FROM
-                               (SELECT * FROM Program_accepts WHERE program = {program_num}) AS Accepted_students
-                               INNER JOIN
-                               View_CollegeStudentDetails
-                               ON Accepted_students.student_num = View_CollegeStudentDetails.UIN''').fetchall()
+    majors_data = get_prog_student_majors(conn, program_num)
     
     # converts majors_data into a dictionary w {major: student count} values
     majors_dict = {"None": 0}
     for major in majors_data:
-        majorName = major[0]
+        # Handle null values in database gracefully
+        if (major[0] == None):
+            majorName = "None"
+        else:
+          majorName = major[0]
         currCount = majors_dict.get(majorName, -1)
         if (currCount == -1):
             majors_dict.update({majorName: 1})
