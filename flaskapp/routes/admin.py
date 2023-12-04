@@ -273,7 +273,7 @@ def update_event(event_id):
     conn.close()
     return render_template("update_event.html", event=event)
 
-# ENDPOINT FOR NUMBER OF STUDENTS IN ATTENDANCE OF AN EVENT
+# ENDPOINT FOR NUMBER OF STUDENTS IN ATTENDANCE OF AN EVENT *** FIX THIS ***
 @admin_bp.route('/event_attendance/<int:event_id>', methods=['GET'])
 @login_required
 def event_attendance(event_id):
@@ -282,7 +282,7 @@ def event_attendance(event_id):
     conn.close()
     return render_template("admin_view_events.html", event_attendance=event_attendance)
 
-# ENDPOINT FOR ADMIN ATTENDEE CONTROL
+# ENDPOINT FOR ADMIN ATTENDEE CONTROL *** FIX THIS ***
 @admin_bp.route('/attendee_control/<int:event_id>', methods=['GET', 'POST'])
 @login_required
 def attendee_control(event_id):
@@ -295,7 +295,7 @@ def attendee_control(event_id):
     conn.close()
     return render_template("admin_attendee_control.html", event_attendance=event_attendance)
 
-# ENDPOINT FOR ADMIN TO ADD ATTENDEES TO AN EVENT
+# ENDPOINT FOR ADMIN TO ADD ATTENDEES TO AN EVENT *** FIX THIS ***
 @admin_bp.route('/add_attendee/<int:event_id>', methods=['GET', 'POST'])
 @login_required
 def add_attendee(event_id):

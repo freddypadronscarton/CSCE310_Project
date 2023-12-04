@@ -1,18 +1,25 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
+from flask import Flask, render_template, request, jsonify, redirect, url_for, flash, send_from_directory
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from datetime import datetime
+import sqlite3
+import os
+
 
 from db import *
 from util.Users import *
 from util.Programs import *
 from routes.admin import admin_bp
 from routes.example import items_bp
+from util.Documents import *
 
 # App Initialization
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
+UPLOAD_FOLDER = 'uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 
 #Blueprints
 app.register_blueprint(admin_bp, url_prefix='/admin')
@@ -341,6 +348,65 @@ def delete_application(app_num):
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
+@app.route('/document_display')
+def document_display():
+    conn = get_db_connection()
+    documents = get_all_documents(conn)
+    conn.close()
+    return render_template('document_display.html' , documents=documents)
+
+@app.route('/upload_document', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        app_num = request.form['app_num']
+        type = request.form['type']
+        file = request.files['document']
+        if file:
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+            file.save(file_path)
+            conn = get_db_connection()
+            create_document(conn, app_num, file_path, type)
+            conn.close()
+
+            return redirect(url_for('document_display'))
+
+    return render_template('upload_document.html')
+
+
+@app.route('/delete_document/<int:doc_num>', methods=['DELETE'])
+def delete_document(doc_num):
+    conn = get_db_connection()
+    document = get_document_by_id(conn, doc_num)
+    delete_document_backend(conn, doc_num)
+    os.remove(document['Link'])
+    conn.close()
+    return jsonify({"success": "document deleted"})
+
+@app.route('/update_document/<int:doc_num>', methods=['GET', 'POST'])
+def update_document(doc_num):
+    conn = get_db_connection()
+    document = get_document_by_id(conn, doc_num)
+    conn.close()
+    return render_template('update_document.html', document=document)
+
+@app.route('/update_file/<int:doc_num>', methods=['POST'])
+def update_file(doc_num):
+    app_num = request.form['app_num']
+    type = request.form['type']
+    file = request.files['document']
+    if file:
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        file.save(file_path)
+        conn = get_db_connection()
+        oldDoc = get_document_by_id(conn, doc_num)
+        os.remove(oldDoc['Link'])
+        update_document_backend(conn, doc_num, app_num, file_path, type)
+        conn.close()
+
+        return redirect(url_for('document_display'))
+
+    return render_template('upload_document.html')
 
 if __name__ == '__main__':
     init_sqlite_db()
