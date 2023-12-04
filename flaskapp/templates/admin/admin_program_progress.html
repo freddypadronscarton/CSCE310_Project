@@ -45,11 +45,14 @@
 			</div>
 		</nav>
 		<!--End of Navigation Bar -->
+
 		<!-- Flash Messages -->
 		{% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for
 		category, message in messages %}
 		<div class="flash {{ category }}">{{ message }}</div>
 		{% endfor %} {% endif %} {% endwith %}
+
+
 		<div>
       <h2>Program Progress</h2>
       <div>
@@ -68,24 +71,28 @@
           <th>Modify</th>
         </tr>
         {% for program in programs %}
-        <tr>
-          <td>{{ program.name }}</td>
-          <td>{{ program.description }}</td>
-          <td>{{ program.status }}</td>
-          <td>
-            <a href="/admin/update_program/{{program.program_num}}">
-              <button>Update</button>
-            </a>
-
-            {% if program.archived %}
-            <button onclick="archiveProgram({{program.program_num}}, 0)">Unarchive</button>
-            {% else %}
-            <button onclick="archiveProgram({{program.program_num}}, 1)">Archive</button>
-            {% endif %}
-
-            <button onclick="deleteProgram({{program.program_num}})">Delete</button>
-          </td>
-        </tr>
+          {% if not program.archived %}
+            <tr>
+              <td>{{ program.name }}</td>
+              <td>{{ program.description }}</td>
+              <td>{% if program.status %} {{ program.status }} {% else %} Applied {% endif %}</td>
+              <td>
+                {% if not program.status %}
+                  <button onclick="acceptOrRejectRecord({{program.UIN}}, {{program.program_num}}, 1)">Accept</button>
+                  <button onclick="acceptOrRejectRecord({{program.UIN}}, {{program.program_num}}, 0)">Reject</button>
+                {% elif program.status == "Enrolled" %}
+                  <button onclick="updateProgramProgress({{program.UIN}}, {{program.program_num}}, 'Completed')">Mark as Complete</button>
+                  <button onclick="updateProgramProgress({{program.UIN}}, {{program.program_num}}, 'Dropped')">Drop</button>
+                {% elif program.status == "Rejected" %}
+                  <button onclick="updateProgramProgress({{program.UIN}}, {{program.program_num}}, 'Enrolled')" >Recsind Rejection</button>
+                {% elif program.status == "Completed" %}
+                  <button onclick="updateProgramProgress({{program.UIN}}, {{program.program_num}}, 'Enrolled')"  >Mark as Incomplete</button>
+                {% elif program.status == "Dropped" %}
+                  <button onclick="updateProgramProgress({{program.UIN}}, {{program.program_num}}, 'Enrolled')"  >Enroll</button>
+                {% endif %}
+              </td>
+            </tr>
+          {% endif %}
         {% endfor %}
         <!-- Look at admin_home.html for idea of how archived code will work -->
       </table>
@@ -219,7 +226,42 @@
       
       
       
-      <script></script>
+    <script>
+      function acceptOrRejectRecord(uin, program_id, is_accepted) {
+        $.ajax({
+            url: `/progress/accept_user`,
+            method: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({ 
+                'uin': uin,
+                'program_id': program_id,
+                'accepted': is_accepted
+            }),
+            success: function(response) {
+              window.location.href = `/progress/view_progress/${uin}`;
+            }
+        });
+      }
+
+
+      function updateProgramProgress(uin, program_id, new_status) {
+        $.ajax({
+            url: `/progress/update_program_progress`,
+            method: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({ 
+                'uin': uin,
+                'program_id': program_id,
+                'status': new_status
+            }),
+            success: function(response) {
+              window.location.href = `/progress/view_progress/${uin}`;
+            }
+        });
+      }
+
+
+    </script>
     </body>
     </html>
     

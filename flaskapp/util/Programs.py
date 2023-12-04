@@ -91,3 +91,19 @@ def update_prog_apps(conn, uncom_cert, com_cert, purpose_statement, app_num):
   conn.execute("UPDATE Application SET uncom_cert=?, com_cert=?, purpose_statement=? WHERE app_num=?"
                  , (uncom_cert, com_cert, purpose_statement, app_num))
   conn.commit()
+  
+  
+# Freddy Queries
+def addTrackRecord(conn, UIN, program_id, is_accepted):
+  
+  new_status = 'Enrolled' if is_accepted else 'Rejected'
+  
+  conn.execute("INSERT INTO Track (student_num, program, status) VALUES (?, ?, ?)", (UIN, program_id, new_status))
+  conn.commit()
+  
+def get_all_programs_by_user(conn, UIN):
+  return conn.execute('SELECT * FROM View_ApplicationDetails WHERE UIN = ?', (UIN,)).fetchall()
+
+def updateTrackRecord(conn, UIN, program_id, new_status):
+  conn.execute('UPDATE Track SET status=? WHERE program=? and student_num=?', (new_status, program_id, UIN))
+  conn.commit()

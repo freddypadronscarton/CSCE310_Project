@@ -5,8 +5,7 @@ from flask import flash
 def init_sqlite_db():
     conn = sqlite3.connect('database.db')
     print("Opened database successfully")
-    
-    conn.execute('''DROP TABLE Track''')
+
     # ITEMS TABLE (EXAMPLE)
     conn.execute(''' CREATE TABLE IF NOT EXISTS items (
                     item_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -161,7 +160,7 @@ def init_sqlite_db():
                     CertE_Num INTEGER PRIMARY KEY AUTOINCREMENT,
                     UIN INTEGER,
                     Cert_ID INTEGER,
-                    Program_Num INTEGER
+                    Program_Num INTEGER,
                     Status VARCHAR, 
                     Training_Status VARCHAR,
                     Semester VARCHAR,
@@ -196,25 +195,24 @@ def init_sqlite_db():
         LEFT JOIN College_Students cs ON u.UIN = cs.UIN
     ''')
     
-    #Added track to the join so we can access the tracking status
+    # Added track to the join so we can access the tracking status
     conn.execute('''CREATE VIEW IF NOT EXISTS View_ApplicationDetails AS
-    SELECT 
-        Applied.UIN, 
-        Applied.app_num, 
-        Applied.program_num, 
-        Programs.name, 
-        Programs.description, 
-        Applied.uncom_cert, 
-        Applied.com_cert, 
-        Applied.purpose_statement, 
-        Track.status AS status
-    FROM 
-        (SELECT * FROM Application) AS Applied
-        LEFT OUTER JOIN Track
-        ON Applied.app_num = Track.tracking_num
-        JOIN Programs
-        ON Applied.program_num = Programs.program_num;
-    ''')
+                SELECT 
+                    Application.UIN, 
+                    Application.app_num, 
+                    Application.program_num, 
+                    Programs.name, 
+                    Programs.description,
+                    Programs.archived, 
+                    Application.uncom_cert, 
+                    Application.com_cert, 
+                    Application.purpose_statement, 
+                    Track.status
+                FROM 
+                    Application
+                LEFT JOIN Track ON Application.program_num = Track.program
+                JOIN Programs ON Application.program_num = Programs.program_num
+                ''')
 
     # Old view for View_ApplicationDetails
     # Kept in case I mess something up
