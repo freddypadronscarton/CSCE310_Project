@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Admin View Programs</title>
+		<link rel="stylesheet" href="../../static/general.css" />
+		<link rel="stylesheet" href="../../static/admin_home.css" />
+		<link
+			rel="stylesheet"
+			href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+		/>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<!-- Navigation Bar -->
+		<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+			<a class="navbar-brand" href="#">CSCE 310 Project</a>
+			<button
+				class="navbar-toggler"
+				type="button"
+				data-toggle="collapse"
+				data-target="#navbarNav"
+				aria-controls="navbarNav"
+				aria-expanded="false"
+				aria-label="Toggle navigation"
+			>
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link" href="/home">Home</a>
+					</li>
+
+					<li class="nav-item">
+						<a class="nav-link" href="/profile">Profile</a>
+					</li>
+
+					<li class="nav-item">
+						<a class="nav-link" href="/logout">Logout</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+		<!--End of Navigation Bar -->
+		<!-- Flash Messages -->
+		{% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for
+		category, message in messages %}
+		<div class="flash {{ category }}">{{ message }}</div>
+		{% endfor %} {% endif %} {% endwith %}
+		<div>
+      <h2>Program Progress</h2>
+      <div>
+        <a href="{{ url_for('admin_bp.add_program') }}">
+          <button>Add Program</button>
+        </a>
+        <a href="{{ url_for('admin_bp.view_all_programs') }}">
+          <button>View Programs</button>
+        </a>
+      </div>
+      <table id="programsTable">
+        <tr>
+          <th>Program Name</th>
+          <th>Progam Description</th>
+          <th>Status</th>
+          <th>Modify</th>
+        </tr>
+        {% for program in programs %}
+        <tr>
+          <td>{{ program.name }}</td>
+          <td>{{ program.description }}</td>
+          <td>{{ program.status }}</td>
+          <td>
+            <a href="/admin/update_program/{{program.program_num}}">
+              <button>Update</button>
+            </a>
+
+            {% if program.archived %}
+            <button onclick="archiveProgram({{program.program_num}}, 0)">Unarchive</button>
+            {% else %}
+            <button onclick="archiveProgram({{program.program_num}}, 1)">Archive</button>
+            {% endif %}
+
+            <button onclick="deleteProgram({{program.program_num}})">Delete</button>
+          </td>
+        </tr>
+        {% endfor %}
+        <!-- Look at admin_home.html for idea of how archived code will work -->
+      </table>
+    </div>
+    <div>
+      <h2>Class Progress</h2>
+      <div>
+        <a href="{{ url_for('admin_bp.add_program') }}">
+          <button>Add Class</button>
+        </a>
+        <a href="{{ url_for('admin_bp.view_all_programs') }}">
+          <button>View Classes</button>
+        </a>
+        Classes not yet implemented
+      </div>
+      <table id="classesTable">
+        <tr>
+          <th>Class Name</th>
+          <th>Class Description</th>
+          <th>Class Type</th>
+          <th>Modify</th>
+        </tr>
+        {% for program in programs %}
+        <tr>
+          <td>name</td>
+          <td>desc</td>
+          <td>type</td>
+          <td>
+            <a href="/admin/update_program/{{program.program_num}}">
+              <button>Update</button>
+            </a>
+            
+            {% if program.archived %}
+            <button onclick="archiveProgram({{program.program_num}}, 0)">Unarchive</button>
+            {% else %}
+            <button onclick="archiveProgram({{program.program_num}}, 1)">Archive</button>
+            {% endif %}
+            
+            <button onclick="deleteProgram({{program.program_num}})">Delete</button>
+          </td>
+        </tr>
+        {% endfor %}
+        <!-- Look at admin_home.html for idea of how archived code will work -->
+      </table>
+    </div>
+    <div>
+      <h2>Certification Progress</h2>
+      <div>
+        <a href="{{ url_for('admin_bp.add_program') }}">
+          <button>Add Certification</button>
+        </a>
+        <a href="{{ url_for('admin_bp.view_all_programs') }}">
+          <button>View Certifications</button>
+        </a>
+        Certifications not yet implemented
+      </div>
+      <table id="classesTable">
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Level</th>
+          <th>Modify</th>
+        </tr>
+        {% for program in programs %}
+        <tr>
+          <td>name</td>
+          <td>desc</td>
+          <td>level</td>
+          <td>
+            <a href="/admin/update_program/{{program.program_num}}">
+              <button>Update</button>
+            </a>
+            
+            {% if program.archived %}
+            <button onclick="archiveProgram({{program.program_num}}, 0)">Unarchive</button>
+            {% else %}
+            <button onclick="archiveProgram({{program.program_num}}, 1)">Archive</button>
+            {% endif %}
+            
+            <button onclick="deleteProgram({{program.program_num}})">Delete</button>
+          </td>
+        </tr>
+        {% endfor %}
+        <!-- Look at admin_home.html for idea of how archived code will work -->
+      </table>
+    </div>
+    <div>
+      <h2>Internship Progress</h2>
+      <div>
+        <a href="{{ url_for('admin_bp.add_program') }}">
+          <button>Add Internship</button>
+        </a>
+        <a href="{{ url_for('admin_bp.view_all_programs') }}">
+          <button>View Internship</button>
+        </a>
+        Internships not yet implemented
+      </div>
+      <table id="classesTable">
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Is Government</th>
+          <th>Modify</th>
+        </tr>
+        {% for program in programs %}
+        <tr>
+          <td>name</td>
+          <td>desc</td>
+          <td>y/n</td>
+          <td>
+            <a href="/admin/update_program/{{program.program_num}}">
+              <button>Update</button>
+            </a>
+            
+            {% if program.archived %}
+            <button onclick="archiveProgram({{program.program_num}}, 0)">Unarchive</button>
+            {% else %}
+            <button onclick="archiveProgram({{program.program_num}}, 1)">Archive</button>
+            {% endif %}
+            
+            <button onclick="deleteProgram({{program.program_num}})">Delete</button>
+          </td>
+        </tr>
+        {% endfor %}
+        <!-- Look at admin_home.html for idea of how archived code will work -->
+      </table>
+    </div>
+      
+      
+      
+      <script></script>
+    </body>
+    </html>
+    

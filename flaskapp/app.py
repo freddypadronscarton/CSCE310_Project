@@ -7,6 +7,7 @@ from util.Users import *
 from util.Programs import *
 from routes.admin import admin_bp
 from routes.example import items_bp
+from routes.progress import progress_bp
 
 # App Initialization
 app = Flask(__name__)
@@ -17,6 +18,7 @@ login_manager.init_app(app)
 #Blueprints
 app.register_blueprint(admin_bp, url_prefix='/admin')
 app.register_blueprint(items_bp, url_prefix='/items')
+app.register_blueprint(progress_bp, url_prefix='/progress')
 
 # Flask-Login: User class and user_loader
 class User(UserMixin):
