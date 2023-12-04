@@ -44,10 +44,8 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-    <h1> {{ current_user.first_name }}'s User Management</h1>
+    <h1>Welcome Admin! </h1>
 
-    <!-- Buttons for managing available programs -->
-    <h2>Program Management</h2>
     <div>
       <a href="{{ url_for('admin_bp.add_program') }}">
         <button>Add Program</button>
@@ -95,6 +93,7 @@
                         {% else %}
                             <button onclick="archiveUser({{user.uin}}, 1)">Archive</button>
                         {% endif %}
+                        <button onclick="viewProgressButton({{ user.uin }})">View Progress</button>
                         <button onclick="deleteUser({{user.uin}})">Delete</button>
                     </td>
                 </tr>
@@ -114,6 +113,10 @@
         // Redirect to editUser page
         function editButtonPress(uin) {
             window.location.href = `/admin/edit/user/${uin}`;
+        }
+
+        function viewProgressButton(uin){
+            window.location.href = `/progress/view_progress/${uin}`;
         }
 
         // Delete User
