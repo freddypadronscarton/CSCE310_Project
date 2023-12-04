@@ -12,16 +12,14 @@ progress_bp = Blueprint('progress_bp', __name__)
 
 @progress_bp.route('/view_progress/<int:UIN>', methods=['GET'])
 @login_required
-def archive_user(UIN):
-    
+def view_progress(UIN):
     if current_user.user_type != "admin":
         return jsonify({"Erorr" : "Access Denied"})
-    
-    
-    conn = get_db_connection();
-    
+    conn = get_db_connection()
+    programs = conn.execute('SELECT * FROM View_ApplicationDetails where UIN = ?', (UIN,)).fetchall()
+    # name = conn.execute('SELECT * FROM WHERE UIN = ?', (UIN,)).fetchone()
+    conn.close()
 
-    
-    
-    
-    return render_template("admin/admin_program_progress.html", programs= [])
+
+
+    return render_template("admin/admin_program_progress.html", programs=programs)
