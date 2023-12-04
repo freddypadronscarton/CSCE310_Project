@@ -26,31 +26,31 @@
     </tr>
     <tr>
       <th>Number of students that completed all opportunities</th>
-      <td></td>
+      <td>{{ program.completed_students_count }}</td>
     </tr>
     <tr>
       <th>Number of students in foreign language courses</th>
-      <td></td>
+      <td>{{ program.num_in_foreign_lang_courses }}</td>
     </tr>
     <tr>
       <th>Number of students take other cryptography and cryptographic mathematics courses</th>
-      <td></td>
+      <td>{{ program.num_in_crypt_courses }}</td>
     </tr>
     <tr>
       <th>Number of students electing to carry additional data science and related courses</th>
-      <td></td>
+      <td>{{ program.num_in_data_science_courses }}</td>
     </tr>
     <tr>
       <th>Number of students to enroll in DoD 8570.01M preparation training courses</th>
-      <td></td>
+      <td>{{ program.DoD_training_enrolled }}</td>
     </tr>
     <tr>
       <th>Number of students to complete DoD 8570.01M preparation training courses</th>
-      <td></td>
+      <td>{{ program.DoD_training_completed }}</td>
     </tr>
     <tr>
       <th>Number of students to complete a DoD 8570.01M certification examination</th>
-      <td></td>
+      <td>{{ program.DoD_cert_complete }}</td>
     </tr>
     <tr>
       <th>Minority participation</th>
@@ -62,7 +62,7 @@
     </tr>
     <tr>
       <th>Number of students pursuing federal internships</th>
-      <td></td>
+      <td>{{ program.fed_internships }}</td>
     </tr>
     <tr>
       <th>Student majors</th>
@@ -73,8 +73,16 @@
       </td>
     </tr>
     <tr>
-      <th>Internship locations</th>
-      <td></td>
+      <th>Internship Locations</th>
+      <td>
+        {% if program.internship_names|length == 0 %}
+          <p>None</p>
+        {% else %}
+          {% for internship in program.internship_names %}
+          <p>{{ internship }}</p>
+          {% endfor %}
+        {% endif %}
+      </td>
     </tr>
     <!-- <tr>
       <td></td>
