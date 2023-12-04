@@ -66,7 +66,7 @@ def load_user(UIN):
 
 # LOGIN PAGE
 @app.route('/', methods=['GET', 'POST'])
-def login():    
+def login():
     #handling the submission
     if request.method == 'POST':
         # fields from the submitted form
@@ -94,7 +94,7 @@ def login():
             flash("Incorrect Password. Please try again.", "Error")
         conn.close()  
      
-    return render_template('login.html')
+    return render_template('auth/login.html')
 
 
 # REGISTRATION PAGE
@@ -134,7 +134,7 @@ def register():
             
         conn.close()  
      
-    return render_template('register.html', current_year=datetime.now().year, previous = previous_entry)
+    return render_template('auth/register.html', current_year=datetime.now().year, previous = previous_entry)
 
 
 # HOME PAGE
@@ -157,7 +157,7 @@ def home():
         return render_template('k12_home.html', items=items)
     else:
         conn.close()
-        return render_template('login.html')
+        return render_template('auth/login.html')
 
 # PROFILE PAGE
 @app.route('/profile', methods=['GET', 'POST'])
@@ -230,7 +230,7 @@ def profile():
                 user_info['phone_number'] = phone_str[:3] + "-" + phone_str[3:6] + "-" + phone_str[6:]
 
         conn.close()
-        return render_template('Profile.html', user=user_info, current_year=datetime.now().year)
+        return render_template('auth/Profile.html', user=user_info, current_year=datetime.now().year)
 
 # PROFILE PAGE
 @app.route('/passwordRecovery', methods=['GET', 'POST'])
@@ -254,13 +254,15 @@ def passwordRecovery():
             'Confirm': confirmation
         }
         
+        
+        
         # Connect to database
         conn = get_db_connection()
         #Retrieve User info (for entered UIN)
         user_info = get_user(conn, UIN)
         
         if not user_info:
-            flash("No user exists with UIN: ", UIN)
+            flash("Invalid UIN entry.", UIN)
         elif not user_info["Password"] == oldPassword:
             flash("Incorrect old password entered.")
         elif not newPassword == confirmation:
@@ -274,7 +276,7 @@ def passwordRecovery():
         
     
         
-    return render_template('PasswordRecovery.html', stored = stored)
+    return render_template('auth/PasswordRecovery.html', stored = stored)
         
 
     

@@ -126,6 +126,9 @@ def get_user(conn, UIN):
     # store result in dict
     user_info = {}
     
+    if not query_result:
+        return user_info
+    
     for column_name in query_result.keys():
         user_info[column_name] = query_result[column_name]
     
