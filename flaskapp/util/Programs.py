@@ -32,14 +32,14 @@ def delete_program_backend(conn, program_num):
   conn.commit()
 
 def get_program_num_students(conn, program_num):
-  return conn.execute(f'SELECT COUNT(*) FROM TRACK WHERE program={program_num}').fetchone()[0]
+  return conn.execute(f'SELECT COUNT(*) FROM Program_accepts WHERE program={program_num}').fetchone()[0]
 
 def num_students_completed_program(conn, program_num):
   return conn.execute(f'SELECT COUNT(*) FROM TRACK WHERE program = {program_num} AND status = "Completed"').fetchone()[0]
 
 def num_in_program_and_coursetype(conn, program_num, course_type):
   return conn.execute(f'''SELECT COUNT(DISTINCT Class_enrollment.UIN) AS num_students_in_foreign_lang 
-                      FROM (SELECT * FROM Track WHERE Program = {program_num}) AS Accepted_students
+                      FROM (SELECT * FROM Program_accepts WHERE Program = {program_num}) AS Accepted_students
                       JOIN Class_enrollment
                       ON Accepted_students.student_num = Class_enrollment.UIN
                       JOIN Classes
@@ -50,7 +50,7 @@ def num_in_program_and_coursetype(conn, program_num, course_type):
 #FIXME : THIS DOUBLE COUNTS STUDENTS ENROLLED IN MUTLIPLE CERTIFICATE TRAININGS, IS THIS THE INTENDED BEHAVIOR
 def num_w_specified_DoD_training_status(conn, program_num, status):
   return conn.execute(f'''SELECT COUNT(*)
-                      FROM (SELECT * FROM Track WHERE Program = {program_num}) AS Accepted_students
+                      FROM (SELECT * FROM Program_accepts WHERE Program = {program_num}) AS Accepted_students
                       JOIN Cert_Enrollment
                       ON Accepted_students.Student_num = Cert_enrollment.UIN
                       WHERE Training_Status = "{status}"
@@ -58,7 +58,7 @@ def num_w_specified_DoD_training_status(conn, program_num, status):
 
 def num_completed_DoD_cert(conn, program_num):
   return conn.execute(f'''SELECT COUNT(*)
-                      FROM (SELECT * FROM Track WHERE Program = {program_num}) AS Accepted_students
+                      FROM (SELECT * FROM Program_accepts WHERE Program = {program_num}) AS Accepted_students
                       JOIN Cert_Enrollment
                       ON Accepted_students.Student_num = Cert_enrollment.UIN
                       WHERE Status = "Complete"
@@ -66,7 +66,7 @@ def num_completed_DoD_cert(conn, program_num):
 
 def num_federal_internships(conn, program_num):
   return conn.execute(f'''SELECT COUNT(*) 
-               FROM (SELECT * FROM Track WHERE Program = {program_num}) AS Accepted_students
+               FROM (SELECT * FROM Program_accepts WHERE Program = {program_num}) AS Accepted_students
                JOIN Intern_App
                ON Accepted_students.student_num = Intern_App.UIN
                JOIN Internship
@@ -76,7 +76,7 @@ def num_federal_internships(conn, program_num):
   
 def names_of_prog_student_internships(conn, program_num):
   conn.execute(f'''SELECT DISTINCT Internship.name
-               FROM (SELECT * FROM Track WHERE Program = {program_num}) AS Accepted_students
+               FROM (SELECT * FROM Program_accepts WHERE Program = {program_num}) AS Accepted_students
                JOIN Intern_App
                ON Accepted_students.student_num = Intern_App.UIN
                JOIN Internship

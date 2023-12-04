@@ -216,6 +216,10 @@ def init_sqlite_db():
         ON Applied.program_num = Programs.program_num;
     ''')
 
+    conn.execute('''CREATE VIEW IF NOT EXISTS Program_accepts AS
+                 SELECT Tracking_num, Program, Student_num, Status FROM Track WHERE Status != "Rejected"
+                 ''')
+
     # Old view for View_ApplicationDetails
     # Kept in case I mess something up
     # conn.execute('''CREATE VIEW IF NOT EXISTS View_ApplicationDetails AS
@@ -239,7 +243,7 @@ def init_sqlite_db():
     conn.execute('CREATE INDEX IF NOT EXISTS idx_application_uin ON Application(UIN)')
     conn.execute('CREATE INDEX IF NOT EXISTS idx_user_username ON Users(Username)')
     conn.execute('CREATE INDEX IF NOT EXISTS idx_user_email ON Users(Email)')
-    conn.execute("CREATE INDEX IF NOT EXISTS Track_Index ON Track (program);")
+    conn.execute("CREATE INDEX IF NOT EXISTS Track_Index ON Track(program)")
 
     
     conn.commit()

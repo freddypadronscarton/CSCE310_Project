@@ -254,7 +254,7 @@ def get_report(program_num):
       minority_percent = 100
     
     k12 = conn.execute(f'''SELECT COUNT(*) FROM 
-                        (SELECT * FROM TRACK WHERE program = {program_num}) AS Accepted_students
+                        (SELECT * FROM Program_accepts WHERE program = {program_num}) AS Accepted_students
                         INNER JOIN
                         (SELECT * FROM College_students WHERE student_type = 'k12_student') AS K12_students
                         ON Accepted_students.student_num=K12_students.UIN''').fetchone()[0]
@@ -270,7 +270,7 @@ def get_report(program_num):
     fed_internships = num_federal_internships(conn, program_num)
 
     majors_data = conn.execute(f'''SELECT View_CollegeStudentDetails.major FROM
-                               (SELECT * FROM TRACK WHERE program = {program_num}) AS Accepted_students
+                               (SELECT * FROM Program_accepts WHERE program = {program_num}) AS Accepted_students
                                INNER JOIN
                                View_CollegeStudentDetails
                                ON Accepted_students.student_num = View_CollegeStudentDetails.UIN''').fetchall()
