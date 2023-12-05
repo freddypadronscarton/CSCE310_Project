@@ -13,8 +13,17 @@ def insert_mock_data():
     conn = sqlite3.connect('database.db')
     
     # call insertion functions
+    print("Generating Users...")
     insert_users(conn)
+    print("Users Complete")
+    
+    print("Generating Programs...")
     insert_programs(conn)
+    print("Programs Complete")
+    
+    print("Generating Certifications...")
+    insert_certifications(conn)
+    print("Certifications Complete")
     
     conn.commit()
 
@@ -92,3 +101,26 @@ def insert_users(conn):
     #     conn.execute('''INSERT INTO Classes (Class_ID, Name, Description, Type) VALUES (?, ?, ?, ?)''', 
     #                  (i, f'Class{i}', f'Description{i}', 'Type'))
 
+def insert_certifications(conn):
+    certifications = {
+        'IAT Level I': ['A+ CE', 'CCNA-Security', 'CND', 'Network+ CE', 'SSCP'],
+        'IAT Level II': ['CCNA-Security', 'CySA+', 'GICSP', 'GSEC', 'Security+ CE', 'SSCP'],
+        'IAT Level III': ['CASP+ CE', 'CCNP Security', 'CISA', 'CISSP (or Associate)', 'GCED', 'GCIH', 'CCSP'],
+        'IAM Level I': ['CAP', 'CND', 'Cloud+', 'GSLC', 'Security+ CE', 'HCISPP'],
+        'IAM Level II': ['CAP', 'CASP+ CE', 'CISM', 'CISSP (or Associate)', 'GSLC', 'CCISO'],
+        'IAM Level III': ['CISM', 'CISSP (or Associate)', 'GSLC', 'CCISO'],
+        'IASAE I': ['CASP+ CE', 'CISSP (or Associate)', 'CSSLP'],
+        'IASAE II': ['CASP+ CE', 'CISSP (or Associate)', 'CSSLP'],
+        'IASAE III': ['CISSP-ISSAP', 'CISSP-ISSEP', 'CSSP'],
+        'CSSP Analyst': ['CEH', 'CFR', 'CCNA Cyber Ops', 'CCNA-Security', 'CySA+', 'GICSP', 'GCIH', 'GSEC', 'Cloud+', 'CND', 'SCYBER', 'PenTest+'],
+        'CSSP Infrastructure Support': ['CEH', 'CFR', 'CCNA Cyber Ops', 'CCNA-Security', 'CySA+', 'GICSP', 'GCIH', 'GSEC', 'Cloud+', 'CND', 'SCYBER', 'PenTest+'],
+        'CSSP Incident Responder': ['CEH', 'CFR', 'CCNA Cyber Ops', 'CCNA-Security', 'CySA+', 'GICSP', 'GCIH', 'GSEC', 'Cloud+', 'CND', 'SCYBER', 'PenTest+'],
+        'CSSP Auditor': ['CEH', 'CySA+', 'CISA', 'GSNA', 'CFR', 'PenTest+'],
+        'CSSP Manager': ['CISSM', 'CISSP-ISSMP', 'CCISO']
+    }
+
+    for level, certs in certifications.items():
+        for cert in certs:
+            # Insert each certification with its corresponding level into the database
+            conn.execute('''INSERT INTO Certification (Name, Description, Level) VALUES (?, ?, ?)''', 
+                         (cert, 'Sample Description', level))
