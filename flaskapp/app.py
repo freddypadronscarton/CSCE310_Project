@@ -127,7 +127,7 @@ def register():
             flash("That username is already in use. Please try another.", "Error")
         elif check_user_email(conn, entered_email):
             flash("That email is already in use. Please try another.", "Error")
-        elif check_user_email(conn, entered_uin):
+        elif check_user_uin(conn, entered_uin):
             flash("That UIN is already in use. Please try another.", "Error")
         else:
             register_user(conn, request.form)
