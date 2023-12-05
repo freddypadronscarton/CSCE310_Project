@@ -323,7 +323,7 @@ def application_review():
     applied_programs = get_applied_programs(conn, current_user.uin)
     conn.close()
 
-    return render_template('program_review.html', applied_programs=applied_programs)
+    return render_template('student/program_review.html', applied_programs=applied_programs)
     
 @app.route('/update_program_app/<int:app_num>')
 def load_update_appl_page(app_num):
