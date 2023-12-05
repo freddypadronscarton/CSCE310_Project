@@ -36,3 +36,9 @@ def get_event_attendance(conn, Event_ID):
 def add_student_to_event(conn, Event_ID, UIN):
     conn.execute('INSERT INTO Event_Tracking (Event_ID, UIN) VALUES (?, ?)', (Event_ID, UIN))
     conn.commit()
+
+# REMOVE STUDENT FROM EVENT
+def delete_attendee_backend(conn, Event_ID, UIN):
+    conn.execute('DELETE FROM Event_Tracking WHERE Event_ID=? AND UIN=?', (Event_ID, UIN))
+    conn.commit()
+    
