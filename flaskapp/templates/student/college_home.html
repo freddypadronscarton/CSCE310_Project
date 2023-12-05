@@ -93,6 +93,14 @@
       </a>
     </div>
 
+    <!-- Enroll in a Class -->
+    <div id="classEnrollment">
+        <h2>Classes</h2>
+        <a href="{{ url_for('class_enrollment', UIN=current_user.uin)}}">
+            <button>Enroll</button>
+        </a>
+    </div>
+
     <!-- Documents section -->
     <div id="documents">
         <h2>Documents</h2>

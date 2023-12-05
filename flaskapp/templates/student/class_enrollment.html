@@ -40,8 +40,8 @@
     {% endif %}
   {% endwith %}
 
-  <form action="{{ url_for('classes_bp.add_classes') }}" method="POST">
-    <h1>Add New Class</h1><br>
+  <form action="{{ url_for('class_enrollment', UIN=current_user.uin) }}" method="POST">
+    <h1>Add Class</h1><br>
     <div class="form-group">
       <label for="class_name">Class Name:</label>
       <input id="class_name" name="class_name" type="text">

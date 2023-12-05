@@ -271,17 +271,6 @@ def init_sqlite_db():
                  JOIN Internship
                  ''')
 
-    # Old view for View_ApplicationDetails
-    # Kept in case I mess something up
-    # conn.execute('''CREATE VIEW IF NOT EXISTS View_ApplicationDetails AS
-    #     SELECT Applied.UIN, Applied.app_num, Applied.program_num, Programs.name, Programs.description, Applied.uncom_cert, Applied.com_cert, Applied.purpose_statement, Accepted.tracking_num
-    #     FROM (SELECT * FROM Application) AS Applied
-    #     LEFT OUTER JOIN (SELECT * FROM Track) AS Accepted
-    #     ON Applied.program_num = Accepted.program
-    #     JOIN Programs
-    #     ON Applied.program_num = Programs.program_num;
-    # ''')
-    
     # Join classes and enrollments
     conn.execute('''CREATE VIEW IF NOT EXISTS View_ClassEnrollmentDetails AS
     SELECT
@@ -291,9 +280,9 @@ def init_sqlite_db():
         CE.Status,
         CE.Semester,
         CE.Year,
-        C.Name AS ClassName,
-        C.Description AS ClassDescription,
-        C.Type AS ClassType
+        C.Name AS Name,
+        C.Description AS Description,
+        C.Type AS Type
     FROM
         Class_Enrollment CE
         JOIN Classes C ON CE.Class_ID = C.Class_ID;

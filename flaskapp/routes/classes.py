@@ -28,8 +28,6 @@ def view_all_classes():
     conn.close()
     return render_template('view_all_classes.html', classes=classes)
 
-
-
 @classes_bp.route('/add_classes', methods=['GET', 'POST'])
 @login_required
 def add_classes():
@@ -47,16 +45,57 @@ def add_classes():
             return redirect(url_for("home"))
     return render_template('add_classes.html')
 
+@classes_bp.route('/delete_class/<int:Class_ID>', methods=['DELETE'])
+@login_required
+def delete_class(Class_ID):
+    conn = get_db_connection()
+    delete_class_backend(conn, Class_ID)
+    delete_enrollments_by_class_id(conn, Class_ID)
+    conn.close()
+    return jsonify({"change": "program deleted"})
+
+
+
+
+
+
+
+
+
+
+
 def is_class_name_taken(conn, class_name):
-  class_exist = conn.execute('SELECT COUNT(*) FROM Classes WHERE name=?', (class_name, )).fetchone()[0]
-  if (class_exist > 0):
-    return True
-  else:
-    return False
+    class_exist = conn.execute('SELECT COUNT(*) FROM Classes WHERE name=?', (class_name, )).fetchone()[0]
+    if (class_exist > 0):
+        return True
+    else:
+        return False
+
+def get_class_by_name(conn, class_name):
+    if is_class_name_taken(conn, class_name):
+        return conn.execute('SELECT * FROM Classes WHERE name=?', (class_name, )).fetchone()
+    else:
+        return None
 
 def add_new_class(conn, class_name, class_descr):
   conn.execute('INSERT INTO Classes (name, description) VALUES (?, ?)', (class_name, class_descr))
   conn.commit()
 
+def enroll_class(conn, class_name, class_descr):
+    class_ = get_class_by_name(conn, class_name)
+    if class_ is None:
+        conn.execute('INSERT INTO Classes (name, description) VALUES (?, ?)', (class_name, class_descr))
+        class_ = get_class_by_name(conn, class_name)
+    conn.execute('INSERT INTO Class_Enrollment (UIN, Class_ID, Status, Semester, Year) VALUES (?, ?, "Enrolled", 0, 0)', (current_user.uin, class_['Class_ID']))
+    conn.commit()
     
+def get_all_classes_by_user(conn, UIN):
+    return conn.execute('SELECT * FROM View_ClassEnrollmentDetails where UIN = ?', (UIN,)).fetchall()
+    
+def delete_class_backend(conn, Class_ID):
+  conn.execute('DELETE FROM Classes WHERE Class_ID=?', (Class_ID, ))
+  conn.commit()
 
+def delete_enrollments_by_class_id(conn, Class_ID):
+    conn.execute('DELETE FROM Class_Enrollment WHERE Class_ID=?', (Class_ID,))
+    conn.commit()

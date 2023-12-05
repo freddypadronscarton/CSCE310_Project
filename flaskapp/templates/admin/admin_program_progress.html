@@ -109,7 +109,7 @@
         <a href="{{ url_for('classes_bp.view_classes', UIN=request.view_args['UIN']) }}">
           <button>View User's Classes</button>
         </a>
-        &lt;--Not yet implemented
+        &lt;--Not implemented
       </div>
       <table id="classesTable">
         <tr>
@@ -118,23 +118,13 @@
           <th>Class Type</th>
           <th>Modify</th>
         </tr>
-        {% for program in programs %}
+        {% for class in classes %}
         <tr>
-          <td>name</td>
-          <td>desc</td>
-          <td>type</td>
+          <td>{{ class.Name }}</td>
+          <td>{{ class.Description }}</td>
+          <td>{{ class.type }}</td>
           <td>
-            <a href="/admin/update_program/{{program.program_num}}">
-              <button>Update</button>
-            </a>
-            
-            {% if program.archived %}
-            <button onclick="archiveProgram({{program.program_num}}, 0)">Unarchive</button>
-            {% else %}
-            <button onclick="archiveProgram({{program.program_num}}, 1)">Archive</button>
-            {% endif %}
-            
-            <button onclick="deleteProgram({{program.program_num}})">Delete</button>
+            <button onclick="deleteClass({{class.Class_ID}})">Delete</button>
           </td>
         </tr>
         {% endfor %}
@@ -227,6 +217,18 @@
       
       
     <script>
+      function deleteClass(class_id) {
+      $.ajax({
+        url: `/classes/delete_class/${class_id}`,
+        method: 'DELETE',
+        success: function(response) {
+          window.location.reload();
+        }
+      })
+    }
+
+
+
       function acceptOrRejectRecord(uin, program_id, is_accepted) {
         $.ajax({
             url: `/progress/accept_user`,

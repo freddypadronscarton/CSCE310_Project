@@ -12,7 +12,8 @@ from routes.admin import admin_bp
 from routes.example import items_bp
 from util.Documents import *
 from routes.progress import progress_bp
-from routes.classes import classes_bp
+from routes.classes import *
+
 
 # App Initialization
 app = Flask(__name__)
@@ -327,7 +328,7 @@ def application_review():
 def load_update_appl_page(app_num):
     conn = get_db_connection()
     app = conn.execute("SELECT * FROM Application WHERE APP_NUM = ?", (app_num, )).fetchone()
-    conn.close();
+    conn.close()
     return render_template("student/update_program_app.html", app=app)
 
 @app.route('/update_application', methods=['POST'])
@@ -416,6 +417,35 @@ def update_file(doc_num):
         return redirect(url_for('document_display'))
 
     return render_template('upload_document.html')
+
+
+@app.route('/class_enrollment/<int:UIN>', methods=['GET', 'POST'])
+@login_required
+def class_enrollment(UIN):
+    if(request.method == "POST"):
+        class_name = request.form['class_name']
+        class_descr = request.form['class_descr']
+        conn = get_db_connection()
+        class_exist = is_class_name_taken(conn, class_name)
+        if class_exist:
+            flash("A class of this name already exists")
+            conn.close()
+        else:
+            enroll_class(conn, class_name, class_descr)
+            conn.close()
+            return redirect(url_for("home"))
+    return render_template('student/class_enrollment.html')
+
+
+
+
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
     init_sqlite_db()

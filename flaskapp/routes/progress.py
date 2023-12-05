@@ -6,6 +6,7 @@ from datetime import datetime
 from db import *
 from util.Users import *
 from util.Programs import *
+from routes.classes import *
 
 progress_bp = Blueprint('progress_bp', __name__)
 
@@ -18,9 +19,11 @@ def view_progress(UIN):
         return jsonify({"Erorr" : "Access Denied"})
     conn = get_db_connection()
     programs = get_all_programs_by_user(conn, UIN)
+    classes = get_all_classes_by_user(conn, UIN)
+    
     conn.close()
 
-    return render_template("admin/admin_program_progress.html", programs=programs)
+    return render_template("admin/admin_program_progress.html", programs=programs, classes=classes)
 
 
 
