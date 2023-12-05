@@ -273,29 +273,20 @@ def update_event(event_id):
     conn.close()
     return render_template("update_event.html", event=event)
 
-# ENDPOINT FOR NUMBER OF STUDENTS IN ATTENDANCE OF AN EVENT *** FIX THIS ***
-@admin_bp.route('/event_attendance/<int:event_id>', methods=['GET'])
-@login_required
-def event_attendance(event_id):
-    conn = get_db_connection()
-    event_attendance = get_event_attendance(conn, event_id)
-    conn.close()
-    return render_template("admin/admin_view_events.html", event_attendance=event_attendance)
-
-# ENDPOINT FOR ADMIN ATTENDEE CONTROL *** FIX THIS ***
+# ENDPOINT FOR ADMIN ATTENDEE CONTROL
 @admin_bp.route('/attendee_control/<int:event_id>', methods=['GET', 'POST'])
 @login_required
 def attendee_control(event_id):
     conn = get_db_connection()
+    event_attendance = get_students_by_event(conn, event_id)
     if (request.method == 'POST'):
         get_students_by_event(conn, event_id)
         conn.close()
-        return redirect(url_for('admin_bp.admin_attendee_control'))
-    event_attendance = get_event_attendance(conn, event_id)
+        return render_template("admin/admin_attendee_control.html", event_attendance=event_attendance)
     conn.close()
     return render_template("admin/admin_attendee_control.html", event_attendance=event_attendance)
 
-# ENDPOINT FOR ADMIN TO ADD ATTENDEES TO AN EVENT *** FIX THIS ***
+# ENDPOINT FOR ADMIN TO ADD ATTENDEES TO AN EVENT
 @admin_bp.route('/add_attendee/<int:event_id>', methods=['GET', 'POST'])
 @login_required
 def add_attendee(event_id):
@@ -303,10 +294,19 @@ def add_attendee(event_id):
     if (request.method == 'POST'):
         add_student_to_event(conn, event_id, request.form["UIN"])
         conn.close()
-        return redirect(url_for('admin_bp.admin_attendee_control'))
+        return redirect(url_for('admin_bp.attendee_control', event_id=event_id))
     event_attendance = get_event_attendance(conn, event_id)
     conn.close()
     return render_template("admin/admin_attendee_control.html", event_attendance=event_attendance)
+
+# ENDPOINT FOR ADMIN TO REMOVE ATTENDEES FROM AN EVENT
+@admin_bp.route('/delete_attendee/<int:event_id>/<int:UIN>', methods=['DELETE'])
+@login_required
+def delete_attendee(event_id, UIN):
+    conn = get_db_connection()
+    delete_attendee_backend(conn, event_id, UIN)
+    conn.close()
+    return jsonify({"success": "attendee deleted"})
 
 
 @admin_bp.route('/get_report/<int:program_num>')
