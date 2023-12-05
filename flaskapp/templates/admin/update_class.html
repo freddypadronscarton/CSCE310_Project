@@ -51,8 +51,12 @@
       <input id="class_type" name="class_type" type="text" value="{{class_.type}}">
     </div>
     <div class="form-group">
-      <label for="class_semester">Semester: </label>
-      <input id="class_semester" name="class_semester" type="text" value="{{enrollment.semester}}">
+        <label for="class_semester">Semester: </label>
+            <select id="class_semester" name="class_semester">
+                <option value="Spring">Spring</option>
+                <option value="Summer">Summer</option>
+                <option value="Fall">Fall</option>
+            </select>
     </div>
     <div class="form-group">
       <label for="class_year">Year: </label>
