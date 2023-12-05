@@ -131,8 +131,9 @@ def register():
             flash("That UIN is already in use. Please try another.", "Error")
         else:
             register_user(conn, request.form)
-            conn.commit()
+            previous_entry = None
             
+        conn.commit()   
         conn.close()  
      
     return render_template('auth/register.html', current_year=datetime.now().year, previous = previous_entry)
