@@ -54,48 +54,53 @@
 
 
 		<div>
-      <h2>{{name}}'s Program Progress</h2>
-      <div>
-        <a href="{{ url_for('admin_bp.add_program') }}">
-          <button>Add Program</button>
-        </a>
+      {% if programs %}
+        <h2>{{name}}'s Program Progress</h2>
         <a href="{{ url_for('admin_bp.view_all_programs') }}">
           <button>View Programs</button>
         </a>
-      </div>
-      <table id="programsTable">
-        <tr>
-          <th>Program Name</th>
-          <th>Progam Description</th>
-          <th>Status</th>
-          <th>Modify</th>
-        </tr>
-        {% for program in programs %}
-          {% if not program.archived %}
-            <tr>
-              <td>{{ program.name }}</td>
-              <td>{{ program.description }}</td>
-              <td>{% if program.status %} {{ program.status }} {% else %} Applied {% endif %}</td>
-              <td>
-                {% if not program.status %}
-                  <button onclick="acceptOrRejectRecord({{program.UIN}}, {{program.program_num}}, 1)">Accept</button>
-                  <button onclick="acceptOrRejectRecord({{program.UIN}}, {{program.program_num}}, 0)">Reject</button>
-                {% elif program.status == "Enrolled" %}
-                  <button onclick="updateProgramProgress({{program.UIN}}, {{program.program_num}}, 'Completed')">Mark as Complete</button>
-                  <button onclick="updateProgramProgress({{program.UIN}}, {{program.program_num}}, 'Dropped')">Drop</button>
-                {% elif program.status == "Rejected" %}
-                  <button onclick="updateProgramProgress({{program.UIN}}, {{program.program_num}}, 'Enrolled')" >Recsind Rejection</button>
-                {% elif program.status == "Completed" %}
-                  <button onclick="updateProgramProgress({{program.UIN}}, {{program.program_num}}, 'Enrolled')"  >Mark as Incomplete</button>
-                {% elif program.status == "Dropped" %}
-                  <button onclick="updateProgramProgress({{program.UIN}}, {{program.program_num}}, 'Enrolled')"  >Enroll</button>
-                {% endif %}
-              </td>
-            </tr>
-          {% endif %}
-        {% endfor %}
-        <!-- Look at admin_home.html for idea of how archived code will work -->
-      </table>
+        <table id="programsTable">
+          <tr>
+            <th>Program Name</th>
+            <th>Progam Description</th>
+            <th>Status</th>
+            <th>Modify</th>
+          </tr>
+          {% for program in programs %}
+            {% if not program.archived %}
+              <tr>
+                <td>{{ program.name }}</td>
+                <td>{{ program.description }}</td>
+                <td>{% if program.status %} {{ program.status }} {% else %} Applied {% endif %}</td>
+                <td>
+                  {% if not program.status %}
+                    <button onclick="acceptOrRejectRecord({{program.UIN}}, {{program.program_num}}, 1)">Accept</button>
+                    <button onclick="acceptOrRejectRecord({{program.UIN}}, {{program.program_num}}, 0)">Reject</button>
+                  {% elif program.status == "Enrolled" %}
+                    <button onclick="updateProgramProgress({{program.UIN}}, {{program.program_num}}, 'Completed')">Mark as Complete</button>
+                    <button onclick="updateProgramProgress({{program.UIN}}, {{program.program_num}}, 'Dropped')">Drop</button>
+                  {% elif program.status == "Rejected" %}
+                    <button onclick="updateProgramProgress({{program.UIN}}, {{program.program_num}}, 'Enrolled')" >Recsind Rejection</button>
+                  {% elif program.status == "Completed" %}
+                    <button onclick="updateProgramProgress({{program.UIN}}, {{program.program_num}}, 'Enrolled')"  >Mark as Incomplete</button>
+                  {% elif program.status == "Dropped" %}
+                    <button onclick="updateProgramProgress({{program.UIN}}, {{program.program_num}}, 'Enrolled')"  >Enroll</button>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+          <!-- Look at admin_home.html for idea of how archived code will work -->
+        </table>
+      {% else %}
+        <h2>{{name}} has not applied to any programs.</h2>
+        <div class="button-container">
+          <a href="{{ url_for('admin_bp.view_all_programs') }}">
+            <button>View Programs</button>
+          </a>
+        </div>
+        <br>
+      {% endif %}
     </div>
     <div>
       <h2>{{name}}'s Class Progress</h2>
@@ -266,5 +271,11 @@
 
     </script>
     </body>
+    <style>
+      .button-container {
+        display: flex;
+        justify-content: center; /* Aligns horizontally at the center */
+      }
+    </style>
     </html>
     
