@@ -49,7 +49,7 @@
       <td>{{ class.Description }}</td>
       <td>{{ class.Type }}</td>
       <td>
-        <a href="{{ url_for('classes_bp.update_class', Class_ID=class.Class_ID) }}">
+        <a href="{{ url_for('classes_bp.update_class_basic', Class_ID=class.Class_ID)}}">
           <button>Update</button>
         </a>
         <button onclick="deleteClass({{class.Class_ID}})">Delete</button>
