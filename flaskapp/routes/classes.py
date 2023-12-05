@@ -12,8 +12,9 @@ classes_bp = Blueprint('classes_bp', __name__)
 def view_classes(UIN):
     conn = get_db_connection()
     classes = get_all_classes_by_user(conn, UIN)
+    name = conn.execute('SELECT First_Name FROM Users WHERE UIN=?', (UIN,)).fetchone()
     conn.close()
-    return render_template('admin/view_classes.html', classes=classes)
+    return render_template('admin/view_classes.html', classes=classes, name=name['First_Name'])
 
 @classes_bp.route('/view_all_classes', methods=['GET'])
 @login_required

@@ -54,7 +54,7 @@
 
 
 		<div>
-      <h2>Program Progress</h2>
+      <h2>{{name}}'s Program Progress</h2>
       <div>
         <a href="{{ url_for('admin_bp.add_program') }}">
           <button>Add Program</button>
@@ -98,7 +98,7 @@
       </table>
     </div>
     <div>
-      <h2>Class Progress</h2>
+      <h2>{{name}}'s Class Progress</h2>
       <div>
         <a href="{{ url_for('classes_bp.add_classes', UIN=request.view_args['UIN']) }}">
           <button>Add Class</button>
@@ -135,7 +135,7 @@
       </table>
     </div>
     <div>
-      <h2>Certification Progress</h2>
+      <h2>{{name}}'s Certification Progress</h2>
       <div>
         <a href="{{ url_for('admin_bp.add_program') }}">
           <button>Add Certification</button>
@@ -176,7 +176,7 @@
       </table>
     </div>
     <div>
-      <h2>Internship Progress</h2>
+      <h2>{{name}}'s Internship Progress</h2>
       <div>
         <a href="{{ url_for('admin_bp.add_program') }}">
           <button>Add Internship</button>

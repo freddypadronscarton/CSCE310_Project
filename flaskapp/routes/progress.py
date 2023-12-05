@@ -20,10 +20,10 @@ def view_progress(UIN):
     conn = get_db_connection()
     programs = get_all_programs_by_user(conn, UIN)
     classes = get_all_classes_by_user(conn, UIN)
-    
+    name = conn.execute('SELECT First_Name FROM Users WHERE UIN=?', (UIN,)).fetchone()
     conn.close()
 
-    return render_template("admin/admin_program_progress.html", programs=programs, classes=classes)
+    return render_template("admin/admin_program_progress.html", programs=programs, classes=classes, name=name['First_Name'])
 
 
 
