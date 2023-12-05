@@ -365,7 +365,7 @@ def document_display():
     conn = get_db_connection()
     documents = get_all_documents(conn)
     conn.close()
-    return render_template('document_display.html' , documents=documents)
+    return render_template('student/document_display.html' , documents=documents)
 
 @app.route('/upload_document', methods=['GET', 'POST'])
 def upload_file():
