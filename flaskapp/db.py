@@ -26,7 +26,7 @@ def init_sqlite_db():
                     Password TEXT NOT NULL,
                     User_Type TEXT NOT NULL,
                     Email TEXT UNIQUE NOT NULL,
-                    Discord_Name TEXT UNIQUE NOT NULL,
+                    Discord_Name TEXT NOT NULL,
                     Archived INTEGER NOT NULL
                     )''')
 

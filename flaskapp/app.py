@@ -317,13 +317,13 @@ def add_new_application():
     return redirect(url_for('home'))
 
 
-@app.route('/program_review')
+@app.route('/application_review')
 def application_review():
     conn = get_db_connection()
     applied_programs = get_applied_programs(conn, current_user.uin)
     conn.close()
 
-    return render_template('student/program_review.html', applied_programs=applied_programs)
+    return render_template('student/application_review.html', applied_programs=applied_programs)
     
 @app.route('/update_program_app/<int:app_num>')
 def load_update_appl_page(app_num):

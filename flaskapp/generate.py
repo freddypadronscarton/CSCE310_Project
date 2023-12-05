@@ -7,8 +7,6 @@ import os
 # GENERATES MOCK DATA
 
 def insert_mock_data():
-    # remove old db
-    os.remove("database.db")
     # re-initialize
     init_sqlite_db()
     # connect
@@ -56,8 +54,11 @@ def insert_users(conn):
             conn.execute('''INSERT INTO College_Students (UIN, Gender, Hispanic_Or_Latino, Race, US_Citizen, First_Generation, Birthdate, School, Classification, Phone, Student_Type) 
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', 
                         (i, 'male' if i % 2 == 0 else 'female', random.randint(0, 1), 'other', random.randint(0, 1), random.randint(0, 1), random_date(1990, 2005), 'Cinco Ranch High School', 'K', 1234567890, 'k12_student'))
-
-
+    for i in range(1, 4):
+        ## Now Insert 3 Admins
+        conn.execute('''INSERT INTO Users (UIN, First_Name, M_Initial, Last_Name, Username, Password, User_Type, Email, Discord_Name, Archived) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', 
+                (100 + i, f'{random.choice(first_names)}', 'M', f'{random.choice(last_names)}', f'Admin{i}', 'admin', 'admin', f'admin{i}@mockData.com', f'DiscordUser{100 + i}', 0))
 
 
     # # Insert Events
