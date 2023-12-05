@@ -431,7 +431,7 @@ def class_enrollment(UIN):
             flash("A class of this name already exists")
             conn.close()
         else:
-            enroll_class(conn, class_name, class_descr)
+            enroll_class(conn, class_name, class_descr, UIN)
             conn.close()
             return redirect(url_for("home"))
     return render_template('student/class_enrollment.html')

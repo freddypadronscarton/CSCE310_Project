@@ -100,7 +100,7 @@
     <div>
       <h2>Class Progress</h2>
       <div>
-        <a href="{{ url_for('classes_bp.add_classes') }}">
+        <a href="{{ url_for('classes_bp.add_classes', UIN=request.view_args['UIN']) }}">
           <button>Add Class</button>
         </a>
         <a href="{{ url_for('classes_bp.view_all_classes') }}">
@@ -116,6 +116,7 @@
           <th>Class Name</th>
           <th>Class Description</th>
           <th>Class Type</th>
+          <th>Status</th>
           <th>Modify</th>
         </tr>
         {% for class in classes %}
@@ -123,7 +124,11 @@
           <td>{{ class.Name }}</td>
           <td>{{ class.Description }}</td>
           <td>{{ class.type }}</td>
+          <td>{{ class.status }}</td>
           <td>
+            <a href="{{ url_for('classes_bp.update_class', Class_ID=class.Class_ID, UIN=request.view_args['UIN']) }}">
+              <button>Update</button>
+            </a>
             <button onclick="deleteClass({{class.Class_ID}})">Delete</button>
           </td>
         </tr>
@@ -218,16 +223,14 @@
       
     <script>
       function deleteClass(class_id) {
-      $.ajax({
-        url: `/classes/delete_class/${class_id}`,
-        method: 'DELETE',
-        success: function(response) {
-          window.location.reload();
-        }
-      })
-    }
-
-
+        $.ajax({
+          url: `/classes/delete_class/${class_id}`,
+          method: 'DELETE',
+          success: function(response) {
+            window.location.reload();
+          }
+        })
+      }
 
       function acceptOrRejectRecord(uin, program_id, is_accepted) {
         $.ajax({

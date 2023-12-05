@@ -107,7 +107,7 @@ def init_sqlite_db():
                     FOREIGN KEY(UIN) REFERENCES College_students(UIN)
                     )''')
     
-    # TRACK TABLE: status = ['Applied', 'Rejected', 'Enrolled', 'Completed', 'Inactive'] 
+    # TRACK TABLE: status = ['Applied', 'Rejected', 'Enrolled', 'Completed', 'Dropped'] 
     conn.execute('''CREATE TABLE IF NOT EXISTS Track (
                     tracking_num INTEGER PRIMARY KEY AUTOINCREMENT,
                     program INTEGER,

@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Class</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <title>Add Class</title>
 </head>
 <body>
-      <!-- Navigation Bar -->
+    <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
       <a class="navbar-brand" href="#">CSCE 310 Project</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,37 +40,39 @@
     {% endif %}
   {% endwith %}
 
-  <form action="{{ url_for('classes_bp.add_classes', UIN=request.view_args['UIN']) }}" method="POST">
-    <h1>Add New Class</h1><br>
+  <form action="/classes/update_class/{{class_.Class_ID}}/{{enrollment.UIN}}" method="POST" id="updateClassForm">
+    <h1>Update Class</h1><br>
     <div class="form-group">
       <label for="class_name">Class Name:</label>
-      <input id="class_name" name="class_name" type="text">
+      <input id="class_name" name="class_name" type="text" value="{{class_.name}}">
     </div>
     <div class="form-group">
       <label for="class_type">Class Type: &nbsp; </label>
-      <input id="class_type" name="class_type" type="text">
+      <input id="class_type" name="class_type" type="text" value="{{class_.type}}">
     </div>
     <div class="form-group">
       <label for="class_semester">Semester: </label>
-      <input id="class_semester" name="class_semester" type="text">
+      <input id="class_semester" name="class_semester" type="text" value="{{enrollment.semester}}">
     </div>
     <div class="form-group">
       <label for="class_year">Year: </label>
-      <input id="class_year" name="class_year" type="text">
+      <input id="class_year" name="class_year" type="text" value="{{enrollment.year}}">
     </div>
     <div class="form-group row">
       <label for="class_descr" class="col-sm-2 col-form-label">Description:</label>
       <div class="col-sm-10">
-          <textarea id="class_descr" name="class_descr" class="form-control"></textarea>
+          <textarea id="class_descr" name="class_descr" class="form-control">{{class_.description}}</textarea>
       </div>
     </div>
     <div class="form-group">
-      <button type="submit">Add Class</button>
-    </div><br>
-
-    <a class="nav-link" href="/home">Back</a>
+      <button type="submit">Update Class</button>
+    </div>
+    <a href="{{ url_for('classes_bp.view_all_classes') }}">
+      <button>Back</button>
+    </a>
   </form>
 </body>
+
 <style>
   body { 
       display: flex;
@@ -94,13 +96,13 @@
       margin-right: 10px;
   }
   button, .btn-custom {
-      border: none;
-      padding: 10px 20px;
-      margin: 10px 2px;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    border: none;
+    padding: 10px 20px;
+    margin: 10px 2px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
   }
-  
+
   button:hover, .btn-custom:hover {
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
   }
