@@ -40,6 +40,8 @@
       <th>Class Name</th>
       <th>Class Description</th>
       <th>Class Type</th>
+      <th>Status</th>
+      <th>Semester</th>
       <th>Modify</th>
     </tr>
     {% for class in classes %}
@@ -47,7 +49,12 @@
           <td>{{ class.Name }}</td>
           <td>{{ class.Description }}</td>
           <td>{{ class.type }}</td>
+          <td>{{ class.status }}</td>
+          <td>{{ class.semester}} {{class.year }}</td>
           <td>
+            <a href="{{ url_for('classes_bp.update_class_student', Class_ID=class.Class_ID, UIN=request.view_args['UIN']) }}">
+              <button>Update</button>
+            </a>
             <button onclick="deleteClass({{class.Class_ID}})">Delete</button>
           </td>
         </tr>

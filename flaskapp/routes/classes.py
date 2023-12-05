@@ -69,7 +69,6 @@ def update_class(Class_ID, UIN):
     class_ = get_class_by_id(conn, Class_ID)
     enrollment = get_enrollment(conn, Class_ID, UIN)
     conn.close()
-    print(enrollment['UIN'])
     return render_template("admin/update_class.html", class_=class_, enrollment=enrollment)
 
 
@@ -87,6 +86,23 @@ def update_class_basic(Class_ID):
     class_ = get_class_by_id(conn, Class_ID)
     conn.close()
     return render_template("admin/update_class_basic.html", class_=class_)
+
+@classes_bp.route('/update_class_student/<int:Class_ID>/<int:UIN>', methods=['GET', 'POST'])
+@login_required
+def update_class_student(Class_ID, UIN):
+    print(request.form)
+    print(request.method)
+    conn = get_db_connection()
+    if (request.method == 'POST'):
+        # update_class_info(conn, Class_ID, request.form["class_name"], request.form["class_descr"], request.form["class_type"])
+        update_enrollment_info(conn, Class_ID, UIN, request.form["class_semester"], request.form["class_year"], request.form["class_status"])
+        conn.close()
+        return redirect(url_for('classes_bp.view_classes', UIN=UIN))
+        # return redirect(url_for('classes_bp.update_class', Class_ID=Class_ID, UIN=UIN))
+    class_ = get_class_by_id(conn, Class_ID)
+    enrollment = get_enrollment(conn, Class_ID, UIN)
+    conn.close()
+    return render_template("student/update_class_student.html", class_=class_, enrollment=enrollment)
 
 
 
