@@ -135,28 +135,31 @@ def get_user(conn, UIN):
     return user_info
 
 def check_user_email(conn, email):
-    result = conn.execute("SELECT * FROM Users WHERE Email = ?", (email,)).fetchone()
+    result = conn.execute("SELECT COUNT(*) FROM Users WHERE Email = ?", (email,)).fetchone()[0]
+    print(email, result)
     
     if not result:
-        return True
-    else:
         return False
+    else:
+        return True
     
 def check_user_username(conn, username):
-    result = conn.execute("SELECT * FROM Users WHERE Username = ?", (username,)).fetchone()
+    result = conn.execute("SELECT COUNT(*) FROM Users WHERE Username = ?", (username,)).fetchone()[0]
+    print(username, result)
     
     if not result:
-        return True
-    else:
         return False
+    else:
+        return True
     
 def check_user_uin(conn, UIN):
-    result = conn.execute("SELECT * FROM Users WHERE UIN = ?", (UIN,)).fetchone()
+    result = conn.execute("SELECT COUNT(*) FROM Users WHERE UIN = ?", (UIN,)).fetchone()[0]
+    print(UIN, result)
     
     if not result:
-        return True
-    else:
         return False
+    else:
+        return True
           
           
 # UPDATES SINGLE FIELD
@@ -216,11 +219,11 @@ def update_user_fields(conn, user_info):
 
     conn.commit()
 
+# DELETES
+
 def delete_user(conn, UIN):
     conn.execute(f"DELETE FROM College_Students WHERE UIN = {UIN}")
     conn.execute(f"DELETE FROM Users WHERE UIN = {UIN}")
-    
-# DELETES
 
 def delete_student(conn, UIN):
     conn.execute(f"DELETE FROM College_Students WHERE UIN = {UIN}")

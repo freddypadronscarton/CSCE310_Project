@@ -127,12 +127,13 @@ def register():
             flash("That username is already in use. Please try another.", "Error")
         elif check_user_email(conn, entered_email):
             flash("That email is already in use. Please try another.", "Error")
-        elif check_user_email(conn, entered_uin):
+        elif check_user_uin(conn, entered_uin):
             flash("That UIN is already in use. Please try another.", "Error")
         else:
             register_user(conn, request.form)
-            conn.commit()
+            previous_entry = None
             
+        conn.commit()   
         conn.close()  
      
     return render_template('auth/register.html', current_year=datetime.now().year, previous = previous_entry)
@@ -322,7 +323,7 @@ def application_review():
     applied_programs = get_applied_programs(conn, current_user.uin)
     conn.close()
 
-    return render_template('program_review.html', applied_programs=applied_programs)
+    return render_template('student/program_review.html', applied_programs=applied_programs)
     
 @app.route('/update_program_app/<int:app_num>')
 def load_update_appl_page(app_num):
@@ -364,7 +365,7 @@ def document_display():
     conn = get_db_connection()
     documents = get_all_documents(conn)
     conn.close()
-    return render_template('document_display.html' , documents=documents)
+    return render_template('student/document_display.html' , documents=documents)
 
 @app.route('/upload_document', methods=['GET', 'POST'])
 def upload_file():

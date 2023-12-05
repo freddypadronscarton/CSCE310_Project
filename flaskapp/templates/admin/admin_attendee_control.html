@@ -17,23 +17,24 @@
             <th>UIN</th>
             <th>Actions</th>
         </tr>
-        {% for attendee in attendees %}
+        {% for attendee in event_attendance %}
         <tr>
             <td>{{attendee.UIN}}</td>
 
             <td>
-                <button onclick="deleteAttendee({{attendee.UIN}})">Delete</button>
+                <button onclick="deleteAttendee({{attendee.event_id}}, {{attendee.UIN}})">Delete</button>
             </td>
         {% endfor %}
     </table>
     <script>
-        function deleteAttendee(UIN) {
+        function deleteAttendee(event_id, UIN) {
             $.ajax({
-                url: `/admin/delete_attendee/${UIN}`,
-                method: 'POST',
+                url: `/admin/delete_attendee/${event_id}/${UIN}`,
+                method: 'DELETE',
                 contentType: 'application/json',
                 data: JSON.stringify({
-                    "UIN": parseInt(UIN)
+                    "UIN": parseInt(UIN),
+                    "event_id": parseInt(event_id)
                 }),
                 success: function(response) {
                     window.location.reload();

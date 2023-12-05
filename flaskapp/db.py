@@ -299,8 +299,6 @@ def init_sqlite_db():
     
     conn.execute('CREATE INDEX IF NOT EXISTS idx_event_uin ON Event(UIN)')
     conn.execute('CREATE INDEX IF NOT EXISTS idx_application_uin ON Application(UIN)')
-    conn.execute('CREATE INDEX IF NOT EXISTS idx_user_username ON Users(Username)')
-    conn.execute('CREATE INDEX IF NOT EXISTS idx_user_email ON Users(Email)')
     conn.execute("CREATE INDEX IF NOT EXISTS Track_Index ON Track(program)")
 
     

@@ -21,7 +21,6 @@
         <th>Location</th>
         <th>End Date</th>
         <th>Event Type</th>
-        <th>Number of Attendees</th>
         <th>Add Attendee</th>
         <th>Actions</th>
     </tr>
@@ -34,10 +33,9 @@
         <td>{{event.location}}</td>
         <td>{{event.end_date}}</td>
         <td>{{event.event_type}}</td>
-        <td>{{event_attendence}}</td>
         <td>
-            <form onsubmit="addAttendee({{event.event_id, event.UIN}})">
-                <input type="text" name="adding" placeholder="UIN">
+            <form method="POST" action="/admin/add_attendee/{{event.event_id}}">
+                <input type="text" id="UIN" name="UIN" placeholder="UIN">
                 <button type="submit">Add</button>
             </form>
         </td>
