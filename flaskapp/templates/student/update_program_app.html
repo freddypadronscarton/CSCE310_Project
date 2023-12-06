@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Update Program Application</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <link rel="stylesheet" href="../static/program_application.css">
   <link rel="stylesheet" href="../../static/general.css">
+  <link rel="stylesheet" href="../../static/program_application.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
@@ -35,13 +35,10 @@
   </nav>
   <!--End of Navigation Bar -->
 
-  <a class="back_button" href="{{url_for('application_bp.application_review')}}">
-    <button> Back to All Applications</button>
-  </a>
-
-  <h2>Update Program Application</h2>
-
+  
   <form action="{{ url_for('application_bp.update_application') }}" method="POST">
+    <h2>Update Program Application</h2><br>
+
     <div class="form-group">
       <input id="app_num" name="app_num" type="number" value="{{ app.app_num }}" style="display:none"></div>
     </div>
@@ -63,18 +60,94 @@
 
     <!-- Need form group to handle uploading documents to application -->
     <div class="form-group">
-      <label>FIXME</label>
-      <input type="file">
+      <label for="document-type">Upload Additional Documents: Choose Type</label>
+      <select id="document-type" name="document_type">
+        <option value="None">None</option>
+        <option value="Resume">Resume</option>
+        <option value="Transcript">Transcript</option>
+        <option value="Other">Other</option>
+      </select>
     </div>
 
-    <br>
+    <div class="form-group" id="document-upload" style="display: none;">
+      <label for="document">Upload Document</label>
+      <input type="file" id="document" name="document">
+    </div>
+
+    <div class="form-group" id="document-upload" style="display: none;">
+      <label for="document">Upload Document</label>
+      <input type="file" id="document" name="document">
+    </div>
+
     <div class="form-group">
       <button id="apply-button" type="submit">Update</button>
     </div>
+
+    <a class="back_button" href="{{url_for('application_bp.application_review')}}">
+      <button type="button"> Back to All Applications</button>
+    </a>
   </form>
 
   <script>
     
   </script>
 </body>
+
+<script>
+  document.getElementById('document-type').addEventListener('change', function() {
+      var documentType = this.value;
+      var documentUploadDiv = document.getElementById('document-upload');
+  
+      if(documentType === 'None') {
+        documentUploadDiv.style.display = 'none';
+      } else {
+        documentUploadDiv.style.display = 'block';
+      }
+    });
+</script>
+
+<style>
+  body { 
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    min-height: 100vh;
+    margin: 0; 
+    padding: 80;
+}
+form {
+    width: 50%; 
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+    background: #fff;
+    border-radius: 5px; 
+}
+.form-group {
+    margin-bottom: 15px; 
+}
+label {
+    margin-right: 10px;
+}
+button, .btn-custom {
+  border: none;
+  padding: 10px 20px;
+  margin: 10px 2px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+textarea {
+  width: 100%; 
+  max-width: 600px;
+  min-height: 100px; 
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; 
+}
+
+button:hover, .btn-custom:hover {
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+</style>
 </html>

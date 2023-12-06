@@ -55,10 +55,10 @@
       <td>{{ program_app.purpose_statement }}</td>
       <td>
         <!-- Gives application status depending on whether student+program is in Track -->
-        {% if program_app.tracking_num == None %}
+        {% if program_app.status == None %}
         Pending
         {% else %}
-        Accepted
+        {{ program_app.status }}
         {% endif %}
       </td>
       <td>

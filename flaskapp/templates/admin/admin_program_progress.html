@@ -80,7 +80,7 @@
                     <button onclick="updateProgramProgress({{program.UIN}}, {{program.program_num}}, 'Completed')">Mark as Complete</button>
                     <button onclick="updateProgramProgress({{program.UIN}}, {{program.program_num}}, 'Dropped')">Drop</button>
                   {% elif program.status == "Rejected" %}
-                    <button onclick="updateProgramProgress({{program.UIN}}, {{program.program_num}}, 'Enrolled')" >Recsind Rejection</button>
+                    <button onclick="updateProgramProgress({{program.UIN}}, {{program.program_num}}, 'Enrolled')" >Rescind Rejection</button>
                   {% elif program.status == "Completed" %}
                     <button onclick="updateProgramProgress({{program.UIN}}, {{program.program_num}}, 'Enrolled')"  >Mark as Incomplete</button>
                   {% elif program.status == "Dropped" %}
