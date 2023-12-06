@@ -35,39 +35,37 @@
   </nav>
   <!--End of Navigation Bar -->
 
-  <a class="back_button" href="{{url_for('home')}}">
-    <button>< Back</button>
-  </a>
-
-  <h2>Program Application</h2>
-
-  <p id="program_already_applied">You've already applied to this program.</p>
-  
-  <select id="program-select">
-    <option disabled selected>-- select an option --</option>
-    {% for program in programs %}
-    <option name="program_num" value="{{ program.program_num }}">{{ program.name }}</option>
-    {% endfor %}
-  </select>
-
   <form action="{{ url_for('add_new_application') }}" method="post">
+    <h2>Program Application</h2><br>
+  
+    <p id="program_already_applied">You've already applied to this program.</p>
+    
+    <select id="program-select">
+      <option disabled selected>-- select an option --</option>
+      {% for program in programs %}
+      <option name="program_num" value="{{ program.program_num }}">{{ program.name }}</option>
+      {% endfor %}
+    </select>
+
+
     <div class="form-group">
       <input id="program_num" name="program_num" type="number"></div>
     </div>
 
     <div class="form-group">
       <label for="uncom_cert">Are you currently enrolled in other uncompleted certifications sponsored by the Cybersecurity Center?</label>
-      <input id="uncom_cert" name="uncom_cert" type="text">
+      <textarea id="uncom_cert" name="uncom_cert" type="text"></textarea>
     </div>
 
     <div class="form-group">      
       <label for="com_cert">Have you completed any cybersecurity industry certifications via the Cybersecurity Center?</label>
-      <input id="com_cert" name="com_cert" type="text">
+      <textarea id="com_cert" name="com_cert" type="text"></textarea>
+      
     </div>
 
     <div class="form-group">      
-      <label for="purpose_statement">Please provide your purpose statement: </label>
-      <input id="purpose_statement" name="purpose_statement" type="text">
+      <label for="purpose_statement">Please provide your purpose statement: </label><br>
+      <textarea id="purpose_statement" name="purpose_statement" type="text"></textarea>
     </div>
 
     <!-- Need form group to handle uploading documents to application -->
@@ -80,6 +78,11 @@
     <div class="form-group">
       <button id="apply-button" type="submit" disabled="true">Apply</button>
     </div>
+
+    <a class="back_button" href="{{url_for('home')}}">
+      <button>Back</button>
+    </a>
+  
   </form>
 
   <script>
@@ -116,4 +119,48 @@
     document.getElementById('program-select').addEventListener('change', checkForApplication);
   </script>
 </body>
+<style>
+  body { 
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    min-height: 100vh;
+    margin: 0; 
+    padding: 80;
+}
+form {
+    width: 50%; 
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+    background: #fff;
+    border-radius: 5px; 
+}
+.form-group {
+    margin-bottom: 15px; 
+}
+label {
+    margin-right: 10px;
+}
+button, .btn-custom {
+  border: none;
+  padding: 10px 20px;
+  margin: 10px 2px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+textarea {
+  width: 100%; 
+  max-width: 600px;
+  min-height: 100px; 
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; 
+}
+
+button:hover, .btn-custom:hover {
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+</style>
 </html>
