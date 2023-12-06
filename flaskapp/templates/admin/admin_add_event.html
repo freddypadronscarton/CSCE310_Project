@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Add Event</title>
+</head>
+<body>
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form action="{{ url_for('admin_bp.add_event') }}" method="POST">
+    <h1>Add New Event</h1>
+    <div class="form-group">
+      <label for="program_num">Program Number:</label>
+      <input id="program_num" name="program_num" type="text">
+    </div>
+    <div class="form-group">
+      <label for="start_date">Event Start Date:</label>
+      <input id="start_date" name="start_date" type="date">
+    </div>
+    <div class="form-group">
+      <label for="time">Event Time:</label>
+      <input id="time" name="time" type="time">
+    </div>
+    <div class="form-group">
+      <label for="location">Event Location:</label>
+      <input id="location" name="location" type="text">
+    </div>
+    <div class="form-group">
+      <label for="end_date">Event End Date:</label>
+      <input id="end_date" name="end_date" type="date">
+    </div>
+    <div class="form-group">
+      <label for="event_type">Event Type:</label>
+      <input id="event_type" name="event_type" type="text">
+    </div>
+    <div class="form-group">
+      <button type="submit">Add Event</button>
+    </div>
+    <a href="{{ url_for('home') }}">
+      <button>Back</button>
+    </a>
+  </form>
+</body>
+<style>
+  body { 
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    min-height: 100vh;
+      margin: 0; 
+      padding: 0;
+  }
+  form {
+      width: 50%; 
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+      background: #fff;
+      border-radius: 5px; 
+  }
+  .form-group {
+      margin-bottom: 15px; 
+  }
+  label {
+      margin-right: 10px;
+  }
+  button, .btn-custom {
+      border: none;
+      padding: 10px 20px;
+      margin: 10px 2px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+  
+  button:hover, .btn-custom:hover {
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+</style>
+</html>

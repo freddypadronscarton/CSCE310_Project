@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Class</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+      <a class="navbar-brand" href="#">CSCE 310 Project</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+              <li class="nav-item">
+                  <a class="nav-link" href="/home">Home</a>
+              </li>
+
+              <li class="nav-item">
+                  <a class="nav-link" href="/profile">Profile</a>
+              </li>
+
+              <li class="nav-item">
+                  <a class="nav-link" href="/logout">Logout</a>
+              </li>
+          </ul>
+      </div>
+  </nav>
+  <!--End of Navigation Bar -->
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form action="/classes/update_class_student/{{class_.Class_ID}}/{{enrollment.UIN}}" method="POST" id="updateClassForm">
+    <h1>Update Class</h1><br>
+    Class Name: {{ class_.name }}<br>Class Type: {{ class_.type }}<br>Description: {{ class_.description }}<br><br>
+    <div class="form-group">
+      <label for="class_semester">Semester: </label>
+            <select id="class_semester" name="class_semester">
+                <option value="Spring">Spring</option>
+                <option value="Summer">Summer</option>
+                <option value="Fall">Fall</option>
+            </select>
+    </div>
+    <div class="form-group">
+      <label for="class_year">Year: </label>
+      <input id="class_year" name="class_year" type="text" value="{{enrollment.year}}">
+    </div>
+    <div class="form-group">
+        <label for="class_status">Status: </label>
+        <select id="class_status" name="class_status">
+            <option value="Enrolled">Enrolled</option>
+            <option value="Completed">Completed</option>
+            <option value="Dropped">Dropped</option>
+        </select>
+    </div>
+    <div class="form-group">
+      <button type="submit">Update Class</button>
+    </div>
+    <a href="{{ url_for('classes_bp.view_all_classes') }}">
+      <button>Back</button>
+    </a>
+  </form>
+</body>
+
+<style>
+  body { 
+      display: flex;
+      justify-content: center; 
+      align-items: center; 
+      min-height: 100vh;
+      margin: 0; 
+      padding: 0;
+  }
+  form {
+      width: 50%; 
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+      background: #fff;
+      border-radius: 5px; 
+  }
+  .form-group {
+      margin-bottom: 15px; 
+  }
+  label {
+      margin-right: 10px;
+  }
+  button, .btn-custom {
+    border: none;
+    padding: 10px 20px;
+    margin: 10px 2px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+
+  button:hover, .btn-custom:hover {
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+</style>
+</html>

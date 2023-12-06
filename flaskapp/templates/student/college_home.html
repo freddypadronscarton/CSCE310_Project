@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>College Student Landing Page</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="../../static/general.css">
+    <link rel="stylesheet" href="../../static/college_home.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <a class="navbar-brand" href="#">{{ current_user.first_name }}'s Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/home">Home</a>
+                </li>
+  
+                <li class="nav-item">
+                    <a class="nav-link" href="/profile">Profile</a>
+                </li>
+  
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!--End of Navigation Bar -->
+
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Program Application Management Section -->
+    <div id="program_app_management">
+      <h2>Program Applications</h2>
+      <a href="{{ url_for('program_application') }}">
+        <button>Apply</button>
+      </a>
+      <a href="{{ url_for('application_review') }}">
+        <button>Review and Modify Applications</button>
+      </a>
+    </div>
+
+    <!-- Enroll in a Class -->
+    <div id="classEnrollment">
+        <h2>Classes</h2>
+        <a href="{{ url_for('class_enrollment', UIN=current_user.uin)}}">
+            <button>Enroll</button>
+        </a>
+        <a href="{{ url_for('classes_bp.view_classes', UIN=current_user.uin)}}">
+            <button>My Classes</button>
+        </a>
+    </div>
+
+    <!-- Report an Internship -->
+    <div id="internApp">
+        <h2>Internships</h2>
+        <a href="{{ url_for('intern_bp.add_internship_student', UIN=current_user.uin)}}">
+            <button>Create</button>
+        </a>
+        <a href="{{ url_for('intern_bp.view_internships', UIN=current_user.uin)}}">
+            <button>My Internships</button>
+        </a>
+    </div>
+
+    <!-- Documents section -->
+    <div id="documents">
+        <h2>Documents</h2>
+        <a href="{{ url_for('upload_file') }}">
+            <button>Upload Document</button>
+        <a href="{{ url_for('document_display') }}">
+            <button>View Documents</button>
+    </div>
+
+
+    <script>
+        //AJAX calls
+
+        // Add item
+        $('#addItemForm').submit(function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: '/items/add',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ 
+                    name: $('#name').val(), 
+                    description: $('#description').val() 
+                }),
+                success: function(response) {
+                    window.location.reload(); 
+                }
+            });
+        });
+
+        // Delete item
+        function deleteItem(id) {
+            $.ajax({
+                url: '/items/' + id,
+                method: 'DELETE',
+                success: function(response) {
+                    window.location.reload(); 
+                }
+            });
+        }
+
+        // Update item
+        function updateItem(id) {
+            $.ajax({
+                url: '/items/update/' + id,
+                method: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify({ 
+                    name: $('#name_' + id).val(), 
+                    description: $('#desc_' + id).val()
+                }),
+                success: function(response) {
+                    window.location.reload();
+                }
+            });
+        }
+    </script>
+</body>
+</html>

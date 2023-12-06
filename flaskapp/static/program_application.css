@@ -1,0 +1,12 @@
+.back_button {
+  display: block;
+}
+
+#program_already_applied {
+  color: red;
+  display: none;
+}
+
+#program_num {
+  display: none; 
+}

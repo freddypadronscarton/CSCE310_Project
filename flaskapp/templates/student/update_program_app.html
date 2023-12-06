@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Program Application</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="../static/program_application.css">
+  <link rel="stylesheet" href="../../static/general.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <a class="navbar-brand" href="#">CSCE 310 Project</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/home">Home</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/profile">Profile</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+            </li>
+        </ul>
+    </div>
+  </nav>
+  <!--End of Navigation Bar -->
+
+  <a class="back_button" href="{{url_for('application_review')}}">
+    <button>< Back to All Applications</button>
+  </a>
+
+  <h2>Update Program Application</h2>
+
+  <form action="{{ url_for('update_application') }}" method="POST">
+    <div class="form-group">
+      <input id="app_num" name="app_num" type="number" value="{{ app.app_num }}" style="display:none"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="uncom_cert">Are you currently enrolled in other uncompleted certifications sponsored by the Cybersecurity Center?</label>
+      <input id="uncom_cert" name="uncom_cert" type="text" value="{{ app.uncom_cert }}">
+    </div>
+
+    <div class="form-group">      
+      <label for="com_cert">Have you completed any cybersecurity industry certifications via the Cybersecurity Center?</label>
+      <input id="com_cert" name="com_cert" type="text" value="{{ app.com_cert }}">
+    </div>
+
+    <div class="form-group">      
+      <label for="purpose_statement">Please provide your purpose statement: </label>
+      <input id="purpose_statement" name="purpose_statement" type="text" value="{{ app.purpose_statement }}">
+    </div>
+
+    <!-- Need form group to handle uploading documents to application -->
+    <div class="form-group">
+      <label>FIXME</label>
+      <input type="file">
+    </div>
+
+    <br>
+    <div class="form-group">
+      <button id="apply-button" type="submit">Update</button>
+    </div>
+  </form>
+
+  <script>
+    
+  </script>
+</body>
+</html>

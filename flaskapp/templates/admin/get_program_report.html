@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Get Program Report</title>
+  <link rel="stylesheet" href="../../static/general.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <a class="navbar-brand" href="#">CSCE 310 Project</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/home">Home</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/profile">Profile</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+            </li>
+        </ul>
+    </div>
+  </nav>
+  <!--End of Navigation Bar -->
+
+  <a href="{{ url_for('admin_bp.view_all_programs') }}">
+    <button>< Back to All Programs</button>
+  </a>
+
+  <h2>Program Report</h2>
+  <table>
+    <tr>
+      <th>Program Name</th>
+      <td>{{ program.name }}</td>
+    </tr>
+    <tr>
+      <th>Program description</th>
+      <td>{{ program.descr }}</td>
+    </tr>
+    <tr>
+      <th>Number of students</th>
+      <td>{{ program.num_students }}</td>
+    </tr>
+    <tr>
+      <th>Number of students that completed all opportunities</th>
+      <td>{{ program.completed_students_count }}</td>
+    </tr>
+    <tr>
+      <th>Number of students in foreign language courses</th>
+      <td>{{ program.num_in_foreign_lang_courses }}</td>
+    </tr>
+    <tr>
+      <th>Number of students take other cryptography and cryptographic mathematics courses</th>
+      <td>{{ program.num_in_crypt_courses }}</td>
+    </tr>
+    <tr>
+      <th>Number of students electing to carry additional data science and related courses</th>
+      <td>{{ program.num_in_data_science_courses }}</td>
+    </tr>
+    <tr>
+      <th>Number of students to enroll in DoD 8570.01M preparation training courses</th>
+      <td>{{ program.DoD_training_enrolled }}</td>
+    </tr>
+    <tr>
+      <th>Number of students to complete DoD 8570.01M preparation training courses</th>
+      <td>{{ program.DoD_training_completed }}</td>
+    </tr>
+    <tr>
+      <th>Number of students to complete a DoD 8570.01M certification examination</th>
+      <td>{{ program.DoD_cert_complete }}</td>
+    </tr>
+    <tr>
+      <th>Minority participation</th>
+      <td>{{ program.minority_participation }}</td>
+    </tr>
+    <tr>
+      <th>The number of K-12 students enrolled in summer camps</th>
+      <td>{{ program.num_k12_accepted }}</td>
+    </tr>
+    <tr>
+      <th>Number of students pursuing federal internships</th>
+      <td>{{ program.fed_internships }}</td>
+    </tr>
+    <tr>
+      <th>Student majors</th>
+      <td>
+        {% for major in program.student_majors %}
+          <p>{{ major }}: {{ program.student_majors[major] }}</p>
+        {% endfor %}
+      </td>
+    </tr>
+    <tr>
+      <th>Internship Locations</th>
+      <td>
+        {% if program.internship_names|length == 0 %}
+          <p>None</p>
+        {% else %}
+          {% for internship in program.internship_names %}
+          <p>{{ internship }}</p>
+          {% endfor %}
+        {% endif %}
+      </td>
+    </tr>
+    <!-- <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr> -->
+  </table>
+</body>
+</html>

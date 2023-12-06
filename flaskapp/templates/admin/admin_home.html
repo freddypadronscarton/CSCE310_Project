@@ -3,9 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin Landing Page</title>
+    <link rel="stylesheet" href="../static/general.css">
+    <link rel="stylesheet" href="../static/admin_home.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <a class="navbar-brand" href="#">CSCE 310 Project</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/home">Home</a>
+                </li>
+  
+                <li class="nav-item">
+                    <a class="nav-link" href="/profile">Profile</a>
+                </li>
+  
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!--End of Navigation Bar -->
+
+
     <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -14,7 +44,26 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-    <h1> {{ current_user.first_name }}'s User Management</h1>
+    <h1>Welcome Admin! </h1>
+
+    <div>
+      <a href="{{ url_for('admin_bp.add_program') }}">
+        <button>Add Program</button>
+      </a>
+      <a href="{{ url_for('admin_bp.view_all_programs') }}">
+        <button>View Programs</button>
+      </a>
+      <a href="{{ url_for('admin_bp.add_event') }}">
+        <button>Add Event</button>
+      </a>
+      <a href="{{ url_for('admin_bp.view_all_events') }}">
+        <button>View Events</button>
+      </a>
+    </div>
+
+    <!-- User Type Selector Modal Container -->
+    <Modal id="userTypeFrom" style="display:none;">
+    </Modal>
 
     <!-- Table to Display Items -->
     <h2>Current Users</h2>
@@ -42,12 +91,14 @@
                         </select>
                     </td>
                     <td>
-                        <button onclick="deleteUser({{user.uin}})">Delete</button>
+                        <button onclick="editButtonPress({{ user.uin }})">Edit</button>
                         {% if user.archived %}
-                            <button onclick="updateUser('Archived', {{user.uin}}, 0)">Unarchive</button>
+                            <button onclick="archiveUser({{user.uin}}, 0)">Unarchive</button>
                         {% else %}
-                            <button onclick="updateUser('Archived', {{user.uin}}, 1)">Archive</button>
+                            <button onclick="archiveUser({{user.uin}}, 1)">Archive</button>
                         {% endif %}
+                        <button onclick="viewProgressButton({{ user.uin }})">View Progress</button>
+                        <button onclick="deleteUser({{user.uin}})">Delete</button>
                     </td>
                 </tr>
             {% else %}
@@ -55,39 +106,42 @@
         {% endfor %}
     </table>
 
-    <!-- Logout Button -->
-    <form action="{{ url_for('logout') }}" method="post">
-        <button type="submit">Logout</button>
-    </form>
-
-    <!-- User Type Selector Modal Container -->
-    <Modal id="userTypeFrom" style="display:none;">
-    </Modal>
-
-
     <script>
         //AJAX calls
 
+        // Redirect to editUser page
+        function editButtonPress(uin) {
+            window.location.href = `/admin/edit/user/${uin}`;
+        }
+
+        function viewProgressButton(uin){
+            window.location.href = `/progress/view_progress/${uin}`;
+        }
+
         // Delete User
         function deleteUser(uin) {
-            $.ajax({
-                url: `/admin/delete_user/${uin}`,
-                method: 'DELETE',
-                success: function(response) {
-                    window.location.reload(); 
-                }
-            });
-        }   
+            var confirmation = confirm("Are you sure you'd like to delete this user?");
+            if (confirmation) {
+                $.ajax({
+                    url: `/admin/delete_user/${uin}`,
+                    method: 'DELETE',
+                    success: function(response) {
+                        window.location.reload(); 
+                    },
+                    error: function() {
+                        alert('Error: User could not be deleted.');
+                    }
+                });
+            }
+        }
 
-        // update user: called for archive
-        function updateUser(field, uin, value) {
+        function archiveUser(uin, value) {
             $.ajax({
-                url: `/admin/update_user/${uin}`,
+                url: `/admin/archive_user/${uin}`,
                 method: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify({ 
                     'uin': uin,
-                    'field':field,
                     'value': value
                 }),
                 success: function(response) {
@@ -128,6 +182,7 @@
                      },
                     success: function(response) {
                         $('#userTypeFrom').html(response).show();
+                        $('html, body').animate({ scrollTop: 0 }, 'slow');
                     }
                 });
             } else{

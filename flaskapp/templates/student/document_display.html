@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document Viewer</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../static/general.css">
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <a class="navbar-brand" href="#">CSCE 310 Project</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/home">Home</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/profile">Profile</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+            </li>
+        </ul>
+    </div>
+  </nav>
+  <!--End of Navigation Bar -->
+    <div>
+        <h2>Documents</h2>
+        <table id="documentTable">
+            <tr>
+                <th>File Name</th>
+                <th>Type</th>
+                <th>Application</th>
+                <th>Actions</th>
+            </tr>
+            {% for document in documents %}
+            <tr>
+                <td>{{ document.name }}</td>
+                <td>{{ document.doc_type }}</td>
+                <td>{{document.ProgramName}}</td>
+                <td>
+                    <button onclick="deleteDocument({{ document.doc_num }})">Delete</button>
+                    <a href="/update_document/{{document.doc_num}}">
+                        <button>Update</button>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <a class="back_button" href="{{ url_for('home') }}">
+            <button>Back</button>
+          </a>
+    </div>
+    <script>
+        function deleteDocument(doc_num) {
+            $.ajax({
+                url: `/delete_document/${doc_num}`,
+                method: 'DELETE',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "doc_num": parseInt(doc_num)
+                }),
+                success: function(response) {
+                    window.location.reload();
+                }
+            });
+        }
+    </script>
+    
+</body>
+<style>
+    body { 
+            display: flex;
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh;
+            margin: 0; 
+            padding: 80;
+        }
+
+    table {
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        background: #fff;
+        border-radius: 5px;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    
+    table th, table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+</style>
+</html>

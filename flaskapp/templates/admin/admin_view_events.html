@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin View Events</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="../static/general.css">
+</head>
+<body>
+  <a href="{{url_for('home')}}">
+    <button>< Back</button>
+  </a>
+
+  <table>
+    <tr>
+        <th>Program Number</th>
+        <th>UIN of Event Creator</th>
+        <th>Start Date</th>
+        <th>Time</th>
+        <th>Location</th>
+        <th>End Date</th>
+        <th>Event Type</th>
+        <th>Add Attendee</th>
+        <th>Actions</th>
+    </tr>
+    {% for event in events %}
+    <tr>
+        <td>{{event.program_num}}</td>
+        <td>{{event.UIN}}</td>
+        <td>{{event.start_date}}</td>
+        <td>{{event.time}}</td>
+        <td>{{event.location}}</td>
+        <td>{{event.end_date}}</td>
+        <td>{{event.event_type}}</td>
+        <td>
+            <form method="POST" action="/admin/add_attendee/{{event.event_id}}">
+                <input type="text" id="UIN" name="UIN" placeholder="UIN">
+                <button type="submit">Add</button>
+            </form>
+        </td>
+        <td>
+            <a href="/admin/update_event/{{event.event_id}}"><button>Update</button></a>
+            <a href="/admin/attendee_control/{{event.event_id}}"><button>Attendees</button></a>
+            <button onclick="deleteEvent({{event.event_id}})">Delete</button>
+        </td>
+
+    </tr>
+    {% endfor %}
+  </table>
+
+    <script>
+        function deleteEvent(event_id) {
+            $.ajax({
+                url: `/admin/delete_event/${event_id}`,
+                method: 'DELETE',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "event_id": parseInt(event_id)
+                }),
+                success: function(response) {
+                    window.location.reload();
+                }
+            });
+        }
+        function addAttendee(event_id, UIN) {
+            $.ajax({
+                url: `/admin/add_attendee/${event_id}`,
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "event_id": parseInt(event_id),
+                    "UIN": parseInt(UIN)
+                }),
+                success: function(response) {
+                    window.location.reload();
+                }
+            });
+        }
+    </script>
+</body>
+</html>

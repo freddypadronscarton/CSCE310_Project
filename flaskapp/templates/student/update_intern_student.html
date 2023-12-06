@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Internship</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+      <a class="navbar-brand" href="#">CSCE 310 Project</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+              <li class="nav-item">
+                  <a class="nav-link" href="/home">Home</a>
+              </li>
+
+              <li class="nav-item">
+                  <a class="nav-link" href="/profile">Profile</a>
+              </li>
+
+              <li class="nav-item">
+                  <a class="nav-link" href="/logout">Logout</a>
+              </li>
+          </ul>
+      </div>
+  </nav>
+  <!--End of Navigation Bar -->
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form action="/internship/update_intern_student/{{intern.Intern_ID}}/{{intern_app.UIN}}" method="POST" id="updateInternForm">
+    <h1>Update Internship</h1><br>
+    Internship Name: {{intern.name}}<br>Description: {{intern.description}}<br>Government Program?: {{intern.is_gov}}<br><br>
+    </div>    
+    <div class="form-group">
+        <label for="intern_status">Status: </label>
+        <select id="intern_status" name="intern_status">
+        {% if intern_app.status == "Applied" %}
+            <option value="Applied">Applied</option>
+            <option value="Accepted">Accepted</option>
+            <option value="Rejected">Rejected</option>
+        {% elif intern_app.status == "Accepted" %}
+            <option value="Accepted">Accepted</option>
+            <option value="Applied">Applied</option>
+            <option value="Rejected">Rejected</option>
+        {% else %}
+            <option value="Rejected">Rejected</option>
+            <option value="Applied">Applied</option>
+            <option value="Accepted">Accepted</option>
+        {% endif %}
+        </select>
+    </div>
+    <div class="form-group">
+      <label for="intern_year">Year:</label>
+      <input id="intern_year" name="intern_year" type="text" value="{{intern_app.year}}">
+    </div>
+    <div class="form-group">
+      <button type="submit">Update Internship</button>
+    </div>
+    <a href="{{ url_for('progress_bp.view_progress', UIN=request.view_args['UIN']) }}">
+      <button>Back</button>
+    </a>
+  </form>
+</body>
+
+<style>
+  body { 
+      display: flex;
+      justify-content: center; 
+      align-items: center; 
+      min-height: 100vh;
+      margin: 0; 
+      padding: 0;
+  }
+  form {
+      width: 50%; 
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+      background: #fff;
+      border-radius: 5px; 
+  }
+  .form-group {
+      margin-bottom: 15px; 
+  }
+  label {
+      margin-right: 10px;
+  }
+  button, .btn-custom {
+    border: none;
+    padding: 10px 20px;
+    margin: 10px 2px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+
+  button:hover, .btn-custom:hover {
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+</style>
+</html>

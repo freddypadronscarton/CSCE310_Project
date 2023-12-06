@@ -1,0 +1,124 @@
+body { 
+    background-color: #f5f5f5; 
+    padding-top: 60px; 
+}
+
+.container {
+    margin-top: 20px;
+}
+
+h1, h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+table {
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background: #fff;
+    border-radius: 5px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+table th, table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+button, .btn-custom {
+    border: none;
+    padding: 10px 20px;
+    margin: 10px 2px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+button:hover, .btn-custom:hover {
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.flash {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: .5rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    display: block;
+    width: 100%;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 .2rem rgba(0,123,255,.25);
+}
+
+
+.card {
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.card-header {
+    padding: .75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: rgba(0,0,0,.03);
+    border-bottom: 1px solid rgba(0,0,0,.125);
+}
+
+.card-body {
+    flex: 1 1 auto;
+    padding: 1.25rem;
+}
+
+.card-title {
+    margin-bottom: .75rem;
+}
+
+/* Style for buttons inside the form */
+.form-group .btn-custom {
+    width: auto; 
+    padding: 10px 15px;
+}
+
+.d-none {
+    display: none !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+
+    .card, .form-group input, .form-group select, .form-group textarea {
+        width: 100%; 
+    }
+}

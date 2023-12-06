@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Program Application</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="../../static/general.css">
+  <link rel="stylesheet" href="../static/program_application.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <a class="navbar-brand" href="#">CSCE 310 Project</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/home">Home</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/profile">Profile</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+            </li>
+        </ul>
+    </div>
+  </nav>
+  <!--End of Navigation Bar -->
+
+  <form action="{{ url_for('add_new_application') }}" method="post" enctype="multipart/form-data">
+    <h2>Program Application</h2><br>
+  
+    <p id="program_already_applied">You've already applied to this program.</p>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    
+    <select id="program-select">
+      <option disabled selected>-- select an option --</option>
+      {% for program in programs %}
+      <option name="program_num" value="{{ program.program_num }}">{{ program.name }}</option>
+      {% endfor %}
+    </select>
+
+
+    <div class="form-group">
+      <input id="program_num" name="program_num" type="number"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="uncom_cert">Are you currently enrolled in other uncompleted certifications sponsored by the Cybersecurity Center?</label>
+      <textarea id="uncom_cert" name="uncom_cert" type="text"></textarea>
+    </div>
+
+    <div class="form-group">      
+      <label for="com_cert">Have you completed any cybersecurity industry certifications via the Cybersecurity Center?</label>
+      <textarea id="com_cert" name="com_cert" type="text"></textarea>
+      
+    </div>
+
+    <div class="form-group">      
+      <label for="purpose_statement">Please provide your purpose statement: </label><br>
+      <textarea id="purpose_statement" name="purpose_statement" type="text"></textarea>
+    </div>
+
+    <!-- Need form group to handle uploading documents to application -->
+    
+    <div class="form-group">
+      <label for="document-type">Document Type</label>
+      <select id="document-type" name="document_type">
+        <option value="None">None</option>
+        <option value="Resume">Resume</option>
+        <option value="Transcript">Transcript</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+
+    <div class="form-group" id="document-upload" style="display: none;">
+      <label for="document">Upload Document</label>
+      <input type="file" id="document" name="document">
+    </div>
+
+    <div class="form-group">
+      <button id="apply-button" type="submit" disabled="true">Apply</button>
+    </div>
+
+    <a class="back_button" href="{{url_for('home')}}">
+      <button>Back</button>
+    </a>
+  
+  </form>
+
+  <script>
+    function updateApplyButton(alreadyApplied) {
+      // if already applied (python code will flash) this function will disable submit button, else it enable submit button
+      var applyButton = document.getElementById('apply-button');
+      var appliedWarning = document.getElementById('program_already_applied');
+      if (alreadyApplied) {
+        applyButton.disabled = true;
+        appliedWarning.style.display = "block";
+      } else {
+        applyButton.disabled = false;
+        appliedWarning.style.display = "none";
+      }
+    }
+
+    function checkForApplication() {
+      let program_num = document.getElementById('program-select').value;
+      document.getElementById("program_num").value = program_num;
+
+      // ajax call to check if current user already applied to this program
+      $.ajax({
+        url: `/program_applied_check/${program_num}`,
+        method: 'GET',
+        contentType: 'json',
+        success: function(response) {
+          let alreadyApplied = response['alreadyApplied'];
+          updateApplyButton(alreadyApplied);
+        }
+      });
+    }
+
+    document.getElementById('document-type').addEventListener('change', function() {
+      var documentType = this.value;
+      var documentUploadDiv = document.getElementById('document-upload');
+  
+      if(documentType === 'None') {
+        documentUploadDiv.style.display = 'none';
+      } else {
+        documentUploadDiv.style.display = 'block';
+      }
+    });
+
+    // triggers every time a new program is selected, checks if user has already applied to that program
+    document.getElementById('program-select').addEventListener('change', checkForApplication);
+  </script>
+</body>
+<style>
+  body { 
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    min-height: 100vh;
+    margin: 0; 
+    padding: 80;
+}
+form {
+    width: 50%; 
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+    background: #fff;
+    border-radius: 5px; 
+}
+.form-group {
+    margin-bottom: 15px; 
+}
+label {
+    margin-right: 10px;
+}
+button, .btn-custom {
+  border: none;
+  padding: 10px 20px;
+  margin: 10px 2px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+textarea {
+  width: 100%; 
+  max-width: 600px;
+  min-height: 100px; 
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; 
+}
+
+button:hover, .btn-custom:hover {
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+</style>
+</html>

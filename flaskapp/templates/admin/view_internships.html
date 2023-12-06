@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View User's Classes</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../static/general.css">
+  <link rel="stylesheet" href="../../static/admin_home.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+      <a class="navbar-brand" href="#">CSCE 310 Project</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+              <li class="nav-item">
+                  <a class="nav-link" href="/home">Home</a>
+              </li>
+
+              <li class="nav-item">
+                  <a class="nav-link" href="/profile">Profile</a>
+              </li>
+
+              <li class="nav-item">
+                  <a class="nav-link" href="/logout">Logout</a>
+              </li>
+          </ul>
+      </div>
+  </nav>
+  <!--End of Navigation Bar -->
+
+  <h2>{{name}}'s Internships</h2>
+  <table>
+    <tr>
+      <th>Internship Name</th>
+      <th>Description</th>
+      <th>Government Program?</th>
+      <th>Status</th>
+      <th>Year</th>
+      <th>Modify</th>
+    </tr>
+    {% for intern in interns %}
+        <tr>
+          <td>{{ intern.Name }}</td>
+          <td>{{ intern.Description }}</td>
+          <td>{{ intern.is_gov }}</td>
+          <td>{{ intern.status }}</td>
+          <td>{{intern.year }}</td>
+          <td>
+            <a href="{{ url_for('intern_bp.update_intern_student', Intern_ID=intern.intern_ID, UIN=request.view_args['UIN']) }}">
+              <button>Update</button>
+            </a>
+            <button onclick="deleteIntern({{intern.Intern_ID}}, {{request.view_args['UIN']|tojson}})">Delete</button>
+          </td>
+        </tr>
+        {% endfor %}
+    <!-- Look at admin_home.html for idea of how archived code will work -->
+  </table>
+
+  <script>
+    function deleteIntern(intern_id, UIN) {
+        $.ajax({
+          url: `/internship/delete_intern_student/${intern_id}/${UIN}`,
+          method: 'DELETE',
+          success: function(response) {
+            window.location.reload();
+          }
+        })
+      }
+  </script>
+</body>
+</html>
