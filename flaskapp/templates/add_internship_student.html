@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <title>Admin Add Class</title>
+  <title>Add Internship</title>
 </head>
 <body>
       <!-- Navigation Bar -->
@@ -31,49 +31,36 @@
   </nav>
   <!--End of Navigation Bar -->
 
-  <!-- Flash Messages -->
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        {% for category, message in messages %}
-            <div class="flash {{ category }}">{{ message }}</div>
-        {% endfor %}
-    {% endif %}
-  {% endwith %}
-
-  <form action="{{ url_for('class_enrollment', UIN=current_user.uin) }}" method="POST">
-    <h1>Add Class</h1><br>
+  
+  <form action="{{ url_for('intern_bp.add_internship_student', UIN=request.view_args['UIN']) }}" method="POST">
+    <h1>Add New Internship</h1><br>
     <div class="form-group">
-      <label for="class_name">Class Name:</label>
-      <input id="class_name" name="class_name" type="text">
+      <label for="intern_name">Internship Name:</label>
+      <input id="intern_name" name="intern_name" type="text">
     </div>
     <div class="form-group">
-      <label for="class_type">Class Type: &nbsp; </label>
-      <input id="class_type" name="class_type" type="text">
-    </div>
-    <div class="form-group">
-      <label for="class_semester">Semester: </label>
-        <select id="class_semester" name="class_semester">
-            <option value="Spring">Spring</option>
-            <option value="Summer">Summer</option>
-            <option value="Fall">Fall</option>
+      <label for="intern_isGov">Government Program?: </label>
+        <select id="intern_isGov" name="intern_isGov">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
         </select>
     </div>
     <div class="form-group">
-      <label for="class_year">Year: </label>
-      <input id="class_year" name="class_year" type="text">
+      <label for="intern_year">Year: </label>
+      <input id="intern_year" name="intern_year" type="text">
     </div>
     <div class="form-group">
-      <label for="class_status">Status: </label>
-      <select id="class_status" name="class_status">
-        <option value="Enrolled">Enrolled</option>
-        <option value="Completed">Completed</option>
-        <option value="Dropped">Dropped</option>
+      <label for="intern_status">Status: </label>
+      <select id="intern_status" name="intern_status">
+        <option value="Applied">Applied</option>
+        <option value="Accepted">Accepted</option>
+        <option value="Rejected">Rejected</option>
       </select>
     </div>
     <div class="form-group row">
-      <label for="class_descr" class="col-sm-2 col-form-label">Description:</label>
+      <label for="intern_descr" class="col-sm-2 col-form-label">Description:</label>
       <div class="col-sm-10">
-        <textarea id="class_descr" name="class_descr" class="form-control"></textarea>
+        <textarea id="intern_descr" name="intern_descr" class="form-control"></textarea>
       </div>
     </div>
     <!-- Flash Messages -->
@@ -85,18 +72,18 @@
       {% endif %}
     {% endwith %}
     <div class="form-group">
-      <button type="submit">Add Class</button>
+      <button type="submit">Add Internship</button>
     </div><br>
-
-    <a class="nav-link" href="/home">Back</a>
+    
+    <a class="nav-link" href="{{url_for('home')}}">Back</a>
   </form>
 </body>
 <style>
   body { 
-      display: flex;
-      justify-content: center; 
-      align-items: center; 
-      min-height: 100vh;
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    min-height: 100vh;
       margin: 0; 
       padding: 0;
   }

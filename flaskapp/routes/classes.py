@@ -55,6 +55,14 @@ def delete_class(Class_ID):
     conn.close()
     return jsonify({"change": "program deleted"})
 
+@classes_bp.route('/delete_class_student/<int:Class_ID>/<int:UIN>', methods=['DELETE'])
+@login_required
+def delete_class_student(Class_ID, UIN):
+    conn = get_db_connection()
+    delete_enrollments_by_class_id_and_uin(conn, Class_ID, UIN)
+    conn.close()
+    return jsonify({"change": "program deleted"})
+
 @classes_bp.route('/update_class/<int:Class_ID>/<int:UIN>', methods=['GET', 'POST'])
 @login_required
 def update_class(Class_ID, UIN):
@@ -76,8 +84,6 @@ def update_class(Class_ID, UIN):
 @classes_bp.route('/update_class_basic/<int:Class_ID>', methods=['GET', 'POST'])
 @login_required
 def update_class_basic(Class_ID):
-    print(request.form)
-    print(request.method)
     conn = get_db_connection()
     if (request.method == 'POST'):
         update_class_info(conn, Class_ID, request.form["class_name"], request.form["class_descr"], request.form["class_type"])
@@ -91,8 +97,6 @@ def update_class_basic(Class_ID):
 @classes_bp.route('/update_class_student/<int:Class_ID>/<int:UIN>', methods=['GET', 'POST'])
 @login_required
 def update_class_student(Class_ID, UIN):
-    print(request.form)
-    print(request.method)
     conn = get_db_connection()
     if (request.method == 'POST'):
         # update_class_info(conn, Class_ID, request.form["class_name"], request.form["class_descr"], request.form["class_type"])
@@ -153,10 +157,14 @@ def delete_enrollments_by_class_id(conn, Class_ID):
     conn.execute('DELETE FROM Class_Enrollment WHERE Class_ID=?', (Class_ID,))
     conn.commit()
 
+def delete_enrollments_by_class_id_and_uin(conn, Class_ID, UIN):
+    conn.execute('DELETE FROM Class_Enrollment WHERE Class_ID=? AND UIN=?', (Class_ID, UIN))
+    conn.commit()
+
 def update_class_info(conn, class_id, class_name, class_descr, class_type):
     conn.execute('UPDATE Classes SET name=?, description=?, type=? WHERE Class_ID=?', (class_name, class_descr, class_type, class_id))
     conn.commit()
 
 def update_enrollment_info(conn, class_id, UIN, class_semester, class_year, class_status):
-    conn.execute('UPDATE Class_Enrollment SET Semester=?, Year=?, Status=? WHERE Class_ID=?', (class_semester, class_year, class_status, class_id))
+    conn.execute('UPDATE Class_Enrollment SET Semester=?, Year=?, Status=? WHERE Class_ID=? AND UIN=?', (class_semester, class_year, class_status, class_id, UIN))
     conn.commit()

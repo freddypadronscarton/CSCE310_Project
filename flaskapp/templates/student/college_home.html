@@ -103,7 +103,17 @@
         <a href="{{ url_for('classes_bp.view_classes', UIN=current_user.uin)}}">
             <button>My Classes</button>
         </a>
+    </div>
 
+    <!-- Report an Internship -->
+    <div id="internApp">
+        <h2>Internships</h2>
+        <a href="{{ url_for('intern_bp.add_internship_student', UIN=current_user.uin)}}">
+            <button>Create</button>
+        </a>
+        <a href="{{ url_for('intern_bp.view_internships', UIN=current_user.uin)}}">
+            <button>My Internships</button>
+        </a>
     </div>
 
     <!-- Documents section -->

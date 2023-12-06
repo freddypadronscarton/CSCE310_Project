@@ -216,42 +216,6 @@ def init_sqlite_db():
                 JOIN Programs ON Application.program_num = Programs.program_num
                 ''')
 
-    # INSERT STATEMENTS FOR THE SAKE OF TESTING GIVEN THAT ALEX'S CODE ISN"T DONE
-    # Add Student
-    # conn.execute('''INSERT INTO Track (program, student_num, status) 
-    #              values (1, 3424, "Accepted")''')
-    # Add Class
-    # conn.execute('''INSERT INTO Classes (name, description, type) 
-    #              values ("data science", "beginner data science class", "data science")''')
-    # Add Class Enrollment
-    # conn.execute('''INSERT INTO Class_enrollment (UIN, Class_ID, status) 
-    #              values (3424, 6, "Enrolled")''')
-    # Add Certification
-    # conn.execute('''INSERT INTO Certification (Name, Description, Level)
-    #              values ("cert1", "basic cyber certification", "1")''')
-    # Add Certificatino Enrollment
-    # conn.execute('''INSERT INTO Cert_enrollment (UIN, Cert_ID, Program_Num, Status, Training_status)
-    #              values (3424, 1, 1, "Incomplete", "Enrolled")''')
-    
-    # Set Student program status to complete
-    # conn.execute('''UPDATE TRACK SET STATUS = "Completed" WHERE student_num = 3424''')
-
-    # conn.execute('''UPDATE Cert_enrollment
-    #              SET Status = "Complete"
-    #              WHERE CertE_Num = 2''')
-    
-    # Add Internship
-    # conn.execute('''INSERT INTO Internship (Name, Description, Is_Gov)
-    #              VALUES ("Gov Internship", "a govt internship", 1)''')
-    # Add Internship Application
-    # conn.execute('''INSERT INTO Intern_app (UIN, Intern_ID, Status, Year)
-    #              VALUES (3424, 1, "Accepted", 2021)''')
-
-    # conn.execute("DELETE FROM Classes WHERE Class_ID = 2")
-    # conn.execute("DELETE FROM Track WHERE tracking_num = 2")
-    # conn.execute("DELETE FROM Internship WHERE Intern_ID = 2")
-    # conn.execute("DELETE FROM Intern_App WHERE IA_Num = 2")
-
     # View of students in programs that are not rejected
     conn.execute('''CREATE VIEW IF NOT EXISTS Program_Accepts AS
                  SELECT Tracking_num, Program, Student_num, Status FROM Track WHERE Status != "Rejected"
@@ -288,6 +252,47 @@ def init_sqlite_db():
         JOIN Classes C ON CE.Class_ID = C.Class_ID;
         ''')
 
+    # Join Internships and Intern_App
+    conn.execute('''CREATE VIEW IF NOT EXISTS View_InternAppDetails AS
+    SELECT * FROM Internship
+    JOIN Intern_App ON Internship.Intern_ID = Intern_App.Intern_ID;
+    ''')
+
+    # INSERT STATEMENTS FOR THE SAKE OF TESTING GIVEN THAT ALEX'S CODE ISN"T DONE
+    # Add Student
+    # conn.execute('''INSERT INTO Track (program, student_num, status) 
+    #              values (1, 3424, "Accepted")''')
+    # Add Class
+    # conn.execute('''INSERT INTO Classes (name, description, type) 
+    #              values ("data science", "beginner data science class", "data science")''')
+    # Add Class Enrollment
+    # conn.execute('''INSERT INTO Class_enrollment (UIN, Class_ID, status) 
+    #              values (3424, 6, "Enrolled")''')
+    # Add Certification
+    # conn.execute('''INSERT INTO Certification (Name, Description, Level)
+    #              values ("cert1", "basic cyber certification", "1")''')
+    # Add Certificatino Enrollment
+    # conn.execute('''INSERT INTO Cert_enrollment (UIN, Cert_ID, Program_Num, Status, Training_status)
+    #              values (3424, 1, 1, "Incomplete", "Enrolled")''')
+    
+    # Set Student program status to complete
+    # conn.execute('''UPDATE TRACK SET STATUS = "Completed" WHERE student_num = 3424''')
+
+    # conn.execute('''UPDATE Cert_enrollment
+    #              SET Status = "Complete"
+    #              WHERE CertE_Num = 2''')
+    
+    # Add Internship
+    # conn.execute('''INSERT INTO Internship (Name, Description, Is_Gov)
+    #              VALUES ("Gov Internship", "a govt internship", 1)''')
+    # Add Internship Application
+    # conn.execute('''INSERT INTO Intern_app (UIN, Intern_ID, Status, Year)
+    #              VALUES (3424, 1, "Accepted", 2021)''')
+
+    # conn.execute("DELETE FROM Classes WHERE Class_ID = 2")
+    # conn.execute("DELETE FROM Track WHERE tracking_num = 2")
+    # conn.execute("DELETE FROM Internship WHERE Intern_ID = 2")
+    # conn.execute("DELETE FROM Intern_App WHERE IA_Num = 2")
 
     # conn.execute('''CREATE VIEW IF NOT EXISTS Student_Data AS 
     #              SELECT UIN, gender, hispanic_or_latino, race, us_citizen, 
@@ -300,6 +305,9 @@ def init_sqlite_db():
     conn.execute('CREATE INDEX IF NOT EXISTS idx_event_uin ON Event(UIN)')
     conn.execute('CREATE INDEX IF NOT EXISTS idx_application_uin ON Application(UIN)')
     conn.execute("CREATE INDEX IF NOT EXISTS Track_Index ON Track(program)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_class_enrollment_uin ON Class_Enrollment(UIN)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_intern_app_uin ON Intern_App(UIN)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_cert_enrollment_uin ON Cert_Enrollment(UIN)")
 
     
     conn.commit()

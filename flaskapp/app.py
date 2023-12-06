@@ -13,6 +13,7 @@ from routes.example import items_bp
 from util.Documents import *
 from routes.progress import progress_bp
 from routes.classes import *
+from routes.intern import *
 
 
 # App Initialization
@@ -29,6 +30,7 @@ app.register_blueprint(admin_bp, url_prefix='/admin')
 app.register_blueprint(items_bp, url_prefix='/items')
 app.register_blueprint(progress_bp, url_prefix='/progress')
 app.register_blueprint(classes_bp, url_prefix='/classes')
+app.register_blueprint(intern_bp, url_prefix='/internship')
 
 # Flask-Login: User class and user_loader
 class User(UserMixin):
@@ -176,24 +178,28 @@ def profile():
     if request.method == 'POST':
         
         # Change any User Table fields
-        user_info['Username'] = request.form.get('username')
-        user_info['First_Name'] = request.form.get('first_name')
-        user_info['M_Initial'] = request.form.get('middle_initial')
-        user_info['Last_Name'] = request.form.get('last_name')
-        user_info['Email'] = request.form.get('email')
-        user_info['Discord_Name'] = request.form.get('discord')
+        user_info['Username'] = request.form.get('Username')
+        user_info['First_Name'] = request.form.get('First_Name')
+        user_info['M_Initial'] = request.form.get('M_Initial')
+        user_info['Last_Name'] = request.form.get('Last_Name')
+        user_info['Email'] = request.form.get('Email')
+        user_info['Discord_Name'] = request.form.get('Discord_Name')
         
-        # Change College Student Fields
-        if current_user.user_type == "college_student":
-            user_info['GPA'] = request.form.get('gpa')
-            user_info['Major'] = request.form.get('major')
-            user_info['Minor'] = request.form.get('minor')
-            user_info['Second_Minor'] = request.form.get('second_minor')
+        # Fields for k12 and college
+        if not user_info['User_Type'] == "admin":
+            user_info['Birthdate'] = request.form.get("Birthdate")
+            user_info['School'] = request.form.get('School')
+            user_info['Classification'] = request.form.get('Classification')
+            user_info['Phone'] = "".join(request.form.get('Phone').split("-"))
+
+        # college student exclusive fields
+        if user_info['User_Type'] == "college_student":
+            user_info['GPA'] = request.form.get('GPA')
+            user_info['Major'] = request.form.get('Major')
+            user_info['Minor'] = request.form.get('Minor')
+            user_info['Second_Minor'] = request.form.get('Second_Minor')
             user_info['Exp_Graduation'] = request.form.get('Exp_Graduation')
-            user_info['Phone'] = "".join(request.form.get('phone_number').split("-"))
         
-        user_info['School'] = request.form.get('school')
-        user_info['Classification'] = request.form.get('classification')
 
         
         conn = get_db_connection()
@@ -202,37 +208,16 @@ def profile():
         
         flash('Profile updated successfully.')
         return redirect(url_for('profile'))
-    else: # Get Request
-        conn = get_db_connection()
-        query_result = conn.execute('SELECT * FROM Users WHERE UIN = ?', (UIN,)).fetchone()
-        
-        if query_result:
-            user_info['username'] = query_result["Username"]
-            user_info['email'] = query_result["Email"]
-            user_info['first_name'] = query_result["First_Name"]
-            user_info['last_name'] = query_result["Last_Name"]
-            user_info['user_type'] = query_result["User_Type"]
-            user_info['middle_initial'] = query_result["M_Initial"]
-            user_info['discord_name'] = query_result["Discord_Name"]
-            
-            # Fetch additional details based on user type
-            if not user_info['user_type'] == 'admin':
-                college_query = 'SELECT * FROM College_Students WHERE UIN = ?'
-                college_info = conn.execute(college_query, (UIN,)).fetchone()
-                
-                # Assign additional attributes specific to college students
-                user_info['gpa'] = college_info["GPA"]
-                user_info['major'] = college_info["Major"]
-                user_info['minor'] = college_info["Minor"]
-                user_info['second_minor'] = college_info["Second_Minor"]
-                user_info['exp_graduation'] = college_info["Exp_Graduation"]
-                user_info['school'] = college_info["School"]
-                user_info['classification'] = college_info["Classification"]
-                phone_str = str(college_info["Phone"])
-                user_info['phone_number'] = phone_str[:3] + "-" + phone_str[3:6] + "-" + phone_str[6:]
-
-        conn.close()
-        return render_template('auth/Profile.html', user=user_info, current_year=datetime.now().year)
+    
+    if not user_info["Phone"]:
+        del user_info["Phone"]
+    else:
+        phone_str = str(user_info['Phone'])
+        user_info['Phone'] = phone_str[:3] + "-" + phone_str[3:6] + "-" + phone_str[6:]
+    
+    # GET REQUEST JUST RENDERS TEMPLATE
+    conn.close()
+    return render_template('auth/Profile.html', user=user_info, current_year=datetime.now().year)
 
 # PROFILE PAGE
 @app.route('/passwordRecovery', methods=['GET', 'POST'])
@@ -426,13 +411,19 @@ def class_enrollment(UIN):
     if(request.method == "POST"):
         class_name = request.form['class_name']
         class_descr = request.form['class_descr']
+        class_type = request.form['class_type']
+        class_semester = request.form['class_semester']
+        class_year = request.form['class_year']
+        class_status = request.form['class_status']
         conn = get_db_connection()
-        class_exist = is_class_name_taken(conn, class_name)
+        class_exist = get_class_by_name(conn, class_name)
         if class_exist:
-            flash("A class of this name already exists")
+            is_enrolled = get_enrollment(conn, class_exist.Class_ID, UIN)
+            if(is_enrolled):
+                flash("You are already enrolled in this class")
             conn.close()
         else:
-            enroll_class(conn, class_name, class_descr, UIN)
+            enroll_class(conn, class_name, class_descr, class_type, class_semester, class_year, class_status, UIN)
             conn.close()
             return redirect(url_for("home"))
     return render_template('student/class_enrollment.html')
