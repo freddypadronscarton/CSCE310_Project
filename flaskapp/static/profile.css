@@ -47,9 +47,9 @@ input[type="submit"] {
 }
 
 .form-group input[type="submit"] {
-    background-color: #007bff;
+    background-color: #423c3c;
     color: white;
-    border-color: #007bff;
+    border-color: #423c3c;
 }
 
 .btn-custom {

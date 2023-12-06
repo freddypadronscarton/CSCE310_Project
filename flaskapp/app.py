@@ -179,6 +179,15 @@ def profile():
     
     if request.method == 'POST':
         
+        # Check if email and username are already taken
+        if not request.form.get('Username') == user_info['Username'] and check_user_username(conn, request.form.get('Username')):
+            flash("That username is already in use. Please try another.", "Error")
+            return redirect(url_for('profile'))
+        elif not request.form.get('Email') == user_info['Email'] and check_user_email(conn, request.form.get('Email')):
+            flash("That email is already in use. Please try another.", "Error")
+            return redirect(url_for('profile'))
+        
+        
         # Change any User Table fields
         user_info['Username'] = request.form.get('Username')
         user_info['First_Name'] = request.form.get('First_Name')
@@ -201,10 +210,7 @@ def profile():
             user_info['Minor'] = request.form.get('Minor')
             user_info['Second_Minor'] = request.form.get('Second_Minor')
             user_info['Exp_Graduation'] = request.form.get('Exp_Graduation')
-        
-
-        
-        conn = get_db_connection()
+            
         update_user_fields(conn, user_info)
         conn.close()
         
@@ -274,7 +280,7 @@ def passwordRecovery():
 @app.route('/program_application')
 def program_application(): 
     conn = get_db_connection()
-    programs = conn.execute('SELECT * FROM programs').fetchall()
+    programs = get_all_programs(conn)
     conn.close()
     return render_template('student/program_application.html', programs=programs)
 
@@ -284,7 +290,6 @@ def check_if_already_applied(program_num):
     conn = get_db_connection()
     alreadyApplied = conn.execute("SELECT COUNT(*) FROM Application WHERE Program_Num = ? AND UIN = ?", (program_num, current_user.uin)).fetchone()[0]
     conn.close()
-    print(alreadyApplied)
     if (alreadyApplied > 0):
         return jsonify({'alreadyApplied': True})
     else:
@@ -296,12 +301,29 @@ def add_new_application():
     uncom_cert = request.form['uncom_cert']
     com_cert = request.form['com_cert']
     purpose_statement = request.form['purpose_statement']
+    file = request.files['document']
+    doc_type = request.form['document_type']
+    
     conn = get_db_connection()
-    conn.execute('INSERT INTO Application (program_num, UIN, uncom_cert, com_cert, purpose_statement) VALUES (?, ?, ?, ?, ?)',
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO Application (program_num, UIN, uncom_cert, com_cert, purpose_statement) VALUES (?, ?, ?, ?, ?)',
                 (program_num, current_user.uin, uncom_cert, com_cert, purpose_statement))
     conn.commit()
+    
+    # Retrieve the last inserted row ID (app_num)
+    last_inserted_app_num = cursor.lastrowid
+    
+    if file and not doc_type == "None":
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        file_path = generateFilePath(file_path)
+        file.save(file_path)
+        create_document(conn, last_inserted_app_num, file_path, doc_type, file.filename)
+        
+    flash("Application Submitted!")
+    
+    programs = get_all_programs(conn)
     conn.close()
-    return redirect(url_for('home'))
+    return render_template('student/program_application.html', programs=programs)
 
 
 @app.route('/application_review')
@@ -337,6 +359,7 @@ def update_application():
 def delete_application(app_num):
   conn = get_db_connection()
   conn.execute(f"DELETE FROM Application WHERE app_num = {app_num}")
+  delete_document_by_app_num(conn, app_num)
   conn.commit()
   conn.close()
   return jsonify({"success": "program application deleted"})
@@ -362,9 +385,10 @@ def upload_file():
         file = request.files['document']
         if file:
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+            file_path = generateFilePath(file_path)
             file.save(file_path)
             conn = get_db_connection()
-            create_document(conn, app_num, file_path, type)
+            create_document(conn, app_num, file_path, type, file.filename)
             conn.close()
 
             return redirect(url_for('document_display'))
@@ -390,21 +414,21 @@ def update_document(doc_num):
 
 @app.route('/update_file/<int:doc_num>', methods=['POST'])
 def update_file(doc_num):
-    app_num = request.form['app_num']
-    type = request.form['type']
+    conn = get_db_connection()
+    oldDoc = get_document_by_id(conn, doc_num)
+    
+    app_num = oldDoc['app_num']
+    type = request.form['document_type']
     file = request.files['document']
     if file:
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-        file.save(file_path)
-        conn = get_db_connection()
-        oldDoc = get_document_by_id(conn, doc_num)
+        file.save(generateFilePath(file_path))
         os.remove(oldDoc['Link'])
-        update_document_backend(conn, doc_num, app_num, file_path, type)
-        conn.close()
+        update_document_backend(conn, doc_num, app_num, file_path, type, file.filename)
 
-        return redirect(url_for('document_display'))
 
-    return render_template('upload_document.html')
+    conn.close()
+    return redirect(url_for('document_display'))
 
 
 @app.route('/class_enrollment/<int:UIN>', methods=['GET', 'POST'])
@@ -444,4 +468,10 @@ def is_admin():
 
 if __name__ == '__main__':
     init_sqlite_db()
+    
+    #insert_mock_data()
+    
+    #store uploaded documents
+    if not os.path.exists('uploads'):
+        os.mkdir('uploads')
     app.run(debug=True)

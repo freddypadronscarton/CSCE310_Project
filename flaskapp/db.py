@@ -1,5 +1,6 @@
 import sqlite3
 from flask import flash
+from generate import *
 
 # Database Initialization
 def init_sqlite_db():
@@ -83,6 +84,7 @@ def init_sqlite_db():
                 App_Num INTEGER,
                 Link VARCHAR(256),
                 Doc_Type VARCHAR(50),
+                Name TEXT,
                 FOREIGN KEY(App_Num) REFERENCES Applications(App_Num)
                 )
             ''')
@@ -234,6 +236,22 @@ def init_sqlite_db():
                  On Program_Accepts.student_num = Cert_Enrollment.UIN
                  JOIN Internship
                  ''')
+    
+    # View of documents, applications, and programs
+    conn.execute('''CREATE VIEW IF NOT EXISTS View_DocumentsApplicationPrograms AS
+                    SELECT
+                        Programs.name AS ProgramName,
+                        Application.app_num AS app_num,
+                        Application.program_num AS program_num,
+                        Application.UIN AS UIN,
+                        Documents.Doc_Num AS Doc_Num,
+                        Documents.Link AS Link,
+                        Documents.Doc_Type AS Doc_Type,
+                        Documents.Name AS Name
+                    FROM Application
+                    JOIN Documents ON Application.app_num = Documents.App_Num
+                    JOIN Programs ON Application.program_num = Programs.program_num;
+                    ''')
 
     # Join classes and enrollments
     conn.execute('''CREATE VIEW IF NOT EXISTS View_ClassEnrollmentDetails AS
@@ -291,9 +309,10 @@ def init_sqlite_db():
     conn.execute("CREATE INDEX IF NOT EXISTS idx_class_enrollment_uin ON Class_Enrollment(UIN)")
     conn.execute("CREATE INDEX IF NOT EXISTS idx_intern_app_uin ON Intern_App(UIN)")
     conn.execute("CREATE INDEX IF NOT EXISTS idx_cert_enrollment_uin ON Cert_Enrollment(UIN)")
-
-    
+    conn.execute('CREATE INDEX IF NOT EXISTS idx_application_num ON Documents(app_num)')
     conn.commit()
+    
+    
 
     print("Database initialized succesfully")
     conn.close()

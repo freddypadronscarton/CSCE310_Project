@@ -8,7 +8,7 @@
 <body>
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-        <a class="navbar-brand" href="#">CSCE 310 Project</a>
+        <a class="navbar-brand" href="#">Profile</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -31,17 +31,17 @@
     <!--End of Navigation Bar -->
 
     <div class="container">
-        <!-- Flash Messages -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="flash {{ category }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-        <h1 class="text-center my-4">Your Profile</h1>
+        <h1 class="text-center my-4">Welcome {{user.First_Name}}  {{user.Last_Name}}!</h1>
 
         <div class="card">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
             <div class="card-body">
                 <form method="POST" onsubmit="return validateForm()" id="updateProfileForm" data-userType="{{user.User_Type}}">
                     
@@ -127,7 +127,7 @@
     <script>
         // JavaScript for phone number formatting
         function setupPhoneNumberFormatting() {
-            var phoneInput = document.getElementById('phone_number');
+            var phoneInput = document.getElementById('Phone');
             if (phoneInput) {
                 phoneInput.addEventListener('input', formatPhoneNumber);
             }
@@ -144,7 +144,7 @@
             
 
             // Fields for any user
-            var general_fields = ['first_name', 'last_name', 'username', 'email', 'discord'];
+            var general_fields = ['First_Name', 'Last_Name', 'Username', 'Email', 'Discord_Name'];
 
 
             for (var i = 0; i < general_fields.length; i++) {
@@ -156,10 +156,10 @@
 
 
             // Fields for Colege Students
-            var college_fields = ['gpa', 'major', 'Exp_Graduation', 'school', 'classification', 'phone_number'];
+            var college_fields = ['GPA', 'Major', 'Exp_Graduation', 'School', 'Classification', 'Phone'];
             
             // Fields for K12 Students
-            var k12_fields = ['school', 'classification', 'phone_number'];
+            var k12_fields = ['School', 'Classification', 'Phone'];
     
             if(userType == "college_student"){
                 for (var i = 0; i < college_fields.length; i++) {
@@ -173,7 +173,7 @@
             // Regex for phone number
             var regex = /^\d{3}-\d{3}-\d{4}$/;
             // Validate number
-            if(!regex.test((document.getElementById("phone_number").value))){
+            if(!regex.test((document.getElementById("Phone").value))){
                 alert("Please enter a valid phone number.");
                 return false; 
             }

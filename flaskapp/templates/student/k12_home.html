@@ -4,8 +4,36 @@
     <meta charset="UTF-8">
     <title>K12 Student Landing Page</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="../../static/general.css">
+    <link rel="stylesheet" href="../../static/college_home.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <a class="navbar-brand" href="#">{{ current_user.first_name }}'s Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/home">Home</a>
+                </li>
+  
+                <li class="nav-item">
+                    <a class="nav-link" href="/profile">Profile</a>
+                </li>
+  
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!--End of Navigation Bar -->
+
+
     <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -14,50 +42,27 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-    <h1> {{ current_user.first_name }}'s Landing Page</h1>
-    <h1> K-12 Student </h1>
 
-    <!-- Form to Add New Item -->
-    <h2>Add Item</h2>
-    <form id="addItemForm">
-        <input type="text" id="name" placeholder="Name" required>
-        <input type="text" id="description" placeholder="Description" required>
-        <button type="submit">Add Item</button>
-    </form>
+    <!-- Program Application Management Section -->
+    <div id="program_app_management">
+      <h2>Summer Camp Applications</h2>
+      <a href="{{ url_for('program_application') }}">
+        <button>Apply</button>
+      </a>
+      <a href="{{ url_for('application_review') }}">
+        <button>Review and Modify Applications</button>
+      </a>
+    </div>
 
-    <!-- Table to Display Items -->
-    {% if items %}
-    <h2>Items</h2>
-    {% endif %}
-    <table id="itemsTable">
-        {% if items %}
-        <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Actions</th>
-        </tr>
-        {% endif %}
-        {% for item in items %}
-        <tr>
-            <td>{{ item.name }}</td>
-            <td>
-                <input type="text" id="desc_{{ item.item_id }}" value="{{ item.description }}">
-                <button onclick="updateItem({{ item.item_id }})">Update</button>
-            </td>
-            <td><button onclick="deleteItem({{ item.item_id }})">Delete</button></td>
-        </tr>
-        {% endfor %}
-    </table>
+    <!-- Documents section -->
+    <div id="documents">
+        <h2>Documents</h2>
+        <a href="{{ url_for('upload_file') }}">
+            <button>Upload Document</button>
+        <a href="{{ url_for('document_display') }}">
+            <button>View Documents</button>
+    </div>
 
-    <!-- Edit Profile Button -->
-    <form action="{{ url_for('profile') }}" method="get">
-        <button type="submit">Edit Profile</button>
-    </form>
-
-    <!-- Logout Button -->
-    <form action="{{ url_for('logout') }}" method="post">
-        <button type="submit">Logout</button>
-    </form>
 
     <script>
         //AJAX calls

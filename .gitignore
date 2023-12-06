@@ -1,0 +1,8 @@
+# Ignore a specific folder
+flaskapp/uploads
+
+# Ignore .pyc files
+**/__pycache__/
+
+#ignore .db file
+*.db
