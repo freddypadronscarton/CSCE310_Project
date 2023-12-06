@@ -13,6 +13,7 @@ from routes.example import items_bp
 from util.Documents import *
 from routes.progress import progress_bp
 from routes.classes import *
+from routes.intern import *
 
 
 # App Initialization
@@ -29,6 +30,7 @@ app.register_blueprint(admin_bp, url_prefix='/admin')
 app.register_blueprint(items_bp, url_prefix='/items')
 app.register_blueprint(progress_bp, url_prefix='/progress')
 app.register_blueprint(classes_bp, url_prefix='/classes')
+app.register_blueprint(intern_bp, url_prefix='/internship')
 
 # Flask-Login: User class and user_loader
 class User(UserMixin):
@@ -415,13 +417,19 @@ def class_enrollment(UIN):
     if(request.method == "POST"):
         class_name = request.form['class_name']
         class_descr = request.form['class_descr']
+        class_type = request.form['class_type']
+        class_semester = request.form['class_semester']
+        class_year = request.form['class_year']
+        class_status = request.form['class_status']
         conn = get_db_connection()
-        class_exist = is_class_name_taken(conn, class_name)
+        class_exist = get_class_by_name(conn, class_name)
         if class_exist:
-            flash("A class of this name already exists")
+            is_enrolled = get_enrollment(conn, class_exist.Class_ID, UIN)
+            if(is_enrolled):
+                flash("You are already enrolled in this class")
             conn.close()
         else:
-            enroll_class(conn, class_name, class_descr, UIN)
+            enroll_class(conn, class_name, class_descr, class_type, class_semester, class_year, class_status, UIN)
             conn.close()
             return redirect(url_for("home"))
     return render_template('student/class_enrollment.html')

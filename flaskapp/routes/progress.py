@@ -7,6 +7,7 @@ from db import *
 from util.Users import *
 from util.Programs import *
 from routes.classes import *
+from routes.intern import *
 
 progress_bp = Blueprint('progress_bp', __name__)
 
@@ -20,10 +21,11 @@ def view_progress(UIN):
     conn = get_db_connection()
     programs = get_all_programs_by_user(conn, UIN)
     classes = get_all_classes_by_user(conn, UIN)
+    interns = get_all_interns_by_user(conn, UIN)
     name = conn.execute('SELECT First_Name FROM Users WHERE UIN=?', (UIN,)).fetchone()
     conn.close()
 
-    return render_template("admin/admin_program_progress.html", programs=programs, classes=classes, name=name['First_Name'])
+    return render_template("admin/admin_program_progress.html", programs=programs, classes=classes, interns=interns, name=name['First_Name'])
 
 
 
