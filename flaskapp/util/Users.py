@@ -168,9 +168,8 @@ def update_user_field(conn, UIN, field, value):
     conn.execute(query, (value, UIN))
     
 # UPDATES ALL FIELDS (except password and user_type)
-def update_user_fields(conn, user_info):    
+def update_user_fields(conn, user_info):   
     # Constructing Users table SQL query
-
     query = f'''UPDATE users SET 
         First_Name = '{user_info["First_Name"]}',
         M_Initial = '{user_info["M_Initial"]}',
@@ -212,9 +211,9 @@ def update_user_fields(conn, user_info):
         First_Generation = {user_info["First_Generation"]},
         Birthdate = '{user_info["Birthdate"]}',
         School = '{user_info["School"]}',
-        Classification = '{user_info["Classification"]}'
+        Classification = '{user_info["Classification"]}',
+        Phone = '{user_info["Phone"]}'
         WHERE UIN = {user_info["UIN"]}'''        
-        
         conn.execute(query)
 
     conn.commit()

@@ -26,7 +26,7 @@ def init_sqlite_db():
                     Password TEXT NOT NULL,
                     User_Type TEXT NOT NULL,
                     Email TEXT UNIQUE NOT NULL,
-                    Discord_Name TEXT UNIQUE NOT NULL,
+                    Discord_Name TEXT NOT NULL,
                     Archived INTEGER NOT NULL
                     )''')
 
@@ -39,14 +39,14 @@ def init_sqlite_db():
                     US_Citizen INTEGER NOT NULL,
                     First_Generation INTEGER NOT NULL,
                     Birthdate DATE NOT NULL,
-                    GPA REAL NOT NULL,
-                    Major TEXT NOT NULL,
+                    GPA REAL,
+                    Major TEXT,
                     Minor TEXT ,
                     Second_Minor TEXT,
-                    Exp_Graduation INTEGER NOT NULL,
+                    Exp_Graduation INTEGER,
                     School TEXT NOT NULL,
                     Classification TEXT NOT NULL,
-                    Phone INTEGER NOT NULL,
+                    Phone INTEGER,
                     Student_Type TEXT NOT NULL,
                     FOREIGN KEY(UIN) REFERENCES Users(UIN)
                     )

@@ -47,7 +47,14 @@ def user_type_form():
     UIN = request.form['uin']
 
     conn = get_db_connection()
-    selected_user = conn.execute('SELECT * FROM users where UIN = ?', (UIN,)).fetchone() 
+    selected_user = get_user(conn, UIN)
+    phone_str = str(selected_user["Phone"])
+    if phone_str == "None":
+        del selected_user['Phone']
+    elif phone_str:
+        selected_user['Phone'] = phone_str[:3] + "-" + phone_str[3:6] + "-" + phone_str[6:]
+    
+    
     return render_template('admin/changeUserTypeForm.html', selected_user= selected_user, user_type= user_type, current_year=datetime.now().year)
 
 # ENDPOINT FOR USER TYPE SAVE/PROMOTE BUTTON
@@ -93,32 +100,32 @@ def editUser(UIN):
     if request.method == 'POST':
         
         # Change any User Table fields
-        user_info['Username'] = request.form.get('username')
-        user_info['First_Name'] = request.form.get('first_name')
-        user_info['M_Initial'] = request.form.get('middle_initial')
-        user_info['Last_Name'] = request.form.get('last_name')
-        user_info['Email'] = request.form.get('email')
-        user_info['Discord_Name'] = request.form.get('discord')
+        user_info['Username'] = request.form.get('Username')
+        user_info['First_Name'] = request.form.get('First_Name')
+        user_info['M_Initial'] = request.form.get('M_Initial')
+        user_info['Last_Name'] = request.form.get('Last_Name')
+        user_info['Email'] = request.form.get('Email')
+        user_info['Discord_Name'] = request.form.get('Discord_Name')
         
-        # Change College Student Fields
+        # Fields for k12 and college
+        if not user_info['User_Type'] == "admin":
+            user_info['Gender'] = request.form.get("Gender")
+            user_info['Hispanic_Or_Latino'] = 1 if "Hispanic_Or_Latino" in request.form else 0
+            user_info['Race'] = request.form.get("Race")
+            user_info['First_Generation'] = 1 if "First_Generation" in request.form else 0
+            user_info['US_Citizen'] = 1 if "US_Citizen" in request.form else 0
+            user_info['Birthdate'] = request.form.get("Birthdate")
+            user_info['School'] = request.form.get('School')
+            user_info['Classification'] = request.form.get('Classification')
+            user_info['Phone'] = "".join(request.form.get('Phone').split("-"))
+
+        # college student exclusive fields
         if user_info['User_Type'] == "college_student":
-            user_info['Gender'] = request.form.get("gender")
-            user_info['Hispanic_Or_Latino'] = 1 if "hispanic_or_latino" in request.form else 0
-            user_info['Race'] = request.form.get("race")
-            user_info['First_Generation'] = 1 if "first_gen" in request.form else 0
-            user_info['US_Citizen'] = 1 if "US_citizen" in request.form else 0
-            user_info['Birthdate'] = request.form.get("birthdate")
-            
             user_info['GPA'] = request.form.get('gpa')
             user_info['Major'] = request.form.get('major')
             user_info['Minor'] = request.form.get('minor')
             user_info['Second_Minor'] = request.form.get('second_minor')
             user_info['Exp_Graduation'] = request.form.get('Exp_Graduation')
-            user_info['Phone'] = "".join(request.form.get('phone_number').split("-"))
-        
-        user_info['School'] = request.form.get('school')
-        user_info['Classification'] = request.form.get('classification')
-
         
         conn = get_db_connection()
         update_user_fields(conn, user_info)
@@ -126,44 +133,16 @@ def editUser(UIN):
         
         flash('Profile updated successfully.')
         return redirect(url_for('admin_bp.editUser', UIN=UIN))
-    else: # Get Request
-        conn = get_db_connection()
-        query_result = conn.execute('SELECT * FROM Users WHERE UIN = ?', (UIN,)).fetchone()
-        
-        if query_result:
-            user_info['username'] = query_result["Username"]
-            user_info['email'] = query_result["Email"]
-            user_info['first_name'] = query_result["First_Name"]
-            user_info['last_name'] = query_result["Last_Name"]
-            user_info['user_type'] = query_result["User_Type"]
-            user_info['middle_initial'] = query_result["M_Initial"]
-            user_info['discord_name'] = query_result["Discord_Name"]
-            
-            # Fetch additional details based on user type
-            if not user_info['user_type'] == 'admin':
-                college_query = 'SELECT * FROM College_Students WHERE UIN = ?'
-                college_info = conn.execute(college_query, (UIN,)).fetchone()
-                
-                # Assign additional attributes specific to college students
-                user_info['gender'] = college_info["Gender"]
-                user_info['hispanic_or_latino'] = college_info["Hispanic_Or_Latino"]
-                user_info['race'] = college_info["Race"]
-                user_info['first_gen'] = college_info["First_Generation"]
-                user_info['us_citizen'] = college_info["US_Citizen"]
-                user_info['birthdate'] = college_info["Birthdate"]
-                
-                user_info['gpa'] = college_info["GPA"]
-                user_info['major'] = college_info["Major"]
-                user_info['minor'] = college_info["Minor"]
-                user_info['second_minor'] = college_info["Second_Minor"]
-                user_info['exp_graduation'] = college_info["Exp_Graduation"]
-                user_info['school'] = college_info["School"]
-                user_info['classification'] = college_info["Classification"]
-                phone_str = str(college_info["Phone"])
-                user_info['phone_number'] = phone_str[:3] + "-" + phone_str[3:6] + "-" + phone_str[6:]
 
-        conn.close()
-        return render_template('admin/edit_user.html', user=user_info, current_year=datetime.now().year)
+    if not user_info["Phone"]:
+        del user_info["Phone"]
+    else:
+        phone_str = str(user_info['Phone'])
+        user_info['Phone'] = phone_str[:3] + "-" + phone_str[3:6] + "-" + phone_str[6:]
+    
+    # GET REQUEST JUST RENDERS TEMPLATE
+    conn.close()
+    return render_template('admin/edit_user.html', user=user_info, current_year=datetime.now().year)
 
 # ENDPOINT FOR ADDING PROGRAMS
 @admin_bp.route('/add_program', methods=['GET', 'POST'])
