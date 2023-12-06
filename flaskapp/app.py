@@ -278,7 +278,7 @@ def passwordRecovery():
 @app.route('/program_application')
 def program_application(): 
     conn = get_db_connection()
-    programs = conn.execute('SELECT * FROM programs').fetchall()
+    programs = get_all_programs(conn)
     conn.close()
     return render_template('student/program_application.html', programs=programs)
 
@@ -288,7 +288,6 @@ def check_if_already_applied(program_num):
     conn = get_db_connection()
     alreadyApplied = conn.execute("SELECT COUNT(*) FROM Application WHERE Program_Num = ? AND UIN = ?", (program_num, current_user.uin)).fetchone()[0]
     conn.close()
-    print(alreadyApplied)
     if (alreadyApplied > 0):
         return jsonify({'alreadyApplied': True})
     else:
@@ -300,12 +299,31 @@ def add_new_application():
     uncom_cert = request.form['uncom_cert']
     com_cert = request.form['com_cert']
     purpose_statement = request.form['purpose_statement']
+    file = request.files['document']
+    doc_type = request.form['document_type']
+    
     conn = get_db_connection()
-    conn.execute('INSERT INTO Application (program_num, UIN, uncom_cert, com_cert, purpose_statement) VALUES (?, ?, ?, ?, ?)',
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO Application (program_num, UIN, uncom_cert, com_cert, purpose_statement) VALUES (?, ?, ?, ?, ?)',
                 (program_num, current_user.uin, uncom_cert, com_cert, purpose_statement))
     conn.commit()
+    
+    # Retrieve the last inserted row ID (app_num)
+    last_inserted_app_num = cursor.lastrowid
+    
+    if file and not doc_type == "None":
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        while os.path.exists(file_path):            
+            file_path = " - copy.".join(file_path.split("."))
+
+        file.save(file_path)
+        create_document(conn, last_inserted_app_num, file_path, doc_type)
+        
+    flash("Application Submitted!")
+    
+    programs = get_all_programs(conn)
     conn.close()
-    return redirect(url_for('home'))
+    return render_template('student/program_application.html', programs=programs)
 
 
 @app.route('/application_review')
