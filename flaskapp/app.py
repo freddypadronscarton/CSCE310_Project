@@ -313,11 +313,8 @@ def add_new_application():
     
     if file and not doc_type == "None":
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-        while os.path.exists(file_path):            
-            file_path = " - copy.".join(file_path.split("."))
-
-        file.save(file_path)
-        create_document(conn, last_inserted_app_num, file_path, doc_type)
+        file.save(generateFilePath(file_path))
+        create_document(conn, last_inserted_app_num, file_path, doc_type, file.filename)
         
     flash("Application Submitted!")
     
@@ -384,9 +381,9 @@ def upload_file():
         file = request.files['document']
         if file:
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-            file.save(file_path)
+            file.save(generateFilePath(file_path))
             conn = get_db_connection()
-            create_document(conn, app_num, file_path, type)
+            create_document(conn, app_num, file_path, type, file.filename)
             conn.close()
 
             return redirect(url_for('document_display'))
@@ -412,21 +409,21 @@ def update_document(doc_num):
 
 @app.route('/update_file/<int:doc_num>', methods=['POST'])
 def update_file(doc_num):
-    app_num = request.form['app_num']
-    type = request.form['type']
+    conn = get_db_connection()
+    oldDoc = get_document_by_id(conn, doc_num)
+    
+    app_num = oldDoc['app_num']
+    type = request.form['document_type']
     file = request.files['document']
     if file:
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-        file.save(file_path)
-        conn = get_db_connection()
-        oldDoc = get_document_by_id(conn, doc_num)
+        file.save(generateFilePath(file_path))
         os.remove(oldDoc['Link'])
-        update_document_backend(conn, doc_num, app_num, file_path, type)
-        conn.close()
+        update_document_backend(conn, doc_num, app_num, file_path, type, file.filename)
 
-        return redirect(url_for('document_display'))
 
-    return render_template('upload_document.html')
+    conn.close()
+    return redirect(url_for('document_display'))
 
 
 @app.route('/class_enrollment/<int:UIN>', methods=['GET', 'POST'])
