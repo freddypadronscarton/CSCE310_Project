@@ -14,6 +14,9 @@ from util.Documents import *
 from routes.progress import progress_bp
 from routes.classes import *
 from routes.intern import *
+from routes.document import *
+from routes.cert import *
+from routes.application import *
 
 
 # App Initialization
@@ -31,6 +34,9 @@ app.register_blueprint(items_bp, url_prefix='/items')
 app.register_blueprint(progress_bp, url_prefix='/progress')
 app.register_blueprint(classes_bp, url_prefix='/classes')
 app.register_blueprint(intern_bp, url_prefix='/internship')
+app.register_blueprint(document_bp, url_prefix='/doc')
+app.register_blueprint(cert_bp, url_prefix='/cert')
+app.register_blueprint(application_bp, url_prefix='/app')
 
 # Flask-Login: User class and user_loader
 class User(UserMixin):
@@ -177,6 +183,15 @@ def profile():
     
     if request.method == 'POST':
         
+        # Check if email and username are already taken
+        if not request.form.get('Username') == user_info['Username'] and check_user_username(conn, request.form.get('Username')):
+            flash("That username is already in use. Please try another.", "Error")
+            return redirect(url_for('profile'))
+        elif not request.form.get('Email') == user_info['Email'] and check_user_email(conn, request.form.get('Email')):
+            flash("That email is already in use. Please try another.", "Error")
+            return redirect(url_for('profile'))
+        
+        
         # Change any User Table fields
         user_info['Username'] = request.form.get('Username')
         user_info['First_Name'] = request.form.get('First_Name')
@@ -199,10 +214,7 @@ def profile():
             user_info['Minor'] = request.form.get('Minor')
             user_info['Second_Minor'] = request.form.get('Second_Minor')
             user_info['Exp_Graduation'] = request.form.get('Exp_Graduation')
-        
-
-        
-        conn = get_db_connection()
+            
         update_user_fields(conn, user_info)
         conn.close()
         
@@ -265,144 +277,12 @@ def passwordRecovery():
         
     return render_template('auth/PasswordRecovery.html', stored = stored)
         
-
-    
-
-# Program Info Management Pages
-@app.route('/program_application')
-def program_application(): 
-    conn = get_db_connection()
-    programs = conn.execute('SELECT * FROM programs').fetchall()
-    conn.close()
-    return render_template('student/program_application.html', programs=programs)
-
-# This is the endpoint for checking if a user has already applied to the program
-@app.route('/program_applied_check/<int:program_num>')
-def check_if_already_applied(program_num):
-    conn = get_db_connection()
-    alreadyApplied = conn.execute("SELECT COUNT(*) FROM Application WHERE Program_Num = ? AND UIN = ?", (program_num, current_user.uin)).fetchone()[0]
-    conn.close()
-    print(alreadyApplied)
-    if (alreadyApplied > 0):
-        return jsonify({'alreadyApplied': True})
-    else:
-        return jsonify({'alreadyApplied': False})
-    
-@app.route('/program_application', methods=['POST'])
-def add_new_application():
-    program_num = request.form['program_num']
-    uncom_cert = request.form['uncom_cert']
-    com_cert = request.form['com_cert']
-    purpose_statement = request.form['purpose_statement']
-    conn = get_db_connection()
-    conn.execute('INSERT INTO Application (program_num, UIN, uncom_cert, com_cert, purpose_statement) VALUES (?, ?, ?, ?, ?)',
-                (program_num, current_user.uin, uncom_cert, com_cert, purpose_statement))
-    conn.commit()
-    conn.close()
-    return redirect(url_for('home'))
-
-
-@app.route('/application_review')
-def application_review():
-    conn = get_db_connection()
-    applied_programs = get_applied_programs(conn, current_user.uin)
-    conn.close()
-
-    return render_template('student/application_review.html', applied_programs=applied_programs)
-    
-@app.route('/update_program_app/<int:app_num>')
-def load_update_appl_page(app_num):
-    conn = get_db_connection()
-    app = conn.execute("SELECT * FROM Application WHERE APP_NUM = ?", (app_num, )).fetchone()
-    conn.close()
-    return render_template("student/update_program_app.html", app=app)
-
-@app.route('/update_application', methods=['POST'])
-def update_application():
-    # gets all needed data from form
-    app_num = request.form["app_num"]
-    uncom_cert = request.form["uncom_cert"]
-    com_cert = request.form["com_cert"]
-    purpose_statement = request.form["purpose_statement"]
-
-    # calls Program.py function to update program applications
-    conn = get_db_connection()
-    update_prog_apps(conn, uncom_cert, com_cert, purpose_statement, app_num)
-    conn.close()
-    return redirect(url_for('application_review'))
-
-@app.route('/delete_application/<int:app_num>', methods=['DELETE'])
-def delete_application(app_num):
-  conn = get_db_connection()
-  conn.execute(f"DELETE FROM Application WHERE app_num = {app_num}")
-  conn.commit()
-  conn.close()
-  return jsonify({"success": "program application deleted"})
-    
+  
 @app.route("/logout", methods=['POST', 'GET'])
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('login'))
-
-@app.route('/document_display')
-def document_display():
-    conn = get_db_connection()
-    documents = get_all_documents(conn)
-    conn.close()
-    return render_template('student/document_display.html' , documents=documents)
-
-@app.route('/upload_document', methods=['GET', 'POST'])
-def upload_file():
-    if request.method == 'POST':
-        app_num = request.form['app_num']
-        type = request.form['type']
-        file = request.files['document']
-        if file:
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-            file.save(file_path)
-            conn = get_db_connection()
-            create_document(conn, app_num, file_path, type)
-            conn.close()
-
-            return redirect(url_for('document_display'))
-
-    return render_template('upload_document.html')
-
-
-@app.route('/delete_document/<int:doc_num>', methods=['DELETE'])
-def delete_document(doc_num):
-    conn = get_db_connection()
-    document = get_document_by_id(conn, doc_num)
-    delete_document_backend(conn, doc_num)
-    os.remove(document['Link'])
-    conn.close()
-    return jsonify({"success": "document deleted"})
-
-@app.route('/update_document/<int:doc_num>', methods=['GET', 'POST'])
-def update_document(doc_num):
-    conn = get_db_connection()
-    document = get_document_by_id(conn, doc_num)
-    conn.close()
-    return render_template('student/update_document.html', document=document)
-
-@app.route('/update_file/<int:doc_num>', methods=['POST'])
-def update_file(doc_num):
-    app_num = request.form['app_num']
-    type = request.form['type']
-    file = request.files['document']
-    if file:
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-        file.save(file_path)
-        conn = get_db_connection()
-        oldDoc = get_document_by_id(conn, doc_num)
-        os.remove(oldDoc['Link'])
-        update_document_backend(conn, doc_num, app_num, file_path, type)
-        conn.close()
-
-        return redirect(url_for('document_display'))
-
-    return render_template('upload_document.html')
 
 
 @app.route('/class_enrollment/<int:UIN>', methods=['GET', 'POST'])
@@ -429,16 +309,16 @@ def class_enrollment(UIN):
     return render_template('student/class_enrollment.html')
 
 
-
-
-
-
-
-
-
-
+def is_admin():
+    return current_user.User_Type == "admin"
 
 
 if __name__ == '__main__':
     init_sqlite_db()
+    
+    #insert_mock_data()
+    
+    #store uploaded documents
+    if not os.path.exists('uploads'):
+        os.mkdir('uploads')
     app.run(debug=True)

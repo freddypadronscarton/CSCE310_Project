@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Update Class</title>
+  <title>Update Certification Enrollment</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
@@ -40,17 +40,26 @@
     {% endif %}
   {% endwith %}
 
-  <form action="/classes/update_class_student/{{class_.Class_ID}}/{{enrollment.UIN}}" method="POST" id="updateClassForm">
-    <h1>Update Class</h1><br>
-    Class Name: {{ class_.name }}<br>Class Type: {{ class_.type }}<br>Description: {{ class_.description }}<br><br>
+  
+  <form action="/cert/update_cert_enrollment/{{cert.Cert_ID}}/{{cert.UIN}}" method="POST" id="updateCertForm">
+    <h1>Update Certification Enrollment</h1><br>
+        
     <div class="form-group">
-      <label for="class_semester">Semester: </label>
-            <select id="class_semester" name="class_semester">
-                {% if enrollment.semester=="Spring" %}
+      <label for="cert_name">Name: </label>
+      <input id="cert_name" name="cert_name" type="text" value="{{cert.name}}"{% if not is_admin %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="cert_level">Level: </label>
+      <input id="cert_level" name="cert_level" type="text" value="{{cert.level}}"{% if not is_admin %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+        <label for="cert_semester">Semester: </label>
+            <select id="cert_semester" name="cert_semester">
+                {% if cert.semester=="Spring" %}
                 <option value="Spring">Spring</option>
                 <option value="Summer">Summer</option>
                 <option value="Fall">Fall</option>
-              {% elif enrollment.semester=="Summer"%}
+              {% elif cert.semester=="Summer" %}
                 <option value="Summer">Summer</option>
                 <option value="Spring">Spring</option>
                 <option value="Fall">Fall</option>
@@ -62,31 +71,43 @@
             </select>
     </div>
     <div class="form-group">
-      <label for="class_year">Year: </label>
-      <input id="class_year" name="class_year" type="text" value="{{enrollment.year}}">
+      <label for="cert_year">Year: </label>
+      <input id="cert_year" name="cert_year" type="text" value="{{cert.year}}">
     </div>
     <div class="form-group">
-        <label for="class_status">Status: </label>
-        <select id="class_status" name="class_status">
-            {% if enrollment.status == "Enrolled" %}
-            <option value="Enrolled">Enrolled</option>
-            <option value="Completed">Completed</option>
-            <option value="Dropped">Dropped</option>
-          {% elif enrollment.status == "Completed" %}
-            <option value="Completed">Completed</option>
-            <option value="Enrolled">Enrolled</option>
-            <option value="Dropped">Dropped</option>
-          {% else %}
-            <option value="Dropped">Dropped</option>
-            <option value="Enrolled">Enrolled</option>
-            <option value="Completed">Completed</option>
-          {% endif %}
+        <label for="cert_status">Status: </label>
+        <select id="cert_status" name="cert_status">
+            {% if cert.status=="Incomplete" %}
+            <option value="Incomplete">Incomplete</option>
+            <option value="Complete">Complete</option>
+            {% else %}
+            <option value="Complete">Complete</option>
+            <option value="Incomplete">Incomplete</option>
+            {% endif %}
         </select>
     </div>
     <div class="form-group">
-      <button type="submit">Update Class</button>
+        <label for="cert_training_status">Training Status: </label>
+        <select id="cert_training_status" name="cert_training_status">
+            {% if cert.training_status=="Enrolled" %}
+            <option value="Enrolled">Enrolled</option>
+            <option value="Completed">Completed</option>
+            {% else %}
+            <option value="Completed">Completed</option>
+            <option value="Enrolled">Enrolled</option>
+            {% endif %}
+        </select>
     </div>
-    <a href="{{ url_for('classes_bp.view_all_classes') }}">
+    <div class="form-group row">
+      <label for="cert_descr" class="col-sm-2 col-form-label">Description:</label>
+      <div class="col-sm-10">
+          <textarea id="cert_descr" name="cert_descr" class="form-control"{% if not is_admin %}readonly{% endif %}>{{cert.description}}</textarea>
+      </div>
+    </div>
+    <div class="form-group">
+      <button type="submit">Update Certification</button>
+    </div>
+    <a href="{{ url_for('cert_bp.view_cert', UIN=request.view_args['UIN']) }}">
       <button>Back</button>
     </a>
   </form>

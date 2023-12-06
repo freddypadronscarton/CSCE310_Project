@@ -3,30 +3,100 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document Viewer</title>
+  <title>Update Document</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="../static/general.css">
 </head>
 <body>
-  <a class="back_button" href="{{ url_for('home') }}">
-    <button>< Back</button>
-  </a>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+      <a class="navbar-brand" href="#">{{ current_user.first_name }}'s Home</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+              <li class="nav-item">
+                  <a class="nav-link" href="/home">Home</a>
+              </li>
 
-    <h2>Update Document</h2>
+              <li class="nav-item">
+                  <a class="nav-link" href="/profile">Profile</a>
+              </li>
 
-    <form id="updateDocumentForm" action="/update_file/{{document.doc_num}}" method="post" enctype="multipart/form-data">
+              <li class="nav-item">
+                  <a class="nav-link" href="/logout">Logout</a>
+              </li>
+          </ul>
+      </div>
+  </nav>
+  <!--End of Navigation Bar -->
 
-        <label for="app_num">Application Number</label>
-        <input type="text" id="app_num" name="app_num" required>
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+  {% endwith %}
 
-        <label for="document_type">Document Type</label>
-        <input type="text" id="type" name="type" required>
+  <form id="updateDocumentForm" action="/doc/update_file/{{document.doc_num}}" method="post" enctype="multipart/form-data">
+    <h1>Update Document</h1>
 
-        <input type="file" id="document" name="document" required>
-        <button type="submit">Upload Document</button>
-        
-    </form>
-    
-    
+    <div class="form-group">
+      <label for="document-type">Document Type</label>
+      <select id="document-type" name="document_type">
+        <option value="Resume" {% if document.Doc_Type == "Resume" %} selected {% endif %}>Resume</option>
+        <option value="Transcript" {% if document.Doc_Type == "Transcript" %} selected {% endif %}>Transcript</option>
+        <option value="Other" {% if document.Doc_Type == "Other" %} selected {% endif %} >Other</option>
+      </select>
+    </div>
+
+
+    <div class="form-group">
+      <input type="file" id="document" name="document" required>
+    </div>
+
+    <div class="form-group">
+      <button type="submit">Update {{document.name}}</button>
+    </div>
+  </form>
+
 </body>
+<style>
+  body { 
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    min-height: 100vh;
+      margin: 0; 
+      padding: 0;
+  }
+  form {
+      width: 50%; 
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+      background: #fff;
+      border-radius: 5px; 
+  }
+  .form-group {
+      margin-bottom: 15px; 
+  }
+  label {
+      margin-right: 10px;
+  }
+  button, .btn-custom {
+      border: none;
+      padding: 10px 20px;
+      margin: 10px 2px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+  
+  button:hover, .btn-custom:hover {
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+</style>
 </html>

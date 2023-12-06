@@ -99,6 +99,14 @@ def editUser(UIN):
     
     if request.method == 'POST':
         
+        # Check if email and username are already taken
+        if not request.form.get('Username') == user_info['Username'] and check_user_username(conn, request.form.get('Username')):
+            flash("That username is already in use. Please try another.", "Error")
+            return redirect(url_for('admin_bp.editUser', UIN=UIN))
+        elif not request.form.get('Email') == user_info['Email'] and check_user_email(conn, request.form.get('Email')):
+            flash("That email is already in use. Please try another.", "Error")
+            return redirect(url_for('admin_bp.editUser', UIN=UIN))
+        
         # Change any User Table fields
         user_info['Username'] = request.form.get('Username')
         user_info['First_Name'] = request.form.get('First_Name')
@@ -121,13 +129,12 @@ def editUser(UIN):
 
         # college student exclusive fields
         if user_info['User_Type'] == "college_student":
-            user_info['GPA'] = request.form.get('gpa')
-            user_info['Major'] = request.form.get('major')
-            user_info['Minor'] = request.form.get('minor')
-            user_info['Second_Minor'] = request.form.get('second_minor')
+            user_info['GPA'] = request.form.get('GPA')
+            user_info['Major'] = request.form.get('Major')
+            user_info['Minor'] = request.form.get('Minor')
+            user_info['Second_Minor'] = request.form.get('Second_Minor')
             user_info['Exp_Graduation'] = request.form.get('Exp_Graduation')
         
-        conn = get_db_connection()
         update_user_fields(conn, user_info)
         conn.close()
         

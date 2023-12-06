@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> View User's Classes</title>
+  <title> View Certifications</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="../../static/general.css">
@@ -33,43 +33,68 @@
       </div>
   </nav>
   <!--End of Navigation Bar -->
+  {% if flag=="add" %}
+{% elif flag=="view" %}
+{% endif %}
 
-  <h2>{{name}}'s Classes</h2>
+    {% if flag=="add" %}
+    <h2>Available Certifications</h2>
+    {% elif flag=="view" %}
+    <h2>{{name}}'s Certifications</h2>
+    {% endif %}
+
   <table>
     <tr>
-      <th>Class Name</th>
-      <th>Class Description</th>
-      <th>Class Type</th>
-      <th>Status</th>
-      <th>Semester</th>
-      <th>Modify</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Level</th>
+    {% if flag=="view" %}
+    <th>Status</th>
+    <th>Training Status</th>
+    <th>Semester</th> <!--and year-->
+    {% endif %}
+    <th>Modify</th>
     </tr>
-    {% for class in classes %}
+    {% for cert in certs %}
         <tr>
-          <td>{{ class.Name }}</td>
-          <td>{{ class.Description }}</td>
-          <td>{{ class.type }}</td>
-          <td>{{ class.status }}</td>
-          <td>{{ class.semester}} {{class.year }}</td>
-          <td>
-            <a href="{{ url_for('classes_bp.update_class_student', Class_ID=class.Class_ID, UIN=request.view_args['UIN']) }}">
-              <button>Update</button>
-            </a>
-            <button onclick="deleteClass({{class.Class_ID}}, {{request.view_args['UIN']}})">Delete</button>
-          </td>
-        </tr>
+          <td>{{ cert.Name }}</td>
+          <td>{{ cert.Description }}</td>
+          <td>{{ cert.Level }}</td>
+        {% if flag=="view" %}
+            <td>{{ cert.Status }}</td>
+            <td>{{ cert.Training_Status }}</td>
+            <td>{{ cert.Semester}} {{cert.Year }}</td>
+        {% endif %}
+        {% if flag=="add" %}
+            <td>
+                <a href="{{url_for('cert_bp.enroll_cert', Cert_ID=cert.Cert_ID, UIN=request.view_args['UIN'])}}">
+                    <button>Enroll</button>
+                </a>
+            </td>
+        {% elif flag=="view" %}
+            <td>
+                <a href="{{url_for('cert_bp.update_cert_enrollment', Cert_ID=cert.Cert_ID, UIN=request.view_args['UIN'])}}">
+                    <button>Edit</button>
+                </a>
+                <button onclick="deleteCert({{cert.Cert_ID}}, {{request.view_args['UIN']}})">Delete</button>
+            </td>
+        {% endif %}
+    </tr>
         {% endfor %}
     <!-- Look at admin_home.html for idea of how archived code will work -->
   </table>
 
   <script>
-    function deleteClass(class_id, UIN) {
+    function deleteCert(cert_id, UIN) {
         $.ajax({
-          url: `/classes/delete_class_student/${class_id}/${UIN}`,
+          url: `/cert/delete_cert_enrollment/${cert_id}/${UIN}`,
           method: 'DELETE',
           success: function(response) {
             window.location.reload();
-          }
+          },
+            error: function(xhr, status, error) {
+                console.error("Error:", error);
+            }
         })
       }
   </script>

@@ -26,7 +26,7 @@ def add_internship_student(UIN):
         else:
             enroll_intern(conn, intern_name, intern_descr, intern_isGov, intern_year, intern_status, UIN)
             conn.close()
-            return redirect(url_for("intern_bp.view_internships.html", UIN=UIN))
+            return redirect(url_for("intern_bp.view_internships", UIN=UIN))
     return render_template('add_internship_student.html')
 
 @intern_bp.route('/add_internship/<int:UIN>', methods=['GET', 'POST'])
