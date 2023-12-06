@@ -127,7 +127,7 @@
     <script>
         // JavaScript for phone number formatting
         function setupPhoneNumberFormatting() {
-            var phoneInput = document.getElementById('phone_number');
+            var phoneInput = document.getElementById('Phone');
             if (phoneInput) {
                 phoneInput.addEventListener('input', formatPhoneNumber);
             }
@@ -144,7 +144,7 @@
             
 
             // Fields for any user
-            var general_fields = ['first_name', 'last_name', 'username', 'email', 'discord'];
+            var general_fields = ['First_Name', 'Last_Name', 'Username', 'Email', 'Discord_Name'];
 
 
             for (var i = 0; i < general_fields.length; i++) {
@@ -156,10 +156,10 @@
 
 
             // Fields for Colege Students
-            var college_fields = ['gpa', 'major', 'Exp_Graduation', 'school', 'classification', 'phone_number'];
+            var college_fields = ['GPA', 'Major', 'Exp_Graduation', 'School', 'Classification', 'Phone'];
             
             // Fields for K12 Students
-            var k12_fields = ['school', 'classification', 'phone_number'];
+            var k12_fields = ['School', 'Classification', 'Phone'];
     
             if(userType == "college_student"){
                 for (var i = 0; i < college_fields.length; i++) {
@@ -173,7 +173,7 @@
             // Regex for phone number
             var regex = /^\d{3}-\d{3}-\d{4}$/;
             // Validate number
-            if(!regex.test((document.getElementById("phone_number").value))){
+            if(!regex.test((document.getElementById("Phone").value))){
                 alert("Please enter a valid phone number.");
                 return false; 
             }

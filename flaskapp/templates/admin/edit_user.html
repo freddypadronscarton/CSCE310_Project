@@ -54,7 +54,7 @@
                     <input type="text" id="Last_Name" name="Last_Name" value="{{ user.Last_Name }}"><br>
 
                     <label for="Username">Username:</label>
-                    <input type="text" id="username" name="Username" value="{{ user.Username }}"><br>
+                    <input type="text" id="Username" name="Username" value="{{ user.Username }}"><br>
 
                     <label for="Email">Email:</label>
                     <input type="email" id="Email" name="Email" value="{{ user.Email }}"><br>
@@ -177,6 +177,7 @@
 
             for (var i = 0; i < general_fields.length; i++) {
                 if (!document.getElementById(general_fields[i]).value) {
+                    console.log(general_fields[i] +" "+ document.getElementById(general_fields[i]).value);
                     alert("Please fill out all required fields.");
                     return false; 
                 }
