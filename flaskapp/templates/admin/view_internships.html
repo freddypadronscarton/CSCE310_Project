@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> View User's Classes</title>
+  <title>View User's Classes</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="../../static/general.css">
@@ -34,28 +34,28 @@
   </nav>
   <!--End of Navigation Bar -->
 
-  <h2>{{name}}'s Classes</h2>
+  <h2>{{name}}'s Internships</h2>
   <table>
     <tr>
-      <th>Class Name</th>
-      <th>Class Description</th>
-      <th>Class Type</th>
+      <th>Internship Name</th>
+      <th>Description</th>
+      <th>Government Program?</th>
       <th>Status</th>
-      <th>Semester</th>
+      <th>Year</th>
       <th>Modify</th>
     </tr>
-    {% for class in classes %}
+    {% for intern in interns %}
         <tr>
-          <td>{{ class.Name }}</td>
-          <td>{{ class.Description }}</td>
-          <td>{{ class.type }}</td>
-          <td>{{ class.status }}</td>
-          <td>{{ class.semester}} {{class.year }}</td>
+          <td>{{ intern.Name }}</td>
+          <td>{{ intern.Description }}</td>
+          <td>{{ intern.is_gov }}</td>
+          <td>{{ intern.status }}</td>
+          <td>{{intern.year }}</td>
           <td>
-            <a href="{{ url_for('classes_bp.update_class_student', Class_ID=class.Class_ID, UIN=request.view_args['UIN']) }}">
+            <a href="{{ url_for('intern_bp.update_intern_student', Intern_ID=intern.intern_ID, UIN=request.view_args['UIN']) }}">
               <button>Update</button>
             </a>
-            <button onclick="deleteClass({{class.Class_ID, request.view_args['UIN']}})">Delete</button>
+            <button onclick="deleteIntern({{intern.Intern_ID}}, {{request.view_args['UIN']|tojson}})">Delete</button>
           </td>
         </tr>
         {% endfor %}
@@ -63,9 +63,9 @@
   </table>
 
   <script>
-    function deleteClass(class_id, UIN) {
+    function deleteIntern(intern_id, UIN) {
         $.ajax({
-          url: `/classes/delete_class_student/${class_id}/${UIN}`,
+          url: `/internship/delete_intern_student/${intern_id}/${UIN}`,
           method: 'DELETE',
           success: function(response) {
             window.location.reload();

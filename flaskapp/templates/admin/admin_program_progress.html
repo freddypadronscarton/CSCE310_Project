@@ -127,7 +127,7 @@
             <a href="{{ url_for('classes_bp.update_class', Class_ID=class.Class_ID, UIN=request.view_args['UIN']) }}">
               <button>Update</button>
             </a>
-            <button onclick="deleteClass({{class.Class_ID}})">Delete</button>
+            <button onclick="deleteClass({{class.Class_ID}}, {{request.view_args['UIN']}})">Delete</button>
           </td>
         </tr>
         {% endfor %}
@@ -178,10 +178,10 @@
     <div>
       <h2>{{name}}'s Internship Progress</h2>
       <div>
-        <a href="{{ url_for('admin_bp.add_program') }}">
+        <a href="{{ url_for('intern_bp.add_internship', UIN=request.view_args['UIN']) }}">
           <button>Add Internship</button>
         </a>
-        <a href="{{ url_for('admin_bp.view_all_programs') }}">
+        <a href="{{ url_for('intern_bp.view_all_internships') }}">
           <button>View Internship</button>
         </a>
         Internships not yet implemented
@@ -191,25 +191,22 @@
           <th>Name</th>
           <th>Description</th>
           <th>Is Government</th>
+          <th>Status</th>
+          <th>Year</th>
           <th>Modify</th>
         </tr>
-        {% for program in programs %}
+        {% for intern in interns %}
         <tr>
-          <td>name</td>
-          <td>desc</td>
-          <td>y/n</td>
+          <td>{{intern.name}}</td>
+          <td>{{intern.description}}</td>
+          <td>{{intern.is_gov}}</td>
+          <td>{{intern.status}}</td>
+          <td>{{intern.year}}</td>
           <td>
-            <a href="/admin/update_program/{{program.program_num}}">
+            <a href="{{ url_for('intern_bp.update_intern', Intern_ID=intern.Intern_ID, UIN=request.view_args['UIN']) }}">
               <button>Update</button>
-            </a>
-            
-            {% if program.archived %}
-            <button onclick="archiveProgram({{program.program_num}}, 0)">Unarchive</button>
-            {% else %}
-            <button onclick="archiveProgram({{program.program_num}}, 1)">Archive</button>
-            {% endif %}
-            
-            <button onclick="deleteProgram({{program.program_num}})">Delete</button>
+            </a>            
+            <button onclick="deleteIntern({{intern.Intern_ID}}, {{request.view_args['UIN']}})">Delete</button>
           </td>
         </tr>
         {% endfor %}
@@ -220,9 +217,19 @@
       
       
     <script>
-      function deleteClass(class_id) {
+      function deleteClass(class_id, UIN) {
         $.ajax({
-          url: `/classes/delete_class/${class_id}`,
+          url: `/classes/delete_class_student/${class_id}/${UIN}`,
+          method: 'DELETE',
+          success: function(response) {
+            window.location.reload();
+          }
+        })
+      }
+
+      function deleteIntern(intern_id, UIN) {
+        $.ajax({
+          url: `/internship/delete_intern_student/${intern_id}/${UIN}`,
           method: 'DELETE',
           success: function(response) {
             window.location.reload();

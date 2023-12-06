@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Internship</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <title>Admin Add Class</title>
 </head>
 <body>
-      <!-- Navigation Bar -->
+    <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
       <a class="navbar-brand" href="#">CSCE 310 Project</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,57 +40,61 @@
     {% endif %}
   {% endwith %}
 
-  <form action="{{ url_for('class_enrollment', UIN=current_user.uin) }}" method="POST">
-    <h1>Add Class</h1><br>
+  <form action="/internship/update_intern/{{intern.Intern_ID}}/{{intern_app.UIN}}" method="POST" id="updateInternForm">
+    <h1>Update Internship</h1><br>
     <div class="form-group">
-      <label for="class_name">Class Name:</label>
-      <input id="class_name" name="class_name" type="text">
+      <label for="intern_name">Internship Name:</label>
+      <input id="intern_name" name="intern_name" type="text" value="{{intern.name}}">
     </div>
     <div class="form-group">
-      <label for="class_type">Class Type: &nbsp; </label>
-      <input id="class_type" name="class_type" type="text">
-    </div>
+      <label for="intern_isGov">Government Program?: </label>
+        <select id="intern_isGov" name="intern_isGov">
+        {% if intern.is_gov == "No" %}
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+        {% else %}
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        {% endif %}
+        </select>
+    </div>    
     <div class="form-group">
-      <label for="class_semester">Semester: </label>
-        <select id="class_semester" name="class_semester">
-            <option value="Spring">Spring</option>
-            <option value="Summer">Summer</option>
-            <option value="Fall">Fall</option>
+        <label for="intern_status">Status: </label>
+        <select id="intern_status" name="intern_status">
+        {% if intern_app.status == "Applied" %}
+            <option value="Applied">Applied</option>
+            <option value="Accepted">Accepted</option>
+            <option value="Rejected">Rejected</option>
+        {% elif intern_app.status == "Accepted" %}
+            <option value="Accepted">Accepted</option>
+            <option value="Applied">Applied</option>
+            <option value="Rejected">Rejected</option>
+        {% else %}
+            <option value="Rejected">Rejected</option>
+            <option value="Applied">Applied</option>
+            <option value="Accepted">Accepted</option>
+        {% endif %}
         </select>
     </div>
     <div class="form-group">
-      <label for="class_year">Year: </label>
-      <input id="class_year" name="class_year" type="text">
-    </div>
-    <div class="form-group">
-      <label for="class_status">Status: </label>
-      <select id="class_status" name="class_status">
-        <option value="Enrolled">Enrolled</option>
-        <option value="Completed">Completed</option>
-        <option value="Dropped">Dropped</option>
-      </select>
+      <label for="intern_year">Year:</label>
+      <input id="intern_year" name="intern_year" type="text" value="{{intern_app.year}}">
     </div>
     <div class="form-group row">
-      <label for="class_descr" class="col-sm-2 col-form-label">Description:</label>
+      <label for="intern_descr" class="col-sm-2 col-form-label">Description:</label>
       <div class="col-sm-10">
-        <textarea id="class_descr" name="class_descr" class="form-control"></textarea>
+          <textarea id="intern_descr" name="intern_descr" class="form-control">{{intern.description}}</textarea>
       </div>
     </div>
-    <!-- Flash Messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-          {% for category, message in messages %}
-              <div class="flash {{ category }}">{{ message }}</div>
-          {% endfor %}
-      {% endif %}
-    {% endwith %}
     <div class="form-group">
-      <button type="submit">Add Class</button>
-    </div><br>
-
-    <a class="nav-link" href="/home">Back</a>
+      <button type="submit">Update Internship</button>
+    </div>
+    <a href="{{ url_for('progress_bp.view_progress', UIN=request.view_args['UIN']) }}">
+      <button>Back</button>
+    </a>
   </form>
 </body>
+
 <style>
   body { 
       display: flex;
@@ -114,13 +118,13 @@
       margin-right: 10px;
   }
   button, .btn-custom {
-      border: none;
-      padding: 10px 20px;
-      margin: 10px 2px;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    border: none;
+    padding: 10px 20px;
+    margin: 10px 2px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
   }
-  
+
   button:hover, .btn-custom:hover {
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
   }
