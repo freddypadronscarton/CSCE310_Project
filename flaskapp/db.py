@@ -190,7 +190,7 @@ def init_sqlite_db():
     
     #  ---------- VIEWS ----------
     
-    # View of Left Join from Users and College Students table: Admins have NULL values for student attribut3es
+    # View of Left Join from Users and College Students table: Admins have NULL values for student attributes
     conn.execute('''CREATE VIEW IF NOT EXISTS View_CollegeStudentDetails AS
         SELECT u.*, cs.Gender, cs.Hispanic_Or_Latino, cs.Race, cs.US_Citizen, cs.First_Generation, 
             cs.Birthdate, cs.GPA, cs.Major, cs.Minor, cs.Second_Minor, cs.Exp_Graduation, 
@@ -276,6 +276,30 @@ def init_sqlite_db():
     JOIN Intern_App ON Internship.Intern_ID = Intern_App.Intern_ID;
     ''')
 
+    # Get user's unenrolled certifications
+    conn.execute('''CREATE VIEW IF NOT EXISTS Unenrolled_Certifications AS
+        SELECT u.UIN, c.Cert_ID, c.Name, c.Description, c.Level, ce.Status, ce.Training_Status, ce.Semester, ce.Year
+        FROM Users u
+        JOIN Certification c
+        LEFT JOIN Cert_Enrollment ce ON u.UIN = ce.UIN AND c.Cert_ID = ce.Cert_ID
+        WHERE ce.CertE_Num IS NULL;
+''')
+
+
+    # # Join Certifications and Cert_Enrollments
+    conn.execute('''CREATE VIEW IF NOT EXISTS View_CertEnrollmentDetails AS
+        SELECT Cert_Enrollment.*, Certification.*
+        FROM Cert_Enrollment
+        LEFT JOIN Certification ON Cert_Enrollment.Cert_ID = Certification.Cert_ID;
+        ''')
+
+
+    # conn.execute('''CREATE VIEW IF NOT EXISTS All_Certifications AS
+    # SELECT Certification.*, Cert_Enrollment.*
+    # FROM Certification
+    # JOIN Cert_Enrollment ON Certification.Cert_ID = Cert_Enrollment.Cert_ID;
+    # ''')
+    
     
     #  ---------- INDEXES ---------- 
     

@@ -142,38 +142,36 @@
     <div>
       <h2>{{name}}'s Certification Progress</h2>
       <div>
-        <a href="{{ url_for('admin_bp.add_program') }}">
+        <a href="{{ url_for('cert_bp.add_cert', UIN=request.view_args['UIN']) }}">
           <button>Add Certification</button>
         </a>
-        <a href="{{ url_for('admin_bp.view_all_programs') }}">
+        <a href="{{ url_for('cert_bp.view_cert', UIN=request.view_args['UIN']) }}">
           <button>View Certifications</button>
         </a>
-        Certifications not yet implemented
       </div>
-      <table id="classesTable">
+      <table id="certsTable">
         <tr>
           <th>Name</th>
           <th>Description</th>
           <th>Level</th>
+          <th>Status</th>
+          <th>Training Status</th>
+          <th>Semester</th> <!--and year-->
           <th>Modify</th>
         </tr>
-        {% for program in programs %}
+        {% for cert in certs %}
         <tr>
-          <td>name</td>
-          <td>desc</td>
-          <td>level</td>
+          <td>{{ cert.Name }}</td>
+          <td>{{ cert.Description }}</td>
+          <td>{{ cert.Level }}</td>
+          <td>{{ cert.Status }}</td>
+          <td>{{ cert.Training_Status }}</td>
+          <td>{{ cert.Semester}} {{cert.Year }}</td>
           <td>
-            <a href="/admin/update_program/{{program.program_num}}">
-              <button>Update</button>
-            </a>
-            
-            {% if program.archived %}
-            <button onclick="archiveProgram({{program.program_num}}, 0)">Unarchive</button>
-            {% else %}
-            <button onclick="archiveProgram({{program.program_num}}, 1)">Archive</button>
-            {% endif %}
-            
-            <button onclick="deleteProgram({{program.program_num}})">Delete</button>
+              <a href="{{url_for('cert_bp.update_cert_enrollment', Cert_ID=cert.Cert_ID, UIN=request.view_args['UIN'])}}">
+                  <button>Edit</button>
+              </a>
+              <button onclick="deleteCert({{cert.Cert_ID}}, {{request.view_args['UIN']}})">Delete</button>
           </td>
         </tr>
         {% endfor %}
@@ -189,7 +187,6 @@
         <a href="{{ url_for('intern_bp.view_all_internships') }}">
           <button>View Internship</button>
         </a>
-        Internships not yet implemented
       </div>
       <table id="classesTable">
         <tr>
@@ -229,6 +226,19 @@
           success: function(response) {
             window.location.reload();
           }
+        })
+      }
+
+      function deleteCert(cert_id, UIN) {
+        $.ajax({
+          url: `/cert/delete_cert_enrollment/${cert_id}/${UIN}`,
+          method: 'DELETE',
+          success: function(response) {
+            window.location.reload();
+          },
+            error: function(xhr, status, error) {
+                console.error("Error:", error);
+            }
         })
       }
 

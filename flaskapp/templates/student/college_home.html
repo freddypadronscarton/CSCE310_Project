@@ -42,6 +42,7 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
+    <h1>Hello {{ current_user.first_name }}</h1>
 
     <!-- Program Application Management Section -->
     <div id="program_app_management">
@@ -73,6 +74,17 @@
         </a>
         <a href="{{ url_for('intern_bp.view_internships', UIN=current_user.uin)}}">
             <button>My Internships</button>
+        </a>
+    </div>
+
+    <!--Certifications-->
+    <div id="certifications">
+        <h2>Certifications</h2>
+        <a href="{{url_for('cert_bp.add_cert', UIN=current_user.uin)}}">
+            <button>Add Certification</button>
+        </a>
+        <a href="{{url_for('cert_bp.view_cert', UIN=current_user.uin)}}">
+            <button>View My Certifications</button>
         </a>
     </div>
 
