@@ -291,21 +291,13 @@ def init_sqlite_db():
         SELECT Cert_Enrollment.*, Certification.*
         FROM Cert_Enrollment
         LEFT JOIN Certification ON Cert_Enrollment.Cert_ID = Certification.Cert_ID;
-        ''')
-
-
-    # conn.execute('''CREATE VIEW IF NOT EXISTS All_Certifications AS
-    # SELECT Certification.*, Cert_Enrollment.*
-    # FROM Certification
-    # JOIN Cert_Enrollment ON Certification.Cert_ID = Cert_Enrollment.Cert_ID;
-    # ''')
-    
+        ''')    
     
     #  ---------- INDEXES ---------- 
     
     conn.execute('CREATE INDEX IF NOT EXISTS idx_event_uin ON Event(UIN)')
     conn.execute('CREATE INDEX IF NOT EXISTS idx_application_uin ON Application(UIN)')
-    conn.execute("CREATE INDEX IF NOT EXISTS Track_Index ON Track(program)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_track_program ON Track(program)")
     conn.execute("CREATE INDEX IF NOT EXISTS idx_class_enrollment_uin ON Class_Enrollment(UIN)")
     conn.execute("CREATE INDEX IF NOT EXISTS idx_intern_app_uin ON Intern_App(UIN)")
     conn.execute("CREATE INDEX IF NOT EXISTS idx_cert_enrollment_uin ON Cert_Enrollment(UIN)")
