@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Edit Profile</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/profile.css">
 </head>
@@ -114,10 +115,7 @@
         
                     <div class="form-group text-center">
                         <input type="submit" value="Update Profile" class="btn btn-custom btn-primary">
-                    </div>
-
-                    <div class="form-group text-center">        
-                        <button onclick="deleteUser({{user.uin}})" class="btn btn-custom btn-danger">Delete Account</button>
+                        <button onclick="deleteUser({{user.UIN}})" class="btn btn-custom btn-danger">Delete Account</button>
                     </div>
                 </form>
             </div>
@@ -131,12 +129,12 @@
             if (phoneInput) {
                 phoneInput.addEventListener('input', formatPhoneNumber);
             }
-        }
+        };
 
         function formatPhoneNumber(e) {
             var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
             e.target.value = !x[2] ? x[1] : x[1] + '-' + x[2] + (x[3] ? '-' + x[3] : '');
-        }
+        };
 
         // Form validation function
         function validateForm() {
@@ -159,7 +157,7 @@
             var college_fields = ['GPA', 'Major', 'Exp_Graduation', 'School', 'Classification', 'Phone'];
             
             // Fields for K12 Students
-            var k12_fields = ['School', 'Classification', 'Phone'];
+            var k12_fields = ['School', 'Classification'];
     
             if(userType == "college_student"){
                 for (var i = 0; i < college_fields.length; i++) {
@@ -188,7 +186,7 @@
             }
             
             return true;
-        }
+        };
 
         function deleteUser(uin) {
             var confirmation = confirm("Are you sure you'd like to delete your account?");
@@ -204,7 +202,7 @@
                     }
                 });
             }
-        }
+        };
 
         // Initialize phone number formatting
         setupPhoneNumberFormatting();
