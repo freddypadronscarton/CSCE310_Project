@@ -46,7 +46,7 @@ def init_sqlite_db():
                     Exp_Graduation INTEGER,
                     School TEXT NOT NULL,
                     Classification TEXT NOT NULL,
-                    Phone INTEGER NOT NULL,
+                    Phone INTEGER,
                     Student_Type TEXT NOT NULL,
                     FOREIGN KEY(UIN) REFERENCES Users(UIN)
                     )

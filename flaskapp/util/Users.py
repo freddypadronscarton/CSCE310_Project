@@ -211,7 +211,8 @@ def update_user_fields(conn, user_info):
         First_Generation = {user_info["First_Generation"]},
         Birthdate = '{user_info["Birthdate"]}',
         School = '{user_info["School"]}',
-        Classification = '{user_info["Classification"]}'
+        Classification = '{user_info["Classification"]}',
+        Phone = '{user_info["Phone"]}'
         WHERE UIN = {user_info["UIN"]}'''        
         conn.execute(query)
 

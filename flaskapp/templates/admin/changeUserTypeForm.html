@@ -119,7 +119,7 @@
     
                 <div class="form-group">
                     <label for="phone_number">Phone Number:</label>
-                    <input type="tel" id="phone_number" name="phone_number" placeholder="123-456-7890">
+                    <input type="tel" id="phone_number" name="phone_number" placeholder="123-456-7890" value="{{ selected_user.Phone }}">
                 </div>
     
                 <div class="form-group">
@@ -200,7 +200,7 @@
     
                 <div class="form-group">
                     <label for="k12_phone_number">Phone Number:</label>
-                    <input type="tel" id="k12_phone_number" name="k12_phone_number" placeholder="123-456-7890">
+                    <input type="tel" id="k12_phone_number" name="k12_phone_number" placeholder="optional" value="{{selected_user.Phone}}">
                 </div>
     
                 <div class="form-group">
@@ -252,7 +252,7 @@
             var college_fields = ['gender', 'race', 'birth_date', 'gpa', 'major', 'Exp_Graduation', 'school', 'classification', 'phone_number'];
             
             // Fields for K12 Students
-            var k12_fields = ['k12_gender', 'k12_race', 'k12_birth_date', 'k12_school', 'k12_classification', 'k12_phone_number'];
+            var k12_fields = ['k12_gender', 'k12_race', 'k12_birth_date', 'k12_school', 'k12_classification'];
     
             if(userType == "college_student"){
                 for (var i = 0; i < college_fields.length; i++) {
@@ -283,7 +283,7 @@
                 // Regex for phone number
                 var regex = /^\d{3}-\d{3}-\d{4}$/;
                 // Validate number
-                if(!regex.test((document.getElementById("k12_phone_number").value))){
+                if(document.getElementById("phone_number").value && !regex.test((document.getElementById("k12_phone_number").value))){
                     alert("Please enter a valid phone number.");
                     return false; 
                 }       

@@ -48,6 +48,12 @@ def user_type_form():
 
     conn = get_db_connection()
     selected_user = get_user(conn, UIN)
+    phone_str = str(selected_user["Phone"])
+    if phone_str == "None":
+        del selected_user['Phone']
+    elif phone_str:
+        selected_user['Phone'] = phone_str[:3] + "-" + phone_str[3:6] + "-" + phone_str[6:]
+    
     
     return render_template('admin/changeUserTypeForm.html', selected_user= selected_user, user_type= user_type, current_year=datetime.now().year)
 
@@ -111,6 +117,7 @@ def editUser(UIN):
             user_info['Birthdate'] = request.form.get("birthdate")
             user_info['School'] = request.form.get('school')
             user_info['Classification'] = request.form.get('classification')
+            user_info['Phone'] = "".join(request.form.get('phone_number').split("-"))
 
         # college student exclusive fields
         if user_info['User_Type'] == "college_student":
@@ -119,7 +126,6 @@ def editUser(UIN):
             user_info['Minor'] = request.form.get('minor')
             user_info['Second_Minor'] = request.form.get('second_minor')
             user_info['Exp_Graduation'] = request.form.get('Exp_Graduation')
-            user_info['Phone'] = "".join(request.form.get('phone_number').split("-"))
         
 
         
@@ -163,7 +169,8 @@ def editUser(UIN):
                 user_info['school'] = college_info["School"]
                 user_info['classification'] = college_info["Classification"]
                 phone_str = str(college_info["Phone"])
-                user_info['phone_number'] = phone_str[:3] + "-" + phone_str[3:6] + "-" + phone_str[6:]
+                if phone_str:
+                    user_info['phone_number'] = phone_str[:3] + "-" + phone_str[3:6] + "-" + phone_str[6:]
 
         conn.close()
         return render_template('admin/edit_user.html', user=user_info, current_year=datetime.now().year)
