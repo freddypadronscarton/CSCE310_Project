@@ -14,7 +14,7 @@
 
     <h2>Upload Document</h2>
 
-    <form id="uploadDocumentForm" action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
+    <form id="uploadDocumentForm" action="{{ url_for('document_bp.upload_file') }}" method="post" enctype="multipart/form-data">
         <label for="app_num">Application Number</label>
         <input type="text" id="app_num" name="app_num" required>
 

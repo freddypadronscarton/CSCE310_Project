@@ -6,7 +6,7 @@
   <title>Document Viewer</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../static/general.css">
+  <link rel="stylesheet" href="../../static/general.css">
 </head>
 <body>
   <!-- Navigation Bar -->
@@ -48,7 +48,7 @@
                 <td>{{document.ProgramName}}</td>
                 <td>
                     <button onclick="deleteDocument({{ document.doc_num }})">Delete</button>
-                    <a href="/update_document/{{document.doc_num}}">
+                    <a href="update_document/{{document.doc_num}}">
                         <button>Update</button>
                     </a>
                 </td>
@@ -62,7 +62,7 @@
     <script>
         function deleteDocument(doc_num) {
             $.ajax({
-                url: `/delete_document/${doc_num}`,
+                url: `/doc/delete_document/${doc_num}`,
                 method: 'DELETE',
                 contentType: 'application/json',
                 data: JSON.stringify({

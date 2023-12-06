@@ -14,6 +14,7 @@ from util.Documents import *
 from routes.progress import progress_bp
 from routes.classes import *
 from routes.intern import *
+from routes.document import *
 
 
 # App Initialization
@@ -31,6 +32,7 @@ app.register_blueprint(items_bp, url_prefix='/items')
 app.register_blueprint(progress_bp, url_prefix='/progress')
 app.register_blueprint(classes_bp, url_prefix='/classes')
 app.register_blueprint(intern_bp, url_prefix='/internship')
+app.register_blueprint(document_bp, url_prefix='/doc')
 
 # Flask-Login: User class and user_loader
 class User(UserMixin):
@@ -368,66 +370,6 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-@app.route('/document_display')
-def document_display():
-    conn = get_db_connection()
-    documents = get_all_documents(conn)
-    conn.close()
-    return render_template('student/document_display.html' , documents=documents)
-
-@app.route('/upload_document', methods=['GET', 'POST'])
-def upload_file():
-    if request.method == 'POST':
-        app_num = request.form['app_num']
-        type = request.form['type']
-        file = request.files['document']
-        if file:
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-            file_path = generateFilePath(file_path)
-            file.save(file_path)
-            conn = get_db_connection()
-            create_document(conn, app_num, file_path, type, file.filename)
-            conn.close()
-
-            return redirect(url_for('document_display'))
-
-    return render_template('upload_document.html')
-
-
-@app.route('/delete_document/<int:doc_num>', methods=['DELETE'])
-def delete_document(doc_num):
-    conn = get_db_connection()
-    document = get_document_by_id(conn, doc_num)
-    delete_document_backend(conn, doc_num)
-    os.remove(document['Link'])
-    conn.close()
-    return jsonify({"success": "document deleted"})
-
-@app.route('/update_document/<int:doc_num>', methods=['GET', 'POST'])
-def update_document(doc_num):
-    conn = get_db_connection()
-    document = get_document_by_id(conn, doc_num)
-    conn.close()
-    return render_template('student/update_document.html', document=document)
-
-@app.route('/update_file/<int:doc_num>', methods=['POST'])
-def update_file(doc_num):
-    conn = get_db_connection()
-    oldDoc = get_document_by_id(conn, doc_num)
-    
-    app_num = oldDoc['app_num']
-    type = request.form['document_type']
-    file = request.files['document']
-    if file:
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-        file.save(generateFilePath(file_path))
-        os.remove(oldDoc['Link'])
-        update_document_backend(conn, doc_num, app_num, file_path, type, file.filename)
-
-
-    conn.close()
-    return redirect(url_for('document_display'))
-
 
 @app.route('/class_enrollment/<int:UIN>', methods=['GET', 'POST'])
 @login_required
@@ -451,16 +393,6 @@ def class_enrollment(UIN):
             conn.close()
             return redirect(url_for("home"))
     return render_template('student/class_enrollment.html')
-
-
-
-
-
-
-
-
-
-
 
 
 if __name__ == '__main__':
