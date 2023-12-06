@@ -175,6 +175,15 @@ def profile():
     
     if request.method == 'POST':
         
+        # Check if email and username are already taken
+        if not request.form.get('Username') == user_info['Username'] and check_user_username(conn, request.form.get('Username')):
+            flash("That username is already in use. Please try another.", "Error")
+            return redirect(url_for('profile'))
+        elif not request.form.get('Email') == user_info['Email'] and check_user_email(conn, request.form.get('Email')):
+            flash("That email is already in use. Please try another.", "Error")
+            return redirect(url_for('profile'))
+        
+        
         # Change any User Table fields
         user_info['Username'] = request.form.get('Username')
         user_info['First_Name'] = request.form.get('First_Name')
@@ -197,10 +206,7 @@ def profile():
             user_info['Minor'] = request.form.get('Minor')
             user_info['Second_Minor'] = request.form.get('Second_Minor')
             user_info['Exp_Graduation'] = request.form.get('Exp_Graduation')
-        
-
-        
-        conn = get_db_connection()
+            
         update_user_fields(conn, user_info)
         conn.close()
         

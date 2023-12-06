@@ -31,17 +31,17 @@
     <!--End of Navigation Bar -->
 
     <div class="container">
-        <!-- Flash Messages -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="flash {{ category }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
         <h1 class="text-center my-4">Your Profile</h1>
 
         <div class="card">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
             <div class="card-body">
                 <form method="POST" onsubmit="return validateForm()" id="updateProfileForm" data-userType="{{user.User_Type}}">
                     
