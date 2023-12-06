@@ -134,6 +134,9 @@ def get_user(conn, UIN):
     
     return user_info
 
+def get_user_by_username(conn, entered_username):
+    return conn.execute('SELECT * FROM Users where Username = ?', (entered_username, )).fetchone()
+
 def check_user_email(conn, email):
     result = conn.execute("SELECT COUNT(*) FROM Users WHERE Email = ?", (email,)).fetchone()[0]
     print(email, result)

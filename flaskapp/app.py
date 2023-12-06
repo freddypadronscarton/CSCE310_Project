@@ -9,7 +9,6 @@ from db import *
 from util.Users import *
 from util.Programs import *
 from routes.admin import admin_bp
-from routes.example import items_bp
 from util.Documents import *
 from routes.progress import progress_bp
 from routes.classes import *
@@ -33,7 +32,6 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 #Blueprints
 app.register_blueprint(admin_bp, url_prefix='/admin')
-app.register_blueprint(items_bp, url_prefix='/items')
 app.register_blueprint(progress_bp, url_prefix='/progress')
 app.register_blueprint(classes_bp, url_prefix='/classes')
 app.register_blueprint(intern_bp, url_prefix='/internship')
@@ -59,7 +57,7 @@ class User(UserMixin):
         else:
             # Initialize by fetching from database
             conn = get_db_connection()
-            query_result = conn.execute('SELECT * FROM Users WHERE UIN = ?', (UIN,)).fetchone()
+            query_result = get_user(conn, UIN)
             conn.close()
             if query_result:
                 self.uin = UIN
@@ -88,7 +86,7 @@ def login():
         # connect to db
         conn = get_db_connection()
         # query for users by entered username
-        query_result = conn.execute('SELECT * FROM Users where Username = ?', (entered_username, )).fetchone()
+        query_result = get_user_by_username(conn, entered_username)
 
         
         if not query_result:
@@ -237,7 +235,7 @@ def profile():
     conn.close()
     return render_template('auth/Profile.html', user=user_info, current_year=datetime.now().year)
 
-# PROFILE PAGE
+# FORGOT PASSWORD PAGE
 @app.route('/passwordRecovery', methods=['GET', 'POST'])
 def passwordRecovery():
     
