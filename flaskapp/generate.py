@@ -7,8 +7,6 @@ import os
 # GENERATES MOCK DATA
 
 def insert_mock_data():
-    # re-initialize
-    init_sqlite_db()
     # connect
     conn = sqlite3.connect('database.db')
     
