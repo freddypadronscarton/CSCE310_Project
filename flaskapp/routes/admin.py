@@ -47,7 +47,14 @@ def user_type_form():
     UIN = request.form['uin']
 
     conn = get_db_connection()
-    selected_user = conn.execute('SELECT * FROM users where UIN = ?', (UIN,)).fetchone() 
+    selected_user = get_user(conn, UIN)
+    phone_str = str(selected_user["Phone"])
+    if phone_str == "None":
+        del selected_user['Phone']
+    elif phone_str:
+        selected_user['Phone'] = phone_str[:3] + "-" + phone_str[3:6] + "-" + phone_str[6:]
+    
+    
     return render_template('admin/changeUserTypeForm.html', selected_user= selected_user, user_type= user_type, current_year=datetime.now().year)
 
 # ENDPOINT FOR USER TYPE SAVE/PROMOTE BUTTON
@@ -100,24 +107,26 @@ def editUser(UIN):
         user_info['Email'] = request.form.get('email')
         user_info['Discord_Name'] = request.form.get('discord')
         
-        # Change College Student Fields
-        if user_info['User_Type'] == "college_student":
+        # Fields for k12 and college
+        if not user_info['User_Type'] == "admin":
             user_info['Gender'] = request.form.get("gender")
             user_info['Hispanic_Or_Latino'] = 1 if "hispanic_or_latino" in request.form else 0
             user_info['Race'] = request.form.get("race")
             user_info['First_Generation'] = 1 if "first_gen" in request.form else 0
             user_info['US_Citizen'] = 1 if "US_citizen" in request.form else 0
             user_info['Birthdate'] = request.form.get("birthdate")
-            
+            user_info['School'] = request.form.get('school')
+            user_info['Classification'] = request.form.get('classification')
+            user_info['Phone'] = "".join(request.form.get('phone_number').split("-"))
+
+        # college student exclusive fields
+        if user_info['User_Type'] == "college_student":
             user_info['GPA'] = request.form.get('gpa')
             user_info['Major'] = request.form.get('major')
             user_info['Minor'] = request.form.get('minor')
             user_info['Second_Minor'] = request.form.get('second_minor')
             user_info['Exp_Graduation'] = request.form.get('Exp_Graduation')
-            user_info['Phone'] = "".join(request.form.get('phone_number').split("-"))
         
-        user_info['School'] = request.form.get('school')
-        user_info['Classification'] = request.form.get('classification')
 
         
         conn = get_db_connection()
@@ -160,7 +169,8 @@ def editUser(UIN):
                 user_info['school'] = college_info["School"]
                 user_info['classification'] = college_info["Classification"]
                 phone_str = str(college_info["Phone"])
-                user_info['phone_number'] = phone_str[:3] + "-" + phone_str[3:6] + "-" + phone_str[6:]
+                if phone_str:
+                    user_info['phone_number'] = phone_str[:3] + "-" + phone_str[3:6] + "-" + phone_str[6:]
 
         conn.close()
         return render_template('admin/edit_user.html', user=user_info, current_year=datetime.now().year)

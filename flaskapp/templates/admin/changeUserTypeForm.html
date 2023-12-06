@@ -11,9 +11,9 @@
 <body>
     <div id = "userTypeSelectionForm" class="container" data-userType="{{user_type}}">
         {% if user_type == "admin"%}
-        <h2> Are you sure you'd like to promote {{selected_user.username}}?</h2>
+        <h2> Are you sure you'd like to promote {{selected_user.Username}}?</h2>
         {% else %}
-        <h2> Update User to {{user_type}}: {{selected_user.username}}</h2>
+        <h2> Update User to {{user_type}}: {{selected_user.Username}}</h2>
         {% endif %}
     
         <form action="{{ url_for('admin_bp.save_user_type') }}" method="post" onsubmit="return validateForm()">
@@ -21,7 +21,7 @@
             <!-- Hidden inputs -->
             <div class="form-group" style="display: none;">
                 <input type="text" id="user_type" name="user_type" value="{{ user_type }}">
-                <input type="number" id="uin"name="uin" value={{ selected_user.uin }}>
+                <input type="number" id="uin"name="uin" value={{ selected_user.UIN }}>
             </div>
     
             {% if user_type == "college_student" %}
@@ -29,45 +29,45 @@
                 <div class="form-group">
                     <label for="gender">Gender:</label>
                     <select id="gender" name="gender">
-                        <option value="Not Selected">Please select</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
+                        <option value="">Please Select</option>
+                        <option value="male" {% if selected_user.Gender == "male" %} selected {% endif %}>Male</option>
+                        <option value="female" {% if selected_user.Gender == "female" %} selected {% endif %} >Female</option>
+                        <option value="other" {% if selected_user.Gender == "other" %} selected {% endif %} >Other</option>
                     </select>
                 </div>
     
                 <div class="form-group">
-                    <label for="hispanic_or_latino">Hispanic or Latino:</label>
-                    <input type="checkbox" id="hispanic_or_latino" name="hispanic_or_latino">
+                    <label for="hispanic_or_latino">Hispanic or Latino: </label>
+                    <input type="checkbox" id="hispanic_or_latino" name="hispanic_or_latino" {% if selected_user.Hispanic_Or_Latino %} checked {% endif %}>
                 </div>
     
                 <div class="form-group">
                     <label for="race">Race:</label>
                     <select id="race" name="race">
                         <option value="">Please select</option>
-                        <option value="asian">Asian</option>
-                        <option value="black">Black or African American</option>
-                        <option value="hispanic">Hispanic or Latino</option>
-                        <option value="white">White</option>
-                        <option value="native_american">Native American or Alaska Native</option>
-                        <option value="pacific_islander">Native Hawaiian or Other Pacific Islander</option>
-                        <option value="other">Other</option>
+                        <option value="asian" {% if selected_user.Race == "asian" %} selected {% endif %}>Asian</option>
+                        <option value="black" {% if selected_user.Race == "black" %} selected {% endif %}>Black or African American</option>
+                        <option value="hispanic" {% if selected_user.Race == "hispanic" %} selected {% endif %}>Hispanic or Latino</option>
+                        <option value="white" {% if selected_user.Race == "white" %} selected {% endif %}>White</option>
+                        <option value="native_american" {% if selected_user.Race == "native_american" %} selected {% endif %}>Native American or Alaska Native</option>
+                        <option value="pacific_islander" {% if selected_user.Race == "pacific_islander" %} selected {% endif %}>Native Hawaiian or Other Pacific Islander</option>
+                        <option value="other" {% if selected_user.Race == "other" %} selected {% endif %}>Other</option>
                     </select>
                 </div>
     
                 <div class="form-group">
                     <label for="first_gen">First Generation Student:</label>
-                    <input type="checkbox" id="first_gen" name="first_gen">
+                    <input type="checkbox" id="first_gen" name="first_gen" {% if selected_user.First_Generation %} checked {% endif %}>
                 </div>
     
                 <div class="form-group">
                     <label for="US_citizen">US Citizen:</label>
-                    <input type="checkbox" id="US_citizen" name="US_citizen">
+                    <input type="checkbox" id="US_citizen" name="US_citizen" {% if selected_user.US_Citizen %} checked {% endif %}>
                 </div>
     
                 <div class="form-group">
                     <label for="birth_date">Date of Birth: </label>
-                    <input type="date" id="birth_date" name="birth_date">
+                    <input type="date" id="birth_date" name="birth_date" value={{selected_user.Birthdate}}>
                 </div>
     
                 <div class="form-group">
@@ -119,12 +119,12 @@
     
                 <div class="form-group">
                     <label for="phone_number">Phone Number:</label>
-                    <input type="tel" id="phone_number" name="phone_number" placeholder="123-456-7890">
+                    <input type="tel" id="phone_number" name="phone_number" placeholder="123-456-7890" value="{{ selected_user.Phone }}">
                 </div>
     
                 <div class="form-group">
                     <button type="submit">Save</button>
-                    <button type="button" onclick="cancelSubmission({{ selected_user.uin }}, '{{ selected_user.user_type }}')">Cancel</button>
+                    <button type="button" onclick="cancelSubmission({{ selected_user.UIN }}, '{{ selected_user.User_Type }}')">Cancel</button>
                 </div>
     
             </div>
@@ -133,44 +133,44 @@
                     <label for="k12_gender">Gender:</label>
                     <select id="k12_gender" name="k12_gender">
                         <option value="Not Selected">Please select</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
+                        <option value="male" {% if selected_user.Gender == "male" %} selected {% endif %}>Male</option>
+                        <option value="female" {% if selected_user.Gender == "female" %} selected {% endif %} >Female</option>
+                        <option value="other" {% if selected_user.Gender == "other" %} selected {% endif %} >Other</option>
                     </select>
                 </div>
     
                 <div class="form-group">
                     <label for="k12_hispanic_or_latino">Hispanic or Latino:</label>
-                    <input type="checkbox" id="k12_hispanic_or_latino" name="k12_hispanic_or_latino">
+                    <input type="checkbox" id="k12_hispanic_or_latino" name="k12_hispanic_or_latino" {% if selected_user.Hispanic_Or_Latino %} checked {% endif %}>
                 </div>
     
                 <div class="form-group">
                     <label for="k12_race">Race:</label>
                     <select id="k12_race" name="k12_race">
                         <option value="">Please select</option>
-                        <option value="asian">Asian</option>
-                        <option value="black">Black or African American</option>
-                        <option value="hispanic">Hispanic or Latino</option>
-                        <option value="white">White</option>
-                        <option value="native_american">Native American or Alaska Native</option>
-                        <option value="pacific_islander">Native Hawaiian or Other Pacific Islander</option>
-                        <option value="other">Other</option>
+                        <option value="asian" {% if selected_user.Race == "asian" %} selected {% endif %}>Asian</option>
+                        <option value="black" {% if selected_user.Race == "black" %} selected {% endif %}>Black or African American</option>
+                        <option value="hispanic" {% if selected_user.Race == "hispanic" %} selected {% endif %}>Hispanic or Latino</option>
+                        <option value="white" {% if selected_user.Race == "white" %} selected {% endif %}>White</option>
+                        <option value="native_american" {% if selected_user.Race == "native_american" %} selected {% endif %}>Native American or Alaska Native</option>
+                        <option value="pacific_islander" {% if selected_user.Race == "pacific_islander" %} selected {% endif %}>Native Hawaiian or Other Pacific Islander</option>
+                        <option value="other" {% if selected_user.Race == "other" %} selected {% endif %}>Other</option>
                     </select>
                 </div>
     
                 <div class="form-group">
                     <label for="k12_first_gen">First Generation Student:</label>
-                    <input type="checkbox" id="k12_first_gen" name="k12_first_gen">
+                    <input type="checkbox" id="k12_first_gen" name="k12_first_gen" {% if selected_user.First_Generation %} checked {% endif %}>
                 </div>
     
                 <div class="form-group">
                     <label for="k12_US_citizen">US Citizen:</label>
-                    <input type="checkbox" id="k12_US_citizen" name="k12_US_citizen">
+                    <input type="checkbox" id="k12_US_citizen" name="k12_US_citizen" {% if selected_user.US_Citizen %} checked {% endif %}>
                 </div>
     
                 <div class="form-group">
                     <label for="k12_birth_date">Date of Birth: </label>
-                    <input type="date" id="k12_birth_date" name="k12_birth_date">
+                    <input type="date" id="k12_birth_date" name="k12_birth_date" value={{selected_user.Birthdate}}>
                 </div>
     
                 <div class="form-group">
@@ -200,17 +200,17 @@
     
                 <div class="form-group">
                     <label for="k12_phone_number">Phone Number:</label>
-                    <input type="tel" id="k12_phone_number" name="k12_phone_number" placeholder="123-456-7890">
+                    <input type="tel" id="k12_phone_number" name="k12_phone_number" placeholder="optional" value="{{selected_user.Phone}}">
                 </div>
     
                 <div class="form-group">
                     <button type="submit">Save</button>
-                    <button type="button" onclick="cancelSubmission({{ selected_user.uin }}, '{{ selected_user.user_type }}')">Cancel</button>
+                    <button type="button" onclick="cancelSubmission({{ selected_user.UIN }}, '{{ selected_user.User_Type }}')">Cancel</button>
                 </div>
             {% elif user_type == "admin" %}
                 <div class="form-group">
                     <button type="submit">Promote</button>
-                    <button type="button" onclick="cancelSubmission({{ selected_user.uin }}, '{{ selected_user.user_type }}')">Cancel</button>
+                    <button type="button" onclick="cancelSubmission({{ selected_user.UIN }}, '{{ selected_user.User_Type }}')">Cancel</button>
                 </div>
     
             {% else %}
@@ -252,7 +252,7 @@
             var college_fields = ['gender', 'race', 'birth_date', 'gpa', 'major', 'Exp_Graduation', 'school', 'classification', 'phone_number'];
             
             // Fields for K12 Students
-            var k12_fields = ['k12_gender', 'k12_race', 'k12_birth_date', 'k12_school', 'k12_classification', 'k12_phone_number'];
+            var k12_fields = ['k12_gender', 'k12_race', 'k12_birth_date', 'k12_school', 'k12_classification'];
     
             if(userType == "college_student"){
                 for (var i = 0; i < college_fields.length; i++) {
@@ -283,7 +283,7 @@
                 // Regex for phone number
                 var regex = /^\d{3}-\d{3}-\d{4}$/;
                 // Validate number
-                if(!regex.test((document.getElementById("k12_phone_number").value))){
+                if(document.getElementById("phone_number").value && !regex.test((document.getElementById("k12_phone_number").value))){
                     alert("Please enter a valid phone number.");
                     return false; 
                 }       

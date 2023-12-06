@@ -131,7 +131,7 @@
                     
                     {% elif user.user_type == 'k12_student' %}
                     <label for="school">School:</label>
-                    <input type="text" id="school" name="school" value="{{ user.school }}"><br>
+                    <input type="text" id="school" name="school" value="{{ user.school }}" required><br>
 
                     <label for="classification">Grade:</label>
                     <select id="classification" name="classification">
@@ -139,6 +139,9 @@
                             <option value={{classification}} {% if classification == user.classification%} selected = "selected" {% endif %}>{{classification}}</option>
                         {% endfor %}
                     </select><br>
+
+                    <label for="phone_number">Phone Number:</label>
+                    <input type="tel" id="phone_number" name="phone_number" placeholder="optional" value="{{ user.phone_number }}"><br>
                     {% endif %}
 
                     <div class="form-group text-center">
@@ -183,7 +186,7 @@
             var college_fields = ['gender', 'race', 'birthdate', 'gpa', 'major', 'Exp_Graduation', 'school', 'classification', 'phone_number'];
             
             // Fields for K12 Students
-            var k12_fields = ['gender', 'race', 'birthdate', 'school', 'classification', 'phone_number'];
+            var k12_fields = ['gender', 'race', 'birthdate', 'school', 'classification'];
     
             if(userType == "college_student"){
                 for (var i = 0; i < college_fields.length; i++) {
@@ -197,7 +200,7 @@
             // Regex for phone number
             var regex = /^\d{3}-\d{3}-\d{4}$/;
             // Validate number
-            if(!regex.test((document.getElementById("phone_number").value))){
+            if(document.getElementById("phone_number").value && !regex.test((document.getElementById("phone_number").value))){
                 alert("Please enter a valid phone number.");
                 return false; 
             }
