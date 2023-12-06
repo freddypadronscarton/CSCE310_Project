@@ -72,8 +72,9 @@ def application_review():
 def load_update_appl_page(app_num):
     conn = get_db_connection()
     app = conn.execute("SELECT * FROM Application WHERE APP_NUM = ?", (app_num, )).fetchone()
+    doc = conn.execute("SELECT * FROM Documents WHERE App_Num = ?", (app_num, )).fetchone()
     conn.close()
-    return render_template("student/update_program_app.html", app=app)
+    return render_template("student/update_program_app.html", app=app, doc=doc)
 
 @application_bp.route('/update_application', methods=['POST'])
 def update_application():
@@ -86,6 +87,14 @@ def update_application():
     # calls Program.py function to update program applications
     conn = get_db_connection()
     update_prog_apps(conn, uncom_cert, com_cert, purpose_statement, app_num)
+    
+    if request.files:
+        file = request.files["document"]
+        file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], file.filename)
+        file_path = generateFilePath(file_path)
+        file.save(file_path)
+        create_document(conn, app_num, file_path, request.form["document_type"], file.filename)
+    
     conn.close()
     return redirect(url_for('application_bp.application_review'))
 

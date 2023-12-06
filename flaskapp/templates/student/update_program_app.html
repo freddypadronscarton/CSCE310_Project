@@ -36,7 +36,7 @@
   <!--End of Navigation Bar -->
 
   
-  <form action="{{ url_for('application_bp.update_application') }}" method="POST">
+  <form action="{{ url_for('application_bp.update_application') }}" method="POST" enctype="multipart/form-data">
     <h2>Update Program Application</h2><br>
 
     <div class="form-group">
@@ -58,26 +58,27 @@
       <input id="purpose_statement" name="purpose_statement" type="text" value="{{ app.purpose_statement }}">
     </div>
 
-    <!-- Need form group to handle uploading documents to application -->
-    <div class="form-group">
-      <label for="document-type">Upload Additional Documents: Choose Type</label>
-      <select id="document-type" name="document_type">
-        <option value="None">None</option>
-        <option value="Resume">Resume</option>
-        <option value="Transcript">Transcript</option>
-        <option value="Other">Other</option>
-      </select>
-    </div>
+    {% if doc %}
+      <a class="back_button" href="{{ url_for('document_bp.update_document', doc_num=doc.Doc_Num) }}">
+        <button type="button"> Update Current Document: {{doc.Name}}</button>
+      </a>
+    {% else %}
+      <div class="form-group">
+        <label for="document-type">Document Type</label>
+        <select id="document-type" name="document_type">
+          <option value="None">None</option>
+          <option value="Resume">Resume</option>
+          <option value="Transcript">Transcript</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
 
-    <div class="form-group" id="document-upload" style="display: none;">
-      <label for="document">Upload Document</label>
-      <input type="file" id="document" name="document">
-    </div>
+      <div class="form-group" id="document-upload" style="display: none;">
+        <label for="document">Upload Document</label>
+        <input type="file" id="document" name="document">
+      </div>
 
-    <div class="form-group" id="document-upload" style="display: none;">
-      <label for="document">Upload Document</label>
-      <input type="file" id="document" name="document">
-    </div>
+    {% endif %}
 
     <div class="form-group">
       <button id="apply-button" type="submit">Update</button>
