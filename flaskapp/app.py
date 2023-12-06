@@ -24,6 +24,9 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+#Uploads Directory for documents
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -74,7 +77,7 @@ def load_user(UIN):
 
 
 # LOGIN PAGE
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     #handling the submission
     if request.method == 'POST':
@@ -102,6 +105,9 @@ def login():
         else:
             flash("Incorrect Password. Please try again.", "Error")
         conn.close()  
+     
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
      
     return render_template('auth/login.html')
 
@@ -148,7 +154,7 @@ def register():
 
 
 # HOME PAGE
-@app.route('/home', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
     conn = get_db_connection()
