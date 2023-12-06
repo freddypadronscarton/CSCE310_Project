@@ -35,13 +35,13 @@
   </nav>
   <!--End of Navigation Bar -->
 
-  <a class="back_button" href="{{url_for('application_review')}}">
-    <button>< Back to All Applications</button>
+  <a class="back_button" href="{{url_for('application_bp.application_review')}}">
+    <button> Back to All Applications</button>
   </a>
 
   <h2>Update Program Application</h2>
 
-  <form action="{{ url_for('update_application') }}" method="POST">
+  <form action="{{ url_for('application_bp.update_application') }}" method="POST">
     <div class="form-group">
       <input id="app_num" name="app_num" type="number" value="{{ app.app_num }}" style="display:none"></div>
     </div>

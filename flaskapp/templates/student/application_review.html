@@ -62,7 +62,7 @@
         {% endif %}
       </td>
       <td>
-        <a href="/update_program_app/{{ program_app.app_num }}">
+        <a href="/app/update_program_app/{{ program_app.app_num }}">
           <button>Modify</button>
         </a>
       </td>
@@ -76,7 +76,7 @@
   <script>
     function deleteApp(app_num) {
       $.ajax({
-        url: `/delete_application/${app_num}`,
+        url: `/app/delete_application/${app_num}`,
         method: 'DELETE',
         success: function(response) {
           window.location.reload();

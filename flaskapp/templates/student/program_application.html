@@ -35,7 +35,7 @@
   </nav>
   <!--End of Navigation Bar -->
 
-  <form action="{{ url_for('add_new_application') }}" method="post" enctype="multipart/form-data">
+  <form action="{{ url_for('application_bp.add_new_application') }}" method="post" enctype="multipart/form-data">
     <h2>Program Application</h2><br>
   
     <p id="program_already_applied">You've already applied to this program.</p>
@@ -124,7 +124,7 @@
 
       // ajax call to check if current user already applied to this program
       $.ajax({
-        url: `/program_applied_check/${program_num}`,
+        url: `/app/program_applied_check/${program_num}`,
         method: 'GET',
         contentType: 'json',
         success: function(response) {
