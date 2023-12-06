@@ -357,6 +357,7 @@ def update_application():
 def delete_application(app_num):
   conn = get_db_connection()
   conn.execute(f"DELETE FROM Application WHERE app_num = {app_num}")
+  delete_document_by_app_num(conn, app_num)
   conn.commit()
   conn.close()
   return jsonify({"success": "program application deleted"})
@@ -464,4 +465,10 @@ def class_enrollment(UIN):
 
 if __name__ == '__main__':
     init_sqlite_db()
+    
+    #insert_mock_data()
+    
+    #store uploaded documents
+    if not os.path.exists('uploads'):
+        os.mkdir('uploads')
     app.run(debug=True)

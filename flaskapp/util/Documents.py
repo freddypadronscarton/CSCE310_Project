@@ -19,6 +19,10 @@ def create_document(conn, app_num, link, type, file_name):
 def delete_document_backend(conn, id):
     conn.execute('DELETE FROM Documents WHERE Doc_Num = ?', (id,))
     conn.commit()
+    
+def delete_document_by_app_num(conn, app_num):
+    conn.execute('DELETE FROM Documents WHERE App_Num = ?', (app_num,))
+    conn.commit()
 
 # UPDATE DOCUMENT
 def update_document_backend(conn, id, app_num, link, type, name):
