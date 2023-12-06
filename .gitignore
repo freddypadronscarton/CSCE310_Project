@@ -2,4 +2,4 @@
 flaskapp/uploads
 
 # Ignore .pyc files
-*.pyc
+**/__pycache__/
