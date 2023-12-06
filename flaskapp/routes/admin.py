@@ -129,10 +129,10 @@ def editUser(UIN):
 
         # college student exclusive fields
         if user_info['User_Type'] == "college_student":
-            user_info['GPA'] = request.form.get('gpa')
-            user_info['Major'] = request.form.get('major')
-            user_info['Minor'] = request.form.get('minor')
-            user_info['Second_Minor'] = request.form.get('second_minor')
+            user_info['GPA'] = request.form.get('GPA')
+            user_info['Major'] = request.form.get('Major')
+            user_info['Minor'] = request.form.get('Minor')
+            user_info['Second_Minor'] = request.form.get('Second_Minor')
             user_info['Exp_Graduation'] = request.form.get('Exp_Graduation')
         
         update_user_fields(conn, user_info)
