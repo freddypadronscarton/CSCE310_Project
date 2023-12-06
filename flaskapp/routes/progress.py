@@ -8,6 +8,7 @@ from util.Users import *
 from util.Programs import *
 from routes.classes import *
 from routes.intern import *
+from routes.cert import *
 
 progress_bp = Blueprint('progress_bp', __name__)
 
@@ -22,10 +23,11 @@ def view_progress(UIN):
     programs = get_all_programs_by_user(conn, UIN)
     classes = get_all_classes_by_user(conn, UIN)
     interns = get_all_interns_by_user(conn, UIN)
+    certs = get_user_enrolled_certs(conn, UIN)
     name = conn.execute('SELECT First_Name FROM Users WHERE UIN=?', (UIN,)).fetchone()
     conn.close()
 
-    return render_template("admin/admin_program_progress.html", programs=programs, classes=classes, interns=interns, name=name['First_Name'])
+    return render_template("admin/admin_program_progress.html", programs=programs, classes=classes, interns=interns, certs=certs, name=name['First_Name'])
 
 
 

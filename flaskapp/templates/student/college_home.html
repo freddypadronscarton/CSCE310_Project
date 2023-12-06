@@ -42,8 +42,7 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-    <h1> {{ current_user.first_name }}'s Landing Page</h1>
-    <h1> College Student </h1>
+    <h1>Hello {{ current_user.first_name }}</h1>
 
     <!-- Form to Add New Item -->
     <h2>Add Item</h2>
@@ -113,6 +112,17 @@
         </a>
         <a href="{{ url_for('intern_bp.view_internships', UIN=current_user.uin)}}">
             <button>My Internships</button>
+        </a>
+    </div>
+
+    <!--Certifications-->
+    <div id="certifications">
+        <h2>Certifications</h2>
+        <a href="{{url_for('cert_bp.add_cert', UIN=current_user.uin)}}">
+            <button>Add Certification</button>
+        </a>
+        <a href="{{url_for('cert_bp.view_cert', UIN=current_user.uin)}}">
+            <button>View My Certifications</button>
         </a>
     </div>
 

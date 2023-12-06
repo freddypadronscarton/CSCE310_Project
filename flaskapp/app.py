@@ -14,6 +14,7 @@ from util.Documents import *
 from routes.progress import progress_bp
 from routes.classes import *
 from routes.intern import *
+from routes.cert import *
 
 
 # App Initialization
@@ -31,6 +32,7 @@ app.register_blueprint(items_bp, url_prefix='/items')
 app.register_blueprint(progress_bp, url_prefix='/progress')
 app.register_blueprint(classes_bp, url_prefix='/classes')
 app.register_blueprint(intern_bp, url_prefix='/internship')
+app.register_blueprint(cert_bp, url_prefix='/cert')
 
 # Flask-Login: User class and user_loader
 class User(UserMixin):
@@ -434,7 +436,8 @@ def class_enrollment(UIN):
 
 
 
-
+def is_admin():
+    return current_user.User_Type == "admin"
 
 
 

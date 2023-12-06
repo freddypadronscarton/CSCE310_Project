@@ -53,9 +53,19 @@
     <div class="form-group">
         <label for="class_semester">Semester: </label>
             <select id="class_semester" name="class_semester">
+              {% if class.semester=="Spring" %}
                 <option value="Spring">Spring</option>
                 <option value="Summer">Summer</option>
                 <option value="Fall">Fall</option>
+              {% elif class.semester=="Summer" %}
+                <option value="Summer">Summer</option>
+                <option value="Spring">Spring</option>
+                <option value="Fall">Fall</option>
+              {% else %}
+                <option value="Fall">Fall</option>
+                <option value="Spring">Spring</option>
+                <option value="Summer">Summer</option>
+              {% endif %}
             </select>
     </div>
     <div class="form-group">
@@ -65,9 +75,19 @@
     <div class="form-group">
         <label for="class_status">Status: </label>
         <select id="class_status" name="class_status">
+          {% if class.status == "Enrolled" %}
             <option value="Enrolled">Enrolled</option>
             <option value="Completed">Completed</option>
             <option value="Dropped">Dropped</option>
+          {% elif class.status == "Completed" %}
+            <option value="Completed">Completed</option>
+            <option value="Enrolled">Enrolled</option>
+            <option value="Dropped">Dropped</option>
+          {% else %}
+            <option value="Dropped">Dropped</option>
+            <option value="Enrolled">Enrolled</option>
+            <option value="Completed">Completed</option>
+          {% endif %}
         </select>
     </div>
     <div class="form-group row">

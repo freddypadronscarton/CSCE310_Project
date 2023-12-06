@@ -188,7 +188,7 @@ def init_sqlite_db():
     
     #  ---------- VIEWS ----------
     
-    # View of Left Join from Users and College Students table: Admins have NULL values for student attribut3es
+    # View of Left Join from Users and College Students table: Admins have NULL values for student attributes
     conn.execute('''CREATE VIEW IF NOT EXISTS View_CollegeStudentDetails AS
         SELECT u.*, cs.Gender, cs.Hispanic_Or_Latino, cs.Race, cs.US_Citizen, cs.First_Generation, 
             cs.Birthdate, cs.GPA, cs.Major, cs.Minor, cs.Second_Minor, cs.Exp_Graduation, 
@@ -258,46 +258,29 @@ def init_sqlite_db():
     JOIN Intern_App ON Internship.Intern_ID = Intern_App.Intern_ID;
     ''')
 
-    # INSERT STATEMENTS FOR THE SAKE OF TESTING GIVEN THAT ALEX'S CODE ISN"T DONE
-    # Add Student
-    # conn.execute('''INSERT INTO Track (program, student_num, status) 
-    #              values (1, 3424, "Accepted")''')
-    # Add Class
-    # conn.execute('''INSERT INTO Classes (name, description, type) 
-    #              values ("data science", "beginner data science class", "data science")''')
-    # Add Class Enrollment
-    # conn.execute('''INSERT INTO Class_enrollment (UIN, Class_ID, status) 
-    #              values (3424, 6, "Enrolled")''')
-    # Add Certification
-    # conn.execute('''INSERT INTO Certification (Name, Description, Level)
-    #              values ("cert1", "basic cyber certification", "1")''')
-    # Add Certificatino Enrollment
-    # conn.execute('''INSERT INTO Cert_enrollment (UIN, Cert_ID, Program_Num, Status, Training_status)
-    #              values (3424, 1, 1, "Incomplete", "Enrolled")''')
-    
-    # Set Student program status to complete
-    # conn.execute('''UPDATE TRACK SET STATUS = "Completed" WHERE student_num = 3424''')
+    # Get user's unenrolled certifications
+    conn.execute('''CREATE VIEW IF NOT EXISTS Unenrolled_Certifications AS
+        SELECT u.UIN, c.Cert_ID, c.Name, c.Description, c.Level, ce.Status, ce.Training_Status, ce.Semester, ce.Year
+        FROM Users u
+        JOIN Certification c
+        LEFT JOIN Cert_Enrollment ce ON u.UIN = ce.UIN AND c.Cert_ID = ce.Cert_ID
+        WHERE ce.CertE_Num IS NULL;
+''')
 
-    # conn.execute('''UPDATE Cert_enrollment
-    #              SET Status = "Complete"
-    #              WHERE CertE_Num = 2''')
-    
-    # Add Internship
-    # conn.execute('''INSERT INTO Internship (Name, Description, Is_Gov)
-    #              VALUES ("Gov Internship", "a govt internship", 1)''')
-    # Add Internship Application
-    # conn.execute('''INSERT INTO Intern_app (UIN, Intern_ID, Status, Year)
-    #              VALUES (3424, 1, "Accepted", 2021)''')
 
-    # conn.execute("DELETE FROM Classes WHERE Class_ID = 2")
-    # conn.execute("DELETE FROM Track WHERE tracking_num = 2")
-    # conn.execute("DELETE FROM Internship WHERE Intern_ID = 2")
-    # conn.execute("DELETE FROM Intern_App WHERE IA_Num = 2")
+    # # Join Certifications and Cert_Enrollments
+    conn.execute('''CREATE VIEW IF NOT EXISTS View_CertEnrollmentDetails AS
+        SELECT Cert_Enrollment.*, Certification.*
+        FROM Cert_Enrollment
+        LEFT JOIN Certification ON Cert_Enrollment.Cert_ID = Certification.Cert_ID;
+        ''')
 
-    # conn.execute('''CREATE VIEW IF NOT EXISTS Student_Data AS 
-    #              SELECT UIN, gender, hispanic_or_latino, race, us_citizen, 
-    #              first_generation, GPA, major, student_type
-    #              FROM College_students''')
+
+    # conn.execute('''CREATE VIEW IF NOT EXISTS All_Certifications AS
+    # SELECT Certification.*, Cert_Enrollment.*
+    # FROM Certification
+    # JOIN Cert_Enrollment ON Certification.Cert_ID = Cert_Enrollment.Cert_ID;
+    # ''')
     
     
     #  ---------- INDEXES ---------- 
