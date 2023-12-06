@@ -313,7 +313,8 @@ def add_new_application():
     
     if file and not doc_type == "None":
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-        file.save(generateFilePath(file_path))
+        file_path = generateFilePath(file_path)
+        file.save(file_path)
         create_document(conn, last_inserted_app_num, file_path, doc_type, file.filename)
         
     flash("Application Submitted!")
@@ -381,7 +382,8 @@ def upload_file():
         file = request.files['document']
         if file:
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-            file.save(generateFilePath(file_path))
+            file_path = generateFilePath(file_path)
+            file.save(file_path)
             conn = get_db_connection()
             create_document(conn, app_num, file_path, type, file.filename)
             conn.close()
