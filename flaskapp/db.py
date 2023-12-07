@@ -7,16 +7,6 @@ def init_sqlite_db():
     conn = sqlite3.connect('database.db')
     print("Opened database successfully")
     
-    # conn.execute('''DROP TABLE Cert_Enrollment''')
-
-    # ITEMS TABLE (EXAMPLE)
-    conn.execute(''' CREATE TABLE IF NOT EXISTS items (
-                    item_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    UIN INTEGER,
-                    name TEXT,
-                    description TEXT,
-                    FOREIGN KEY(UIN) REFERENCES Users(UIN)
-                    )''')
     # USERS TABLE
     conn.execute(''' CREATE TABLE IF NOT EXISTS Users (
                     UIN INTEGER PRIMARY KEY,

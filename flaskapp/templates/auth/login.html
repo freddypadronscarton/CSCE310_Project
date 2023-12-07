@@ -58,23 +58,23 @@
     </style>
 </head>
 <body>
-    <!-- Flash Messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="flash alert-{{ category }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-
     <!-- Login Form -->
     <div class="container">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
         <form action="" method="post" class="form-group">
             <h2 class="centered">Login</h2>
             <label for="username">Username:</label>
-            <input type="text" id="username" name="username" class="form-control">
+            <input type="text" id="username" name="username" class="form-control" required>
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password" class="form-control">
+            <input type="password" id="password" name="password" class="form-control" required>
             <button type="submit" class="btn btn-primary btn-block">Login</button>
         </form>
 

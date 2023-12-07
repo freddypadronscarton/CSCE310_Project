@@ -9,7 +9,6 @@ from db import *
 from util.Users import *
 from util.Programs import *
 from routes.admin import admin_bp
-from routes.example import items_bp
 from util.Documents import *
 from routes.progress import progress_bp
 from routes.classes import *
@@ -33,7 +32,6 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 #Blueprints
 app.register_blueprint(admin_bp, url_prefix='/admin')
-app.register_blueprint(items_bp, url_prefix='/items')
 app.register_blueprint(progress_bp, url_prefix='/progress')
 app.register_blueprint(classes_bp, url_prefix='/classes')
 app.register_blueprint(intern_bp, url_prefix='/internship')
@@ -59,7 +57,7 @@ class User(UserMixin):
         else:
             # Initialize by fetching from database
             conn = get_db_connection()
-            query_result = conn.execute('SELECT * FROM Users WHERE UIN = ?', (UIN,)).fetchone()
+            query_result = get_user(conn, UIN)
             conn.close()
             if query_result:
                 self.uin = UIN
@@ -88,7 +86,7 @@ def login():
         # connect to db
         conn = get_db_connection()
         # query for users by entered username
-        query_result = conn.execute('SELECT * FROM Users where Username = ?', (entered_username, )).fetchone()
+        query_result = get_user_by_username(conn, entered_username)
 
         
         if not query_result:
@@ -148,7 +146,7 @@ def register():
             previous_entry = None
             
         conn.commit()   
-        conn.close()  
+        
      
     return render_template('auth/register.html', current_year=datetime.now().year, previous = previous_entry)
 
@@ -164,13 +162,11 @@ def home():
         conn.close()
         return render_template('admin/admin_home.html', users=users)
     elif current_user.user_type == "college_student":
-        items = conn.execute('SELECT * FROM items where UIN = ?', (current_user.uin, )).fetchall()
         conn.close()
-        return render_template('student/college_home.html', items=items)
+        return render_template('student/college_home.html')
     elif current_user.user_type == "k12_student":
-        items = conn.execute('SELECT * FROM items where UIN = ?', (current_user.uin, )).fetchall()
         conn.close()
-        return render_template('student/k12_home.html', items=items)
+        return render_template('student/k12_home.html')
     else:
         conn.close()
         return render_template('auth/login.html')
@@ -208,7 +204,6 @@ def profile():
         
         # Fields for k12 and college
         if not user_info['User_Type'] == "admin":
-            user_info['Birthdate'] = request.form.get("Birthdate")
             user_info['School'] = request.form.get('School')
             user_info['Classification'] = request.form.get('Classification')
             user_info['Phone'] = "".join(request.form.get('Phone').split("-"))
@@ -237,7 +232,7 @@ def profile():
     conn.close()
     return render_template('auth/Profile.html', user=user_info, current_year=datetime.now().year)
 
-# PROFILE PAGE
+# FORGOT PASSWORD PAGE
 @app.route('/passwordRecovery', methods=['GET', 'POST'])
 def passwordRecovery():
     
@@ -322,6 +317,7 @@ def is_admin():
 if __name__ == '__main__':
     init_sqlite_db()
     
+    # make sure to delete db file first
     #insert_mock_data()
     
     #store uploaded documents

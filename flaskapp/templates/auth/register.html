@@ -8,6 +8,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 <body>
+    <form action="{{ url_for('register') }}" method="post" onsubmit="return validateForm()">
     <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
@@ -16,7 +17,7 @@
         {% endfor %}
     {% endif %}
     {% endwith %}
-    <form action="{{ url_for('register') }}" method="post" onsubmit="return validateForm()">
+
     <div class="form-group">
         <h1> Account Registration </h1>
     </div>
@@ -322,7 +323,7 @@
         var userType = document.getElementById('user_type').value;
         
         // Fields for any user
-        var general_fields = ['uin', 'first_name', 'last_name', 'username', 'email', 'discord', 'user_type'];
+        var general_fields = ['uin', 'first_name', 'last_name', 'username', 'email', 'discord', 'user_type', 'password', 'confirm'];
 
         var password = document.getElementById('password').value;
         var confirmation = document.getElementById('confirm').value;
