@@ -19,6 +19,9 @@ def add_new_program(conn, program_name, program_descr):
 def get_all_programs(conn):
   return conn.execute('SELECT * FROM Programs').fetchall()
 
+def get_all_unarchived_programs(conn):
+  return conn.execute('SELECT * FROM Programs WHERE archived = 0').fetchall()
+
 def update_program_info(conn, program_num, program_name, program_descr):
   conn.execute('UPDATE Programs SET name=?, description=? WHERE program_num=?', (program_name, program_descr, program_num))
   conn.commit()
@@ -77,13 +80,12 @@ def num_federal_internships(conn, program_num):
                     ''').fetchone()[0]
   
 def names_of_prog_student_internships(conn, program_num):
-  conn.execute(f'''SELECT DISTINCT Internship.name
-            FROM (SELECT * FROM Program_Accepts WHERE Program = {program_num}) AS Accepted_students
-            JOIN Intern_App
-            ON Accepted_students.student_num = Intern_App.UIN
+  return conn.execute(f'''SELECT DISTINCT Internship.name
+            FROM (SELECT * FROM Program_Accepts WHERE Program = {program_num}) AS prog_students
+            JOIN (SELECT * FROM Intern_App WHERE status="Accepted") as accepted_interns
+            ON prog_students.student_num = accepted_interns.UIN
             JOIN Internship
-            ON Intern_App.Intern_ID = Internship.Intern_ID
-            WHERE Intern_App.Status = "Accepted"
+            ON accepted_interns.Intern_ID = Internship.Intern_ID
               ''').fetchall()
 
 def get_prog_student_majors(conn, program_num):

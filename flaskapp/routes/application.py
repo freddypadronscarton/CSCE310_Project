@@ -10,11 +10,11 @@ from util.Events import *
 application_bp = Blueprint('application_bp', __name__)
 
 
-# Program Info Management Pages
+# Program Application Management Pages
 @application_bp.route('/program_application')
 def program_application(): 
     conn = get_db_connection()
-    programs = get_all_programs(conn)
+    programs = get_all_unarchived_programs(conn)
     conn.close()
     return render_template('student/program_application.html', programs=programs)
 
