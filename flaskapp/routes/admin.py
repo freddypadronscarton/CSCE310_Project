@@ -1,6 +1,6 @@
 # admin.py
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
-from flask_login import login_required, current_user
+from flask_login import login_required, current_user, logout_user
 from datetime import datetime
 from db import *
 from util.Users import *
@@ -31,6 +31,9 @@ def archive_user(UIN):
 @admin_bp.route('/delete_user/<int:UIN>', methods=['DELETE'])
 @login_required
 def delete_user_button(UIN):
+    if int(current_user.__dict__['uin']) == int(UIN):
+        logout_user()
+     
     conn = get_db_connection()
     delete_user(conn, UIN)
     conn.commit()
