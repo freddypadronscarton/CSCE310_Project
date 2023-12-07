@@ -98,10 +98,17 @@ def update_application():
     conn.close()
     return redirect(url_for('application_bp.application_review'))
 
+# deletes a user's application and deletes the user from the program track
+# a user deleting their application means they are leaving the program
 @application_bp.route('/delete_application/<int:app_num>', methods=['DELETE'])
 def delete_application(app_num):
   conn = get_db_connection()
+  program_num = conn.execute(f"SELECT program_num FROM Application where app_num = {app_num}").fetchone()[0]
+  uin = conn.execute(f"SELECT UIN FROM Application where app_num = {app_num}").fetchone()[0]
+  print(program_num)
+  print(uin)
   conn.execute(f"DELETE FROM Application WHERE app_num = {app_num}")
+  conn.execute(f"DELETE FROM TRACK WHERE program = {program_num} AND student_num = {uin}")
   delete_document_by_app_num(conn, app_num)
   conn.commit()
   conn.close()
