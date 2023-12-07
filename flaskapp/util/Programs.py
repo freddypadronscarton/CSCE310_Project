@@ -68,12 +68,12 @@ def num_completed_DoD_cert(conn, program_num):
 
 def num_federal_internships(conn, program_num):
   return conn.execute(f'''SELECT COUNT(DISTINCT student_num) 
-                  FROM (SELECT * FROM Program_Accepts WHERE Program = {program_num}) AS Accepted_students
-                  JOIN Intern_App
-                  ON Accepted_students.student_num = Intern_App.UIN
+                  FROM (SELECT * FROM Program_Accepts WHERE Program = {program_num}) AS prog_students
+                  JOIN (SELECT * FROM Intern_App WHERE status="Accepted") as accepted_interns
+                  ON prog_students.student_num = accepted_interns.UIN
                   JOIN Internship
-                  ON Intern_App.Intern_ID = Internship.Intern_ID
-                  WHERE Internship.Is_Gov = 1 AND Intern_App.Status = "Accepted"
+                  ON accepted_interns.Intern_ID = Internship.Intern_ID
+                  WHERE Internship.Is_Gov = "Yes"
                     ''').fetchone()[0]
   
 def names_of_prog_student_internships(conn, program_num):
