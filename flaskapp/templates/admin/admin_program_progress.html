@@ -71,7 +71,7 @@
               <tr>
                 <td>{{ program.name }}</td>
                 <td>{{ program.description }}</td>
-                <td>{% if program.status %} {{ program.status }} {% else %} Applied {% endif %}</td>
+                <td>{% if program.status is not none %} {{ program.status }} {% else %} Applied {% endif %}</td>
                 <td>
                   {% if not program.status %}
                     <button onclick="acceptOrRejectRecord({{program.UIN}}, {{program.program_num}}, 1)">Accept</button>

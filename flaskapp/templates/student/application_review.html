@@ -55,7 +55,7 @@
       <td>{{ program_app.purpose_statement }}</td>
       <td>
         <!-- Gives application status depending on whether student+program is in Track -->
-        {% if program_app.status is defined %}
+        {% if program_app.status is not none %}
         {{ program_app.status }}
         {% else %}
         Pending

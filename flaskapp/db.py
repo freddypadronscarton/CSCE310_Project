@@ -188,7 +188,7 @@ def init_sqlite_db():
         FROM Users u
         LEFT JOIN College_Students cs ON u.UIN = cs.UIN
     ''')
-    
+
     # Added track to the join so we can access the tracking status
     conn.execute('''CREATE VIEW IF NOT EXISTS View_ApplicationDetails AS
                 SELECT 
