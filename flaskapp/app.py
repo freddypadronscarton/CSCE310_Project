@@ -304,7 +304,7 @@ def class_enrollment(UIN):
         conn = get_db_connection()
         class_exist = get_class_by_name(conn, class_name)
         if class_exist:
-            is_enrolled = get_enrollment(conn, class_exist.Class_ID, UIN)
+            is_enrolled = get_enrollment(conn, class_exist['Class_ID'], UIN)
             if(is_enrolled):
                 flash("You are already enrolled in this class")
             conn.close()

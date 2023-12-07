@@ -286,7 +286,7 @@ def init_sqlite_db():
 ''')
 
 
-    # # Join Certifications and Cert_Enrollments
+    # Join Certifications and Cert_Enrollments
     conn.execute('''CREATE VIEW IF NOT EXISTS View_CertEnrollmentDetails AS
         SELECT Cert_Enrollment.*, Certification.*
         FROM Cert_Enrollment
