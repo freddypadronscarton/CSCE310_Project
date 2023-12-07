@@ -54,7 +54,6 @@ def num_in_program_and_coursetype(conn, program_num, course_type):
                     WHERE Classes.type = '{course_type}'
                     ''').fetchone()[0]
 
-#FIXME : THIS DOUBLE COUNTS STUDENTS ENROLLED IN MUTLIPLE CERTIFICATE TRAININGS, IS THIS THE INTENDED BEHAVIOR
 def num_w_specified_DoD_training_status(conn, program_num, status):
   return conn.execute(f'''SELECT COUNT(DISTINCT Student_num)
                     FROM Program_student_certification_data
@@ -66,13 +65,6 @@ def num_completed_DoD_cert(conn, program_num):
                     FROM Program_student_certification_data
                     WHERE program = {program_num} AND status = "Complete"
                       ''').fetchone()[0]
-
-# f'''SELECT COUNT(*)
-#                     FROM (SELECT * FROM Program_Accepts WHERE Program = {program_num}) AS Accepted_students
-#                     JOIN Cert_Enrollment
-#                     ON Accepted_students.Student_num = Cert_enrollment.UIN
-#                     WHERE Status = "Complete"
-#                       '''
 
 def num_federal_internships(conn, program_num):
   return conn.execute(f'''SELECT COUNT(DISTINCT student_num) 

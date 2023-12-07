@@ -204,7 +204,7 @@ def init_sqlite_db():
                     Track.status
                 FROM 
                     Application
-                LEFT JOIN Track ON Application.program_num = Track.program
+                LEFT JOIN Track ON Application.UIN = Track.student_num AND Application.program_num = Track.program
                 JOIN Programs ON Application.program_num = Programs.program_num
                 ''')
 
