@@ -154,6 +154,7 @@ def editUser(UIN):
     conn.close()
     return render_template('admin/edit_user.html', user=user_info, current_year=datetime.now().year)
 
+# AUTHOR: Kelvin Zheng
 # ENDPOINT FOR ADDING PROGRAMS
 @admin_bp.route('/add_program', methods=['GET', 'POST'])
 @login_required
@@ -172,6 +173,7 @@ def add_program():
             return redirect(url_for("home"))
     return render_template("admin/admin_add_program.html")
     
+# AUTHOR: Kelvin Zheng
 # ENDPOINT FOR ADMIN TO VIEW ALL PROGRAMS
 @admin_bp.route('/view_programs', methods=['GET'])
 @login_required
@@ -180,7 +182,8 @@ def view_all_programs():
     programs = get_all_programs(conn)
     conn.close()
     return render_template("admin/admin_view_programs.html", programs=programs)
-  
+
+# AUTHOR: Kelvin Zheng  
 # ENDPOINT FOR ARCHIVING AND UNARCHIVING PROGRAMS
 @admin_bp.route('/archive_program', methods=['PUT'])
 @login_required
@@ -191,6 +194,7 @@ def archive_program():
     conn.close()
     return jsonify({"user archive status": data["archive"]})
 
+# AUTHOR: Kelvin Zheng
 # ENDPOINT FOR DELETING A PROGRAM
 @admin_bp.route('/delete_program/<int:program_num>', methods=['DELETE'])
 @login_required
@@ -200,6 +204,7 @@ def delete_program(program_num):
     conn.close()
     return jsonify({"change": "program deleted"})
 
+# AUTHOR: Kelvin Zheng
 # ENDPOINT FOR UPDATING A PROGRAM
 @admin_bp.route('/update_program/<int:program_num>', methods=['GET', 'POST'])
 @login_required
@@ -213,6 +218,7 @@ def update_program(program_num):
     conn.close()
     return render_template("admin/admin_update_program.html", program=program)
 
+# AUTHOR: Kelvin Zheng
 # ENDPOINT FOR GETTING A PROGRAM REPORT
 @admin_bp.route('/get_report/<int:program_num>')
 def get_report(program_num):
@@ -243,8 +249,6 @@ def get_report(program_num):
 
     DoD_training_completed = num_w_specified_DoD_training_status(conn, program_num, "Complete")
     DoD_training_enrolled = num_w_specified_DoD_training_status(conn, program_num, "Enrolled")
-    # A student who has a complete status is also enrolled in the training program
-    # DoD_training_enrolled += DoD_training_completed
     
     DoD_cert_complete = num_completed_DoD_cert(conn, program_num)
     fed_internships = num_federal_internships(conn, program_num)

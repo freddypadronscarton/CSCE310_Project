@@ -1,6 +1,8 @@
 from flask import flash
 from db import *
 
+# File Author: Kelvin Zheng
+
 def get_program(conn, program_num):
   return conn.execute('SELECT * FROM Programs WHERE program_num=?', (program_num, )).fetchone()
 

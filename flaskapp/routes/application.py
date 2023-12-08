@@ -7,6 +7,8 @@ from util.Users import *
 from util.Programs import *
 from util.Events import *
 
+# FILE AUTHOR: Kelvin Zheng
+
 application_bp = Blueprint('application_bp', __name__)
 
 

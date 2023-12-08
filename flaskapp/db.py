@@ -79,7 +79,7 @@ def init_sqlite_db():
                 )
             ''')
 
-    # PROGRAMS TABLE
+    # PROGRAMS TABLE - Kelvin Zheng
     conn.execute(''' CREATE TABLE IF NOT EXISTS Programs (
                     program_num INTEGER PRIMARY KEY AUTOINCREMENT,
                     name TEXT,
@@ -87,7 +87,7 @@ def init_sqlite_db():
                     archived INTEGER
                     )''')
     
-    # APPLICATION TABLE
+    # APPLICATION TABLE - Kelvin Zheng
     conn.execute(''' CREATE TABLE IF NOT EXISTS Application (
                     app_num INTEGER PRIMARY KEY AUTOINCREMENT,
                     program_num INTEGER,
@@ -99,7 +99,8 @@ def init_sqlite_db():
                     FOREIGN KEY(UIN) REFERENCES College_students(UIN)
                     )''')
     
-    # TRACK TABLE: status = ['Applied', 'Rejected', 'Enrolled', 'Completed', 'Dropped'] 
+    # TRACK TABLE - Kelvin Zheng
+    # possible status = ['Rejected', 'Enrolled', 'Completed', 'Dropped'] 
     conn.execute('''CREATE TABLE IF NOT EXISTS Track (
                     tracking_num INTEGER PRIMARY KEY AUTOINCREMENT,
                     program INTEGER,
@@ -190,7 +191,9 @@ def init_sqlite_db():
         LEFT JOIN College_Students cs ON u.UIN = cs.UIN
     ''')
 
-    # Added track to the join so we can access the tracking status
+    # View of LEFT JOIN of Application and Track and JOIN of Application and program
+    # Used to make querying for program application details easier
+    # - Kelvin Zheng
     conn.execute('''CREATE VIEW IF NOT EXISTS View_ApplicationDetails AS
                 SELECT 
                     Application.UIN, 
@@ -210,6 +213,8 @@ def init_sqlite_db():
                 ''')
 
     # View of students in programs that are not rejected
+    # Makes querying for data about students that were at some point in a program easier
+    # - Kelvin Zheng
     conn.execute('''CREATE VIEW IF NOT EXISTS Program_Accepts AS
                  SELECT Tracking_num, Program, Student_num, Status FROM Track WHERE Status != "Rejected"
                  ''')
@@ -287,8 +292,8 @@ def init_sqlite_db():
     #  ---------- INDEXES ---------- 
     
     conn.execute('CREATE INDEX IF NOT EXISTS idx_event_uin ON Event(UIN)') # Christian Jeardoe
-    conn.execute('CREATE INDEX IF NOT EXISTS idx_application_uin ON Application(UIN)')
-    conn.execute("CREATE INDEX IF NOT EXISTS idx_track_program ON Track(program)")
+    conn.execute('CREATE INDEX IF NOT EXISTS idx_application_uin ON Application(UIN)') # Kelvin Zheng
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_track_program ON Track(program)") # Kelvin Zheng
     conn.execute("CREATE INDEX IF NOT EXISTS idx_class_enrollment_uin ON Class_Enrollment(UIN)")
     conn.execute("CREATE INDEX IF NOT EXISTS idx_intern_app_uin ON Intern_App(UIN)")
     conn.execute("CREATE INDEX IF NOT EXISTS idx_cert_enrollment_uin ON Cert_Enrollment(UIN)")
