@@ -43,7 +43,7 @@ def init_sqlite_db():
                     )
                 ''')
     
-    # EVENT TABLE
+    # EVENT TABLE - Christian Jeardoe
     conn.execute(''' CREATE TABLE IF NOT EXISTS Event (
                 Event_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                 Program_Num INTEGER,
@@ -58,7 +58,7 @@ def init_sqlite_db():
                 )
             ''')
     
-    # EVENT_TRACKING TABLE
+    # EVENT_TRACKING TABLE - Christian Jeardoe
     conn.execute(''' CREATE TABLE IF NOT EXISTS Event_Tracking (
                 ET_Num INTEGER PRIMARY KEY AUTOINCREMENT,
                 Event_ID INTEGER,
@@ -68,7 +68,7 @@ def init_sqlite_db():
                 )
             ''')
     
-    # DOCUMENTS TABLE
+    # DOCUMENTS TABLE - Christian Jeardoe
     conn.execute(''' CREATE TABLE IF NOT EXISTS Documents (
                 Doc_Num INTEGER PRIMARY KEY AUTOINCREMENT,
                 App_Num INTEGER,
@@ -181,6 +181,7 @@ def init_sqlite_db():
     #  ---------- VIEWS ----------
     
     # View of Left Join from Users and College Students table: Admins have NULL values for student attributes
+    # - Freddy Padron
     conn.execute('''CREATE VIEW IF NOT EXISTS View_CollegeStudentDetails AS
         SELECT u.*, cs.Gender, cs.Hispanic_Or_Latino, cs.Race, cs.US_Citizen, cs.First_Generation, 
             cs.Birthdate, cs.GPA, cs.Major, cs.Minor, cs.Second_Minor, cs.Exp_Graduation, 
@@ -227,7 +228,7 @@ def init_sqlite_db():
                  JOIN Internship
                  ''')
     
-    # View of documents, applications, and programs
+    # View of documents, applications, and programs - Christian Jeardoe
     conn.execute('''CREATE VIEW IF NOT EXISTS View_DocumentsApplicationPrograms AS
                     SELECT
                         Programs.name AS ProgramName,
@@ -285,13 +286,13 @@ def init_sqlite_db():
     
     #  ---------- INDEXES ---------- 
     
-    conn.execute('CREATE INDEX IF NOT EXISTS idx_event_uin ON Event(UIN)')
+    conn.execute('CREATE INDEX IF NOT EXISTS idx_event_uin ON Event(UIN)') # Christian Jeardoe
     conn.execute('CREATE INDEX IF NOT EXISTS idx_application_uin ON Application(UIN)')
     conn.execute("CREATE INDEX IF NOT EXISTS idx_track_program ON Track(program)")
     conn.execute("CREATE INDEX IF NOT EXISTS idx_class_enrollment_uin ON Class_Enrollment(UIN)")
     conn.execute("CREATE INDEX IF NOT EXISTS idx_intern_app_uin ON Intern_App(UIN)")
     conn.execute("CREATE INDEX IF NOT EXISTS idx_cert_enrollment_uin ON Cert_Enrollment(UIN)")
-    conn.execute('CREATE INDEX IF NOT EXISTS idx_application_num ON Documents(app_num)')
+    conn.execute('CREATE INDEX IF NOT EXISTS idx_application_num ON Documents(app_num)') # Christian Jeardoe
     conn.commit()
     
     

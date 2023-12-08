@@ -21,8 +21,12 @@ def add_internship_student(UIN):
         if intern_exist:
             intern_app = get_intern_app(conn, intern_exist['Intern_ID'], UIN)
             if intern_app:
-                flash("An internship of this name already exists")
-            conn.close()
+                flash("Already applied to an internship with this name")
+                conn.close()
+            else:
+                enroll_intern(conn, intern_name, intern_descr, intern_isGov, intern_year, intern_status, UIN)
+                conn.close()
+                return redirect(url_for("intern_bp.view_internships", UIN=UIN))
         else:
             enroll_intern(conn, intern_name, intern_descr, intern_isGov, intern_year, intern_status, UIN)
             conn.close()
@@ -180,3 +184,7 @@ def delete_enrollments_by_intern_id(conn, Intern_ID):
 def delete_enrollments_by_intern_id_and_uin(conn, Intern_ID, UIN):
     conn.execute('DELETE FROM Intern_App WHERE Intern_ID=? AND UIN=?', (Intern_ID, UIN))
     conn.commit()
+
+def is_user_enrolled(conn, intern_id, UIN):
+    intern_exist = conn.execute('SELECT COUNT(*) FROM Intern_App WHERE UIN=?, Intern_ID=?', (UIN, intern_id)).fetchone()[0]
+    return intern_exist > 0

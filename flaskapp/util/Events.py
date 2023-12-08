@@ -1,6 +1,8 @@
 from flask import flash
 from db import *
 
+# File author: Chritian Jeardoe
+
 # VIEW ALL EVENTS
 def get_all_events(conn):
     return conn.execute('SELECT * FROM Event').fetchall()

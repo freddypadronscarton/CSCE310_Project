@@ -7,6 +7,8 @@ from util.Users import *
 from util.Programs import *
 from util.Events import *
 
+# File author : Christian Jeardoe
+
 document_bp = Blueprint('document_bp', __name__)
 
 @document_bp.route('/display')

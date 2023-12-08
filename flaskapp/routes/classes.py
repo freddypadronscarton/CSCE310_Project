@@ -38,8 +38,13 @@ def add_classes(UIN):
         conn = get_db_connection()
         class_exist = is_class_name_taken(conn, class_name)
         if class_exist:
-            flash("A class of this name already exists")
-            conn.close()
+            if is_user_enrolled(conn, UIN, get_class_by_name(conn, class_name)['Class_ID']):
+                flash("Already enrolled in a class with this name")
+                conn.close()
+            else:
+                enroll_class(conn, class_name, class_descr, class_type, class_semester, class_year, class_status, UIN)
+                conn.close()
+                return redirect(url_for("progress_bp.view_progress", UIN=UIN))
         else:
             enroll_class(conn, class_name, class_descr, class_type, class_semester, class_year, class_status, UIN)
             conn.close()
@@ -168,3 +173,7 @@ def update_class_info(conn, class_id, class_name, class_descr, class_type):
 def update_enrollment_info(conn, class_id, UIN, class_semester, class_year, class_status):
     conn.execute('UPDATE Class_Enrollment SET Semester=?, Year=?, Status=? WHERE Class_ID=? AND UIN=?', (class_semester, class_year, class_status, class_id, UIN))
     conn.commit()
+
+def is_user_enrolled(conn, class_id, UIN):
+    class_exist = conn.execute('SELECT COUNT(*) FROM Class_Enrollment WHERE UIN=?, Class_ID=?', (UIN, class_id)).fetchone()[0]
+    return class_exist > 0
