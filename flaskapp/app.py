@@ -302,7 +302,11 @@ def class_enrollment(UIN):
             is_enrolled = get_enrollment(conn, class_exist['Class_ID'], UIN)
             if(is_enrolled):
                 flash("You are already enrolled in this class")
-            conn.close()
+                conn.close()
+            else:
+                enroll_class(conn, class_name, class_descr, class_type, class_semester, class_year, class_status, UIN)
+                conn.close()
+                return redirect(url_for("home"))
         else:
             enroll_class(conn, class_name, class_descr, class_type, class_semester, class_year, class_status, UIN)
             conn.close()
