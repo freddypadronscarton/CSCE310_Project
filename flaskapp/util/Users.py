@@ -224,8 +224,34 @@ def update_user_fields(conn, user_info):
 # DELETES
 
 def delete_user(conn, UIN):
-    conn.execute(f"DELETE FROM College_Students WHERE UIN = {UIN}")
-    conn.execute(f"DELETE FROM Users WHERE UIN = {UIN}")
+    # Delete from Documents where UIN is an indirect FK through Applications
+    conn.execute("DELETE FROM Documents WHERE App_Num IN (SELECT app_num FROM Application WHERE UIN = ?)", (UIN,))
+
+    # Delete Event_Tracking records associated with the user's events
+    conn.execute("DELETE FROM Event_Tracking WHERE Event_ID IN (SELECT Event_ID FROM Event WHERE UIN = ?)", (UIN,))
+    
+
+    # Delete events created by the user
+    conn.execute("DELETE FROM Event WHERE UIN = ?", (UIN,))
+
+    # Delete from other tables where UIN is a direct foreign key
+    conn.execute("DELETE FROM Event_Tracking WHERE UIN = ?", (UIN,))
+    conn.execute("DELETE FROM Class_Enrollment WHERE UIN = ?", (UIN,))
+    conn.execute("DELETE FROM Cert_Enrollment WHERE UIN = ?", (UIN,))
+    conn.execute("DELETE FROM Intern_App WHERE UIN = ?", (UIN,))
+    conn.execute("DELETE FROM Track WHERE student_num = ?", (UIN,))
+    conn.execute("DELETE FROM Application WHERE UIN = ?", (UIN,))
+
+    # Delete from College_Students which has a FK constraint with Users
+    conn.execute("DELETE FROM College_Students WHERE UIN = ?", (UIN,))
+
+    # Finally, delete the user record from the Users table
+    conn.execute("DELETE FROM Users WHERE UIN = ?", (UIN,))
+
+    
+    # Commit the changes to the database
+    conn.commit()
 
 def delete_student(conn, UIN):
+    # Used when promoting a user to admin ()
     conn.execute(f"DELETE FROM College_Students WHERE UIN = {UIN}")
