@@ -110,7 +110,7 @@ def init_sqlite_db():
                     FOREIGN KEY(student_num) REFERENCES College_students(UIN)             
                   )''')
     
-    # CLASSES TABLE
+    # CLASSES TABLE - Alex Kilgore
     conn.execute(''' CREATE TABLE IF NOT EXISTS Classes (
                     Class_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                     Name VARCHAR,
@@ -119,7 +119,7 @@ def init_sqlite_db():
                     )
                  ''')
     
-    # INTERNSHIP TABLE
+    # INTERNSHIP TABLE - Alex Kilgore
     conn.execute(''' CREATE TABLE IF NOT EXISTS Internship (
                     Intern_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                     Name VARCHAR,
@@ -128,7 +128,7 @@ def init_sqlite_db():
                     )
                  ''')
     
-    # CERTIFICATION TABLE
+    # CERTIFICATION TABLE - Alex Kilgore
     conn.execute(''' CREATE TABLE IF NOT EXISTS Certification (
                     Cert_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                     Name VARCHAR,
@@ -137,7 +137,7 @@ def init_sqlite_db():
                     )
                  ''')
     
-    # CLASS ENROLLMENT TABLE
+    # CLASS ENROLLMENT TABLE - Alex Kilgore
     conn.execute(''' CREATE TABLE IF NOT EXISTS Class_Enrollment (
                     CE_Num INTEGER PRIMARY KEY AUTOINCREMENT,
                     UIN INTEGER,
@@ -150,7 +150,7 @@ def init_sqlite_db():
                     )
                  ''')
 
-    # CERTIFICATION ENROLLMENT TABLE
+    # CERTIFICATION ENROLLMENT TABLE - Alex Kilgore
     conn.execute(''' CREATE TABLE IF NOT EXISTS Cert_Enrollment (
                     CertE_Num INTEGER PRIMARY KEY AUTOINCREMENT,
                     UIN INTEGER,
@@ -166,7 +166,7 @@ def init_sqlite_db():
                     )
                  ''')
     
-    # INTERNSHIP APPLICATION TABLE
+    # INTERNSHIP APPLICATION TABLE - Alex Kilgore
     conn.execute(''' CREATE TABLE IF NOT EXISTS Intern_App (
                     IA_Num INTEGER PRIMARY KEY AUTOINCREMENT,
                     UIN INTEGER,
@@ -249,7 +249,7 @@ def init_sqlite_db():
                     JOIN Programs ON Application.program_num = Programs.program_num;
                     ''')
 
-    # Join classes and enrollments
+    # Join classes and enrollments - Alex Kilgore
     conn.execute('''CREATE VIEW IF NOT EXISTS View_ClassEnrollmentDetails AS
     SELECT
         CE.CE_Num,
@@ -266,13 +266,13 @@ def init_sqlite_db():
         JOIN Classes C ON CE.Class_ID = C.Class_ID;
         ''')
 
-    # Join Internships and Intern_App
+    # Join Internships and Intern_App - Alex Kilgore
     conn.execute('''CREATE VIEW IF NOT EXISTS View_InternAppDetails AS
     SELECT * FROM Internship
     JOIN Intern_App ON Internship.Intern_ID = Intern_App.Intern_ID;
     ''')
 
-    # Get user's unenrolled certifications
+    # Get user's unenrolled certifications -Alex Kilgore, Freddy Padron
     conn.execute('''CREATE VIEW IF NOT EXISTS Unenrolled_Certifications AS
         SELECT u.UIN, c.Cert_ID, c.Name, c.Description, c.Level, ce.Status, ce.Training_Status, ce.Semester, ce.Year
         FROM Users u
@@ -282,7 +282,7 @@ def init_sqlite_db():
 ''')
 
 
-    # Join Certifications and Cert_Enrollments
+    # Join Certifications and Cert_Enrollments - Alex Kilgore
     conn.execute('''CREATE VIEW IF NOT EXISTS View_CertEnrollmentDetails AS
         SELECT Cert_Enrollment.*, Certification.*
         FROM Cert_Enrollment

@@ -285,7 +285,7 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-
+# Endpoint for student class enrollment - Alex Kilgore
 @app.route('/class_enrollment/<int:UIN>', methods=['GET', 'POST'])
 @login_required
 def class_enrollment(UIN):
