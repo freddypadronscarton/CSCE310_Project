@@ -1,6 +1,7 @@
 from flask import flash
 from db import *
 
+# QUERIES BY FREDDY PADRON
 
 # CREATES
 def create_user(conn, user_info):

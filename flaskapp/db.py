@@ -181,6 +181,7 @@ def init_sqlite_db():
     #  ---------- VIEWS ----------
     
     # View of Left Join from Users and College Students table: Admins have NULL values for student attributes
+    # - Freddy Padron
     conn.execute('''CREATE VIEW IF NOT EXISTS View_CollegeStudentDetails AS
         SELECT u.*, cs.Gender, cs.Hispanic_Or_Latino, cs.Race, cs.US_Citizen, cs.First_Generation, 
             cs.Birthdate, cs.GPA, cs.Major, cs.Minor, cs.Second_Minor, cs.Exp_Graduation, 
