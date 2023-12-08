@@ -292,7 +292,7 @@ def get_report(program_num):
     
     return render_template("admin/get_program_report.html", program=program_report)
 
-# ENDPOINT FOR ADMIN TO VIEW ALL EVENTS
+# ENDPOINT FOR ADMIN TO VIEW ALL EVENTS - Christian Jeardoe
 @admin_bp.route('/view_events', methods=['GET'])
 @login_required
 def view_all_events():
@@ -301,7 +301,7 @@ def view_all_events():
     conn.close()
     return render_template("admin/admin_view_events.html", events=events)
 
-# ENDPOINT FOR ADMIN TO ADD EVENTS
+# ENDPOINT FOR ADMIN TO ADD EVENTS - Christian Jeardoe
 @admin_bp.route('/add_event', methods=['GET', 'POST'])
 @login_required
 def add_event():
@@ -319,7 +319,7 @@ def add_event():
         return render_template("admin/admin_home.html")
     return render_template("admin/admin_add_event.html")
 
-# ENDPOINT FOR ADMIN TO DELETE EVENTS
+# ENDPOINT FOR ADMIN TO DELETE EVENTS - Christian Jeardoe
 @admin_bp.route('/delete_event/<int:event_id>', methods=['DELETE'])
 @login_required
 def delete_event(event_id):
@@ -328,7 +328,7 @@ def delete_event(event_id):
     conn.close()
     return jsonify({"success": "event deleted"})
 
-# ENDPOINT FOR ADMIN UPDATE EVENTS
+# ENDPOINT FOR ADMIN UPDATE EVENTS - Christian Jeardoe
 @admin_bp.route('/update_event/<int:event_id>', methods=['GET', 'POST'])
 @login_required
 def update_event(event_id):
@@ -341,7 +341,7 @@ def update_event(event_id):
     conn.close()
     return render_template("update_event.html", event=event)
 
-# ENDPOINT FOR ADMIN ATTENDEE CONTROL
+# ENDPOINT FOR ADMIN ATTENDEE CONTROL - Christian Jeardoe
 @admin_bp.route('/attendee_control/<int:event_id>', methods=['GET', 'POST'])
 @login_required
 def attendee_control(event_id):
@@ -354,7 +354,7 @@ def attendee_control(event_id):
     conn.close()
     return render_template("admin/admin_attendee_control.html", event_attendance=event_attendance)
 
-# ENDPOINT FOR ADMIN TO ADD ATTENDEES TO AN EVENT
+# ENDPOINT FOR ADMIN TO ADD ATTENDEES TO AN EVENT - Christian Jeardoe
 @admin_bp.route('/add_attendee/<int:event_id>', methods=['GET', 'POST'])
 @login_required
 def add_attendee(event_id):
@@ -367,7 +367,7 @@ def add_attendee(event_id):
     conn.close()
     return render_template("admin/admin_attendee_control.html", event_attendance=event_attendance)
 
-# ENDPOINT FOR ADMIN TO REMOVE ATTENDEES FROM AN EVENT
+# ENDPOINT FOR ADMIN TO REMOVE ATTENDEES FROM AN EVENT - Christian Jeardoe
 @admin_bp.route('/delete_attendee/<int:event_id>/<int:UIN>', methods=['DELETE'])
 @login_required
 def delete_attendee(event_id, UIN):

@@ -2,6 +2,8 @@ from flask import flash
 from db import *
 import os
 
+# File author: Chritian Jeardoe
+
 # VIEW ALL DOCUMENTS
 def get_all_documents(conn):
     return conn.execute('SELECT * FROM View_DocumentsApplicationPrograms').fetchall()
