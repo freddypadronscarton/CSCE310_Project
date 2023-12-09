@@ -4,6 +4,8 @@ from datetime import datetime
 from db import *
 import os
 
+#################### FILE BY FREDDY PADRON ####################
+
 # GENERATES MOCK DATA
 
 def insert_mock_data():

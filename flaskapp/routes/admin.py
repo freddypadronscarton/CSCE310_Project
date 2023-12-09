@@ -7,6 +7,8 @@ from util.Users import *
 from util.Programs import *
 from util.Events import *
 
+
+################### CODE BY FREDDY PADRON ###################
 admin_bp = Blueprint('admin_bp', __name__)
 
 # ENDPOINT FOR ARCHIVED BUTTON
@@ -153,6 +155,9 @@ def editUser(UIN):
     # GET REQUEST JUST RENDERS TEMPLATE
     conn.close()
     return render_template('admin/edit_user.html', user=user_info, current_year=datetime.now().year)
+
+
+################### CODE BY FREDDY PADRON ###################
 
 # AUTHOR: Kelvin Zheng
 # ENDPOINT FOR ADDING PROGRAMS

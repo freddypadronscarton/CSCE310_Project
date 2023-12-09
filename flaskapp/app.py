@@ -39,6 +39,10 @@ app.register_blueprint(document_bp, url_prefix='/doc')
 app.register_blueprint(cert_bp, url_prefix='/cert')
 app.register_blueprint(application_bp, url_prefix='/app')
 
+
+################### CODE BY FREDDY PADRON ###################
+
+
 # Flask-Login: User class and user_loader
 class User(UserMixin):
     
@@ -284,6 +288,9 @@ def passwordRecovery():
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
+
+################### END OF CODE BY FREDDY PADRON ###################
 
 # Endpoint for student class enrollment - Alex Kilgore
 @app.route('/class_enrollment/<int:UIN>', methods=['GET', 'POST'])
