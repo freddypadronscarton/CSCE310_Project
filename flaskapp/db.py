@@ -7,7 +7,7 @@ def init_sqlite_db():
     conn = sqlite3.connect('database.db')
     print("Opened database successfully")
     
-    # USERS TABLE
+    # USERS TABLE - Fredy Padron
     conn.execute(''' CREATE TABLE IF NOT EXISTS Users (
                     UIN INTEGER PRIMARY KEY,
                     First_Name TEXT NOT NULL,
@@ -21,7 +21,7 @@ def init_sqlite_db():
                     Archived INTEGER NOT NULL
                     )''')
 
-   # COLLEGE STUDENTS TABLE
+   # COLLEGE STUDENTS TABLE - Freddy Padron
     conn.execute(''' CREATE TABLE IF NOT EXISTS College_Students (
                     UIN INTEGER PRIMARY KEY,
                     Gender TEXT NOT NULL,
