@@ -2,6 +2,31 @@
 
 This document outlines the functionalities and responsibilities of team members in the development of our web application. (Readme by Freddy Padron)
 
+## How to Run the Application
+
+Follow these steps to set up and run the application:
+
+1. **Navigate to the Project Directory**
+  ```
+  cd CSCE310_Project/flaskapp
+  ```
+
+
+2. **Install Dependencies**
+- Install Flask:
+  ```
+  pip install Flask
+  ```
+- Install Flask-Login for user authentication:
+  ```
+  pip install Flask-Login
+  ```
+
+3. **Start the Application**
+  ```
+  python app.py
+  ```
+
 ## Admin Functionalities
 
 ### User Authentication & Roles - Freddy
